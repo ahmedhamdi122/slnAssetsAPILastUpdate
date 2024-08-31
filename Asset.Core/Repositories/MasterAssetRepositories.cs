@@ -20,7 +20,18 @@ namespace Asset.Core.Repositories
         {
             _context = context;
         }
-
+        public bool ExistsByNameModelAndVersion(string Name, string ModelNumber, string VersionNumber)
+        {
+            return _context.MasterAssets.Any(asset => asset.Name == Name && asset.ModelNumber == ModelNumber && asset.VersionNumber == VersionNumber);
+        }
+        public bool ExistsByNameArModelAndVersion(string NameAr, string ModelNumber, string VersionNumber)
+        {
+            return _context.MasterAssets.Any(asset => asset.NameAr == NameAr && asset.ModelNumber == ModelNumber && asset.VersionNumber == VersionNumber);
+        }
+        public bool isMasterAssetExistsUsingId(int id)
+        {
+            return _context.MasterAssets.Any(x => x.Id == id);    
+        }
         public int CountMasterAssets()
         {
             return _context.MasterAssets.Count();
@@ -381,189 +392,179 @@ namespace Asset.Core.Repositories
         /// List MasterAsset By Sort and Search Criteria with Paging
         /// </summary>
         /// <returns></returns>
-        public IndexMasterAssetVM GetAll(SortAndFilterMasterAssetVM data, int pageNumber, int pageSize)
-        {
-            #region Initial Variables
-            IQueryable<MasterAsset> lstMasters = _context.MasterAssets.Include(a => a.brand).Include(a => a.Category)
+        public IndexMasterAssetVM GetAll(int First, int Rows,SearchSortMasterAssetVM SearchSortObj)
+        { 
+        #region Initial Variables
+        IQueryable<MasterAsset> lstMasters = _context.MasterAssets.Include(a => a.brand).Include(a => a.Category)
               .Include(a => a.SubCategory).Include(a => a.ECRIS).Include(a => a.Origin).OrderBy(a => a.Code);
             IndexMasterAssetVM mainClass = new IndexMasterAssetVM();
             List<IndexMasterAssetVM.GetData> list = new List<IndexMasterAssetVM.GetData>();
             #endregion
 
             #region Search Criteria
-            if (!string.IsNullOrEmpty(data.SearchObj.AssetName))
-            {
-                lstMasters = lstMasters.Where(x => x.Name.Contains(data.SearchObj.AssetName));
-            }
-            if (!string.IsNullOrEmpty(data.SearchObj.AssetNameAr))
-            {
-                lstMasters = lstMasters.Where(x => x.NameAr.Contains(data.SearchObj.AssetNameAr));
-            }
-            if (data.SearchObj.BrandId != 0)
-            {
-                lstMasters = lstMasters.Where(x => x.BrandId == data.SearchObj.BrandId);
-            }
-            if (data.SearchObj.OriginId != 0)
-            {
-                lstMasters = lstMasters.Where(x => x.OriginId == data.SearchObj.OriginId);
-            }
-            if (data.SearchObj.ModelNumber != "")
-            {
-                lstMasters = lstMasters.Where(x => x.ModelNumber == data.SearchObj.ModelNumber);
-            }
-            if (data.SearchObj.CategoryId != 0)
-            {
-                lstMasters = lstMasters.Where(x => x.CategoryId == data.SearchObj.CategoryId);
-            }
-            if (data.SearchObj.SubCategoryId != 0)
-            {
-                lstMasters = lstMasters.Where(x => x.SubCategoryId == data.SearchObj.SubCategoryId);
-            }
+          
+                if (!string.IsNullOrEmpty(SearchSortObj.AssetName))
+                {
+                    lstMasters = lstMasters.Where(x => x.Name.Contains(SearchSortObj.AssetName));
+                }
+                if (!string.IsNullOrEmpty(SearchSortObj.AssetNameAr))
+                {
+                    lstMasters = lstMasters.Where(x => x.NameAr.Contains(SearchSortObj.AssetNameAr));
+                }
+                if (SearchSortObj.BrandId!=null)
+                {
+                    lstMasters = lstMasters.Where(x => x.BrandId == SearchSortObj.BrandId);
+                }
+                if (SearchSortObj.OriginId != null)
+                {
+                    lstMasters = lstMasters.Where(x => x.OriginId == SearchSortObj.OriginId);
+                }
+                if (!string.IsNullOrEmpty(SearchSortObj.ModelNumber))
+                {
+                    lstMasters = lstMasters.Where(x => x.ModelNumber == SearchSortObj.ModelNumber);
+                }
+                if (SearchSortObj.CategoryId != null)
+                {
+                    lstMasters = lstMasters.Where(x => x.CategoryId == SearchSortObj.CategoryId);
+                }
+                if (SearchSortObj.SubCategoryId != null)
+                {
+                    lstMasters = lstMasters.Where(x => x.SubCategoryId == SearchSortObj.SubCategoryId);
+                }
+            
+               
 
             #endregion
 
             #region Sort Criteria
 
-            switch (data.SortObj.SortBy)
+            if(SearchSortObj.SortFiled != null)
             {
-                case "Code":
-                case "الكود":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
+                switch (SearchSortObj.SortFiled)
+                {
+                    case "Code":
+                    case "الكود":
+                        if (SearchSortObj.SortOrder == 1)
+                        {
+                            lstMasters = lstMasters.OrderBy(x => x.Code);
+                        }
+                        else
+                        {
+                            lstMasters = lstMasters.OrderByDescending(x => x.Code);
+                        }
+                        break;
+                    case "Model Number":
+                    case "ModelNumber":
+                    case "الموديل":
+                        if (SearchSortObj.SortOrder ==1)
+                        {
+                            lstMasters = lstMasters.OrderBy(x => x.ModelNumber);
+                        }
+                        else
+                        {
+                            lstMasters = lstMasters.OrderByDescending(x => x.ModelNumber);
+                        }
+                        break;
+                    case "ECRI":
+                        if (SearchSortObj.SortOrder == 1)
+                        {
+                            lstMasters = lstMasters.OrderBy(x => x.ECRIS.Name);
+                        }
+                        else
+                        {
+                            lstMasters = lstMasters.OrderByDescending(x => x.ECRIS.Name);
+                        }
+                        break;
+                    case "Name":
+                        if (SearchSortObj.SortOrder == 1)
+                        {
+                            lstMasters = lstMasters.OrderBy(x => x.Name);
+                        }
+                        else
+                        {
+                            lstMasters = lstMasters.OrderByDescending(x => x.Name);
+                        }
+                        break;
+
+                    case "الاسم":
+                        if (SearchSortObj.SortOrder == 1)
+                        {
+                            lstMasters = lstMasters.OrderBy(x => x.NameAr);
+                        }
+                        else
+                        {
+                            lstMasters = lstMasters.OrderByDescending(x => x.NameAr);
+                        }
+                        break;
+
+
+                    case "Origin":
+                        if (SearchSortObj.SortOrder == 1)
+                        {
+                            lstMasters = lstMasters.OrderBy(x => x.Origin.Name);
+                        }
+                        else
+                        {
+                            lstMasters = lstMasters.OrderByDescending(x => x.Origin.Name);
+                        }
+                        break;
+
+                    case "بلد المنشأ":
+                        if (SearchSortObj.SortOrder == 1)
+                        {
+                            lstMasters = lstMasters.OrderBy(x => x.Origin.NameAr);
+                        }
+                        else
+                        {
+                            lstMasters = lstMasters.OrderByDescending(x => x.Origin.NameAr);
+                        }
+                        break;
+                    case "Brand":
+                    case "Manufacture":
+                        if (SearchSortObj.SortOrder == 1)
+                        {
+                            lstMasters = lstMasters.OrderBy(x => x.brand.Name);
+                        }
+                        else
+                        {
+                            lstMasters = lstMasters.OrderByDescending(x => x.brand.Name);
+                        }
+                        break;
+                    case "الماركات":
+                        if (SearchSortObj.SortOrder == 1)
+                        {
+                            lstMasters = lstMasters.OrderBy(x => x.brand.NameAr);
+                        }
+                        else
+                        {
+                            lstMasters = lstMasters.OrderByDescending(x => x.brand.NameAr);
+                        }
+                        break;
+                    case "الماركة":
+                        if (SearchSortObj.SortOrder == 1)
+                        {
+                            lstMasters = lstMasters.OrderBy(x => x.brand.NameAr);
+                        }
+                        else
+                        {
+                            lstMasters = lstMasters.OrderByDescending(x => x.brand.NameAr);
+                        }
+                        break;
+                    default:
                         lstMasters = lstMasters.OrderBy(x => x.Code);
-                    }
-                    else
-                    {
-                        lstMasters = lstMasters.OrderByDescending(x => x.Code);
-                    }
-                    break;
-                case "Model Number":
-                case "ModelNumber":
-                case "الموديل":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        lstMasters = lstMasters.OrderBy(x => x.ModelNumber);
-                    }
-                    else
-                    {
-                        lstMasters = lstMasters.OrderByDescending(x => x.ModelNumber);
-                    }
-                    break;
-                case "ECRI":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        lstMasters = lstMasters.OrderBy(x => x.ECRIS.Name);
-                    }
-                    else
-                    {
-                        lstMasters = lstMasters.OrderByDescending(x => x.ECRIS.Name);
-                    }
-                    break;
-                case "Name":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        lstMasters = lstMasters.OrderBy(x => x.Name);
-                    }
-                    else
-                    {
-                        lstMasters = lstMasters.OrderByDescending(x => x.Name);
-                    }
-                    break;
-
-                case "الاسم":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        lstMasters = lstMasters.OrderBy(x => x.NameAr);
-                    }
-                    else
-                    {
-                        lstMasters = lstMasters.OrderByDescending(x => x.NameAr);
-                    }
-                    break;
-
-
-                case "Origin":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        lstMasters = lstMasters.OrderBy(x => x.Origin.Name);
-                    }
-                    else
-                    {
-                        lstMasters = lstMasters.OrderByDescending(x => x.Origin.Name);
-                    }
-                    break;
-
-                case "بلد المنشأ":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        lstMasters = lstMasters.OrderBy(x => x.Origin.NameAr);
-                    }
-                    else
-                    {
-                        lstMasters = lstMasters.OrderByDescending(x => x.Origin.NameAr);
-                    }
-                    break;
-
-
-
-
-
-
-
-
-
-
-
-
-                case "Brands":
-                case "Manufacture":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        lstMasters = lstMasters.OrderBy(x => x.brand.Name);
-                    }
-                    else
-                    {
-                        lstMasters = lstMasters.OrderByDescending(x => x.brand.Name);
-                    }
-                    break;
-                case "الماركات":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        lstMasters = lstMasters.OrderBy(x => x.brand.NameAr);
-                    }
-                    else
-                    {
-                        lstMasters = lstMasters.OrderByDescending(x => x.brand.NameAr);
-                    }
-                    break;
-                case "الماركة":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        lstMasters = lstMasters.OrderBy(x => x.brand.NameAr);
-                    }
-                    else
-                    {
-                        lstMasters = lstMasters.OrderByDescending(x => x.brand.NameAr);
-                    }
-                    break;
-                default:
-                    lstMasters = lstMasters.OrderBy(x => x.Code);
-                    break;
+                        break;
+                }
             }
+           
 
             #endregion
 
             #region Represent data by Paging and count
             mainClass.Count = lstMasters.Count();
-            if (pageNumber == 0 && pageSize == 0)
-            {
-                lstMasters = lstMasters;
-            }
-            else
-            {
-                lstMasters = lstMasters.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+          
+                lstMasters = lstMasters.Skip(First).Take(Rows);
 
-            }
+            
             #endregion
 
             #region Loop to get Items after serach and sort
@@ -760,14 +761,14 @@ namespace Asset.Core.Repositories
         /// <returns></returns>
         public int Delete(int id)
         {
-            var masterAssetObj = _context.MasterAssets.Find(id);
+            
             try
             {
-                if (masterAssetObj != null)
-                {
+
+                    var masterAssetObj=_context.MasterAssets.Find(id);
                     _context.MasterAssets.Remove(masterAssetObj);
                     return _context.SaveChanges();
-                }
+                
             }
             catch (Exception ex)
             {

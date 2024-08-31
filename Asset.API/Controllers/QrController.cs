@@ -6,21 +6,21 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QRCoder;
-using Syncfusion.Pdf.Barcode;
-using Syncfusion.Pdf.Graphics;
+//using Syncfusion.Pdf.Barcode;
+//using Syncfusion.Pdf.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using Asset.ViewModels.AssetDetailVM;
-using Syncfusion.DocIO.DLS;
-using Syncfusion.DocIO;
+//using Syncfusion.DocIO.DLS;
+//using Syncfusion.DocIO;
 using Asset.API.Helpers;
 using System.Drawing.Imaging;
 
 using Microsoft.AspNetCore.Hosting;
-using Syncfusion.Pdf;
+//using Syncfusion.Pdf;
 
 
 namespace Asset.API.Controllers
@@ -152,172 +152,172 @@ namespace Asset.API.Controllers
         /////////////////////////////////////////////////////
         /// PoliceQr - 2
         /////////////////////////////////////////
-        [Route("GenerateWordForPoliceSelectedQrCode")]
-        public ActionResult GenerateWordForQrCodeForAllAssets(List<IndexAssetDetailVM.GetData> selectedAssets)
-        {
+        //[Route("GenerateWordForPoliceSelectedQrCode")]
+        //public ActionResult GenerateWordForQrCodeForAllAssets(List<IndexAssetDetailVM.GetData> selectedAssets)
+        //{
 
-            using (WordDocument document = new WordDocument())
-            {
-                //Opens the Word template document
-                string strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\PoliceCardTemplate.dotx";
-                Stream docStream = System.IO.File.OpenRead(strTemplateFile);
-                document.Open(docStream, FormatType.Docx);
-                docStream.Dispose();
-
-
-                var allAssets = ListAssets(selectedAssets).ToList();
-                MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allAssets);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_InsertPageBreak);
-                document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_Event);
-                document.MailMerge.RemoveEmptyGroup = true;
-                document.MailMerge.ExecuteGroup(dataTable);
+        //    using (WordDocument document = new WordDocument())
+        //    {
+        //        //Opens the Word template document
+        //        string strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\PoliceCardTemplate.dotx";
+        //        Stream docStream = System.IO.File.OpenRead(strTemplateFile);
+        //        document.Open(docStream, FormatType.Docx);
+        //        docStream.Dispose();
 
 
-                //Saves the file in the given path
-                string strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\PoliceCards.docx";
-                docStream = System.IO.File.Create(strExportFile);
-                document.Save(docStream, FormatType.Docx);
-                docStream.Dispose();
-                document.Close();
+        //        var allAssets = ListAssets(selectedAssets).ToList();
+        //        MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allAssets);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_InsertPageBreak);
+        //        document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_Event);
+        //        document.MailMerge.RemoveEmptyGroup = true;
+        //        document.MailMerge.ExecuteGroup(dataTable);
 
 
-
-            }
-            return Ok();
-        }
+        //        //Saves the file in the given path
+        //        string strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\PoliceCards.docx";
+        //        docStream = System.IO.File.Create(strExportFile);
+        //        document.Save(docStream, FormatType.Docx);
+        //        docStream.Dispose();
+        //        document.Close();
 
 
 
-        /////////////////////////////////////////////////////
-        /// Hospital - 1
-        /////////////////////////////////////////
-        [Route("GenerateWordForHospitalSelectedQrCode")]
-        public ActionResult GenerateWordForHospitalSelectedQrCode(List<IndexAssetDetailVM.GetData> selectedAssets)
-        {
-
-            using (WordDocument document = new WordDocument())
-            {
-                //Opens the Word template document
-                string strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\HospitalCardTemplate.dotx";
-
-                Stream docStream = System.IO.File.OpenRead(strTemplateFile);
-                document.Open(docStream, FormatType.Docx);
-                docStream.Dispose();
-
-
-                var allAssets = ListAssets(selectedAssets).ToList();
-                MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allAssets);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_InsertPageBreak);
-                document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_Event);
-                document.MailMerge.RemoveEmptyGroup = true;
-                document.MailMerge.ExecuteGroup(dataTable);
-
-
-                //Saves the file in the given path
-                string strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\HospitalCards.docx";
-                docStream = System.IO.File.Create(strExportFile);
-                document.Save(docStream, FormatType.Docx);
-                docStream.Dispose();
-                document.Close();
+        //    }
+        //    return Ok();
+        //}
 
 
 
-            }
-            return Ok();
-        }
+        ///////////////////////////////////////////////////////
+        ///// Hospital - 1
+        ///////////////////////////////////////////
+        //[Route("GenerateWordForHospitalSelectedQrCode")]
+        //public ActionResult GenerateWordForHospitalSelectedQrCode(List<IndexAssetDetailVM.GetData> selectedAssets)
+        //{
+
+        //    using (WordDocument document = new WordDocument())
+        //    {
+        //        //Opens the Word template document
+        //        string strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\HospitalCardTemplate.dotx";
+
+        //        Stream docStream = System.IO.File.OpenRead(strTemplateFile);
+        //        document.Open(docStream, FormatType.Docx);
+        //        docStream.Dispose();
 
 
-        /////////////////////////////////////////////////////
-        /// University - 3
-        /////////////////////////////////////////
-        [Route("GenerateWordForUniversitySelectedQrCode")]
-        public ActionResult GenerateWordForUniversitySelectedQrCode(List<IndexAssetDetailVM.GetData> selectedAssets)
-        {
-
-            using (WordDocument document = new WordDocument())
-            {
-                //Opens the Word template document
-                string strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\UniversityCardTemplate.dotx";
-
-                Stream docStream = System.IO.File.OpenRead(strTemplateFile);
-                document.Open(docStream, FormatType.Docx);
-                docStream.Dispose();
+        //        var allAssets = ListAssets(selectedAssets).ToList();
+        //        MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allAssets);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_InsertPageBreak);
+        //        document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_Event);
+        //        document.MailMerge.RemoveEmptyGroup = true;
+        //        document.MailMerge.ExecuteGroup(dataTable);
 
 
-                var allAssets = ListAssets(selectedAssets).ToList();
-                MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allAssets);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_InsertPageBreak);
-                document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_Event);
-                document.MailMerge.RemoveEmptyGroup = true;
-                document.MailMerge.ExecuteGroup(dataTable);
-
-
-                //Saves the file in the given path
-                string strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\UniversityCards.docx";
-                docStream = System.IO.File.Create(strExportFile);
-                document.Save(docStream, FormatType.Docx);
-                docStream.Dispose();
-                document.Close();
+        //        //Saves the file in the given path
+        //        string strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\HospitalCards.docx";
+        //        docStream = System.IO.File.Create(strExportFile);
+        //        document.Save(docStream, FormatType.Docx);
+        //        docStream.Dispose();
+        //        document.Close();
 
 
 
-            }
-            return Ok();
-        }
+        //    }
+        //    return Ok();
+        //}
+
+
+        ///////////////////////////////////////////////////////
+        ///// University - 3
+        ///////////////////////////////////////////
+        //[Route("GenerateWordForUniversitySelectedQrCode")]
+        //public ActionResult GenerateWordForUniversitySelectedQrCode(List<IndexAssetDetailVM.GetData> selectedAssets)
+        //{
+
+        //    using (WordDocument document = new WordDocument())
+        //    {
+        //        //Opens the Word template document
+        //        string strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\UniversityCardTemplate.dotx";
+
+        //        Stream docStream = System.IO.File.OpenRead(strTemplateFile);
+        //        document.Open(docStream, FormatType.Docx);
+        //        docStream.Dispose();
+
+
+        //        var allAssets = ListAssets(selectedAssets).ToList();
+        //        MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allAssets);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_InsertPageBreak);
+        //        document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_Event);
+        //        document.MailMerge.RemoveEmptyGroup = true;
+        //        document.MailMerge.ExecuteGroup(dataTable);
+
+
+        //        //Saves the file in the given path
+        //        string strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\UniversityCards.docx";
+        //        docStream = System.IO.File.Create(strExportFile);
+        //        document.Save(docStream, FormatType.Docx);
+        //        docStream.Dispose();
+        //        document.Close();
+
+
+
+        //    }
+        //    return Ok();
+        //}
 
 
 
 
-        private static void MergeField_Event(object sender, MergeFieldEventArgs args)
-        {
-            string fieldValue = args.FieldValue.ToString();
-            //When field value is Null or empty, then remove the field owner paragraph.
-            if (string.IsNullOrEmpty(fieldValue))
-            {
-                //Get the merge field owner paragraph and remove it from its owner text body.
-                WParagraph ownerParagraph = args.CurrentMergeField.OwnerParagraph;
-                WTextBody ownerTextBody = ownerParagraph.OwnerTextBody;
-                ownerTextBody.ChildEntities.Remove(ownerParagraph);
-            }
-        }
-        private void MergeField_InsertPageBreak(object sender, MergeFieldEventArgs args)
-        {
-            if (args.FieldName == "DepartmentName")
-            {
-                //Gets the owner paragraph 
-                WParagraph paragraph = args.CurrentMergeField.OwnerParagraph;
-                //Appends the page break 
-                paragraph.AppendBreak(BreakType.PageBreak);
-                i++;
-            }
+        //private static void MergeField_Event(object sender, MergeFieldEventArgs args)
+        //{
+        //    string fieldValue = args.FieldValue.ToString();
+        //    //When field value is Null or empty, then remove the field owner paragraph.
+        //    if (string.IsNullOrEmpty(fieldValue))
+        //    {
+        //        //Get the merge field owner paragraph and remove it from its owner text body.
+        //        WParagraph ownerParagraph = args.CurrentMergeField.OwnerParagraph;
+        //        WTextBody ownerTextBody = ownerParagraph.OwnerTextBody;
+        //        ownerTextBody.ChildEntities.Remove(ownerParagraph);
+        //    }
+        //}
+        //private void MergeField_InsertPageBreak(object sender, MergeFieldEventArgs args)
+        //{
+        //    if (args.FieldName == "DepartmentName")
+        //    {
+        //        //Gets the owner paragraph 
+        //        WParagraph paragraph = args.CurrentMergeField.OwnerParagraph;
+        //        //Appends the page break 
+        //        paragraph.AppendBreak(BreakType.PageBreak);
+        //        i++;
+        //    }
 
-        }
-        private void InsertQRBarcode(object sender, MergeImageFieldEventArgs args)
-        {
-            if (args.FieldName == "QrFilePath")
-            {
-                ////Generates barcode image for field value.
-                System.Drawing.Image barcodeImage = GenerateQRBarcodeImage(args.FieldValue.ToString());
-                var stream = FormatImage.ToStream(barcodeImage, ImageFormat.Png);
-                args.ImageStream = stream;
-            }
-        }
-        private System.Drawing.Image GenerateQRBarcodeImage(string qrBarcodeText)
-        {
-            //Drawing QR Barcode
-            PdfQRBarcode barcode = new PdfQRBarcode();
-            //Set Error Correction Level
-            barcode.ErrorCorrectionLevel = PdfErrorCorrectionLevel.Low;
-            //Set XDimension
-            barcode.XDimension = 4;
-            barcode.Text = qrBarcodeText;
-            //Convert the barcode to image
-            System.Drawing.Image barcodeImage = barcode.ToImage(new SizeF(88f, 88f));
-            return barcodeImage;
-        }
+        //}
+        //private void InsertQRBarcode(object sender, MergeImageFieldEventArgs args)
+        //{
+        //    if (args.FieldName == "QrFilePath")
+        //    {
+        //        ////Generates barcode image for field value.
+        //        System.Drawing.Image barcodeImage = GenerateQRBarcodeImage(args.FieldValue.ToString());
+        //        var stream = FormatImage.ToStream(barcodeImage, ImageFormat.Png);
+        //        args.ImageStream = stream;
+        //    }
+        //}
+        //private System.Drawing.Image GenerateQRBarcodeImage(string qrBarcodeText)
+        //{
+        //    //Drawing QR Barcode
+        //    PdfQRBarcode barcode = new PdfQRBarcode();
+        //    //Set Error Correction Level
+        //    barcode.ErrorCorrectionLevel = PdfErrorCorrectionLevel.Low;
+        //    //Set XDimension
+        //    barcode.XDimension = 4;
+        //    barcode.Text = qrBarcodeText;
+        //    //Convert the barcode to image
+        //    System.Drawing.Image barcodeImage = barcode.ToImage(new SizeF(88f, 88f));
+        //    return barcodeImage;
+        //}
         private List<IndexAssetDetailVM.GetData> ListAssets(List<IndexAssetDetailVM.GetData> selectedAssets)
         {
             var lstSettings = _context.Settings.ToList();

@@ -1,6 +1,8 @@
 ﻿using Asset.Models;
 using Asset.ViewModels.MasterAssetAttachmentVM;
 using Asset.ViewModels.MasterAssetVM;
+using Microsoft.Data.SqlClient;
+using Org.BouncyCastle.Crypto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +14,7 @@ namespace Asset.Domain.Services
     public interface IMasterAssetService
     {
         #region Main Functions
-        IndexMasterAssetVM GetAll(SortAndFilterMasterAssetVM data, int pageNumber, int pageSize);
+        IndexMasterAssetVM GetAll(int First,int Rows,SearchSortMasterAssetVM? SearchSortObj);
         IEnumerable<MasterAsset> GetAllMasterAssets();
         IEnumerable<IndexMasterAssetVM.GetData> GetListMasterAsset();
         EditMasterAssetVM GetById(int id);
@@ -45,6 +47,9 @@ namespace Asset.Domain.Services
         int DeleteMasterAssetAttachment(int id);
         MasterAssetAttachment GetLastDocumentForMsterAssetId(int masterId);
         #endregion
+        public bool isMasterAssetExistsUsingId(int id);
+        public bool ExistsByNameModelAndVersion(string Name,string ModelNumber,string VersionNumber);
+        public bool ExistsByNameArModelAndVersion(string NameAr, string ModelNumber, string VersionNumber);
 
 
         IEnumerable<IndexMasterAssetVM.GetData> GetTop10MasterAsset(int hospitalId);

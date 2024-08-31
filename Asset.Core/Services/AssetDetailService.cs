@@ -23,7 +23,10 @@ namespace Asset.Core.Services
     public class AssetDetailService : IAssetDetailService
     {
         private IUnitOfWork _unitOfWork;
-
+        public bool hasAssetWithMasterId(int id)
+        {
+            return _unitOfWork.AssetDetailRepository.hasAssetWithMasterId(id);
+        }
         public AssetDetailService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;

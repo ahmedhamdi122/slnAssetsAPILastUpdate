@@ -12,7 +12,7 @@ namespace Asset.Domain.Repositories
     public interface IMasterAssetRepository
     {
         #region Main Functions
-        IndexMasterAssetVM GetAll(SortAndFilterMasterAssetVM data, int pageNumber, int pageSize);
+        IndexMasterAssetVM GetAll(int First, int Rows,SearchSortMasterAssetVM? SearchSortObj);
         IEnumerable<MasterAsset> GetAllMasterAssets();
         IEnumerable<IndexMasterAssetVM.GetData> GetListMasterAsset();
         EditMasterAssetVM GetById(int id);
@@ -22,6 +22,8 @@ namespace Asset.Domain.Repositories
         int CountMasterAssets();
         GeneratedMasterAssetCodeVM GenerateMasterAssetcode();
         ViewMasterAssetVM ViewMasterAsset(int id);
+        bool ExistsByNameModelAndVersion(string Name, string ModelNumber, string VersionNumber);
+        bool ExistsByNameArModelAndVersion(string NameAr, string ModelNumber, string VersionNumber);
         #endregion
 
         #region Search Auto Complete 
@@ -51,7 +53,7 @@ namespace Asset.Domain.Repositories
          List<CountMasterAssetBrands> CountMasterAssetsByBrand(int hospitalId);
         List<CountMasterAssetSuppliers> CountMasterAssetsBySupplier(int hospitalId);
 
-
+        bool isMasterAssetExistsUsingId(int id);
         List<MasterAsset> GetMasterAssetIdByNameBrandModel(string name,int brandId, string model);
 
     }
