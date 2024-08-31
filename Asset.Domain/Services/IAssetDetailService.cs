@@ -26,7 +26,7 @@ namespace Asset.Domain.Services
         int Update(EditAssetDetailVM assetDetailObj);
         int Delete(int id);
         int DeleteAssetDetailAttachment(int id);
-
+        bool hasAssetWithMasterId(int id);
         IEnumerable<IndexAssetDetailVM.GetData> GetAssetDetailsByAssetId(int assetId);
         IndexAssetDetailVM GetAllAssetsByStatusId(int pageNumber, int pageSize, int statusId, string userId);
         IndexAssetDetailVM ListHospitalAssets(SortAndFilterVM data, int pageNumber, int pageSize);

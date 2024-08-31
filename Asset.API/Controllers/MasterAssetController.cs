@@ -40,10 +40,10 @@ namespace Asset.API.Controllers
 
 
         [HttpPost]
-        [Route("ListMasterAssets/{pageNumber}/{pageSize}")]
-        public IndexMasterAssetVM GetAll(SortAndFilterMasterAssetVM data,int pageNumber, int pageSize)
+        [Route("ListMasterAssets/{First}/{Rows}")]
+        public ActionResult<IndexMasterAssetVM> GetAll(int First, int Rows, [FromBody] SearchSortMasterAssetVM SearchSortObj)
         {
-            return _MasterAssetService.GetAll(data,pageNumber, pageSize);
+            return _MasterAssetService.GetAll(First, Rows,SearchSortObj);
         }
 
         [HttpGet]
@@ -227,12 +227,25 @@ namespace Asset.API.Controllers
         [HttpPost]
         [Route("AddMasterAsset")]
         public ActionResult Add(CreateMasterAssetVM MasterAssetVM)
-        {
+        { 
+            if(MasterAssetVM.Code==null)       
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Code", Message = "Code Required", MessageAr = "لابد من كتابه كود" });
+            }
+
             if (MasterAssetVM.Code.Length > 5)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "codelen", Message = "code must be maximum 5  charchters", MessageAr = "هذا الكود اقصى حد  له 5 حروف وأرقام " });
             }
-            if (MasterAssetVM.BrandId == 0)
+            if (MasterAssetVM.Name==null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "name", Message = "Name Required", MessageAr = "يجب ادخال اسم" });
+            }
+            if (MasterAssetVM.NameAr == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "nameAr", Message = "NameAr Required", MessageAr = "يجب ادخال اسم بالعربي" });
+            }
+            if (MasterAssetVM.BrandId == 0 || MasterAssetVM.BrandId==null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "brnd", Message = "You shold select Brand", MessageAr = "لابد من اختيار الماركة" });
             }
@@ -242,21 +255,28 @@ namespace Asset.API.Controllers
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "code", Message = "MasterAsset code already exist", MessageAr = "هذا الكود مسجل سابقاً" });
             }
-            var lstNames = _MasterAssetService.GetAllMasterAssets().ToList().Where(a => a.Name == MasterAssetVM.Name && a.ModelNumber == MasterAssetVM.ModelNumber && a.VersionNumber == MasterAssetVM.VersionNumber).ToList();
-            if (lstNames.Count > 0)
+            var ExistsByNameModelAndVersion=false;
+            if (MasterAssetVM.Name!=null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "name", Message = "MasterAsset already exist with this data", MessageAr = "هذا الاسم مسجل سابقاً" });
+                ExistsByNameModelAndVersion= _MasterAssetService.ExistsByNameModelAndVersion(MasterAssetVM.Name, MasterAssetVM.ModelNumber, MasterAssetVM.VersionNumber);
             }
-            var lstArNames = _MasterAssetService.GetAllMasterAssets().ToList().Where(a => a.NameAr == MasterAssetVM.NameAr && a.ModelNumber == MasterAssetVM.ModelNumber && a.VersionNumber == MasterAssetVM.VersionNumber).ToList();
-            if (lstArNames.Count > 0)
+            if (ExistsByNameModelAndVersion)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "name", Message = "MasterAsset already exist", MessageAr = "هذا الاصل مسجل مسبقا" });
+            }
+            var ExistsByNameArModelAndVersion = false;
+            if (MasterAssetVM.NameAr != null)
+            {
+                ExistsByNameArModelAndVersion = _MasterAssetService.ExistsByNameArModelAndVersion(MasterAssetVM.NameAr, MasterAssetVM.ModelNumber, MasterAssetVM.VersionNumber);
+            }
+            if (ExistsByNameArModelAndVersion)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "nameAr", Message = "MasterAsset arabic already exist", MessageAr = "هذا الاسم مسجل سابقاً" });
             }
-            else
-            {
+         
                 var savedId = _MasterAssetService.Add(MasterAssetVM);
                 return Ok(savedId);
-            }
+            
         }
 
         [HttpDelete]
@@ -265,16 +285,20 @@ namespace Asset.API.Controllers
         {
             try
             {
-                var assetObj = _MasterAssetService.GetById(id);
-                var lstHospitalAssets = _assetDetailService.ViewAllAssetDetailByMasterId(id).ToList();
-                if (lstHospitalAssets.Count > 0)
+                var isMasterAssetExists=_MasterAssetService.isMasterAssetExistsUsingId(id);
+                if(!isMasterAssetExists)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "code", Message = "MasterAsset cannot be deleted", MessageAr = "لا يمكن مسح الأصل الرئيسي" });
+                    return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "masterAsset", Message = "Can't delete becuase not found", MessageAr = "لا يوجد " });
                 }
-                else
+                var hasAssetDetailsWithMasterId = _assetDetailService.hasAssetWithMasterId(id);
+                if (hasAssetDetailsWithMasterId)
                 {
-                    int deletedRow = _MasterAssetService.Delete(id);
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "code", Message = "Cannot delete asset: There are existing assets associated with the specified master asset", MessageAr = "لا يمكن مسح الأصل الرئيسي بسبب وجود اصىل مستشفى او أكثر مرتبط به " });
                 }
+
+                   int deletedRow = _MasterAssetService.Delete(id);
+                   
+                
             }
             catch (DbUpdateConcurrencyException ex)
             {

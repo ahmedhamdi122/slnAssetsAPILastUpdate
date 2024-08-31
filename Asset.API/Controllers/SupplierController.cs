@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Syncfusion.DocIO;
-using Syncfusion.DocIO.DLS;
+//using Syncfusion.DocIO;
+//using Syncfusion.DocIO.DLS;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -695,120 +695,120 @@ namespace Asset.API.Controllers
 
 
 
-        [HttpPost]
-        [Route("GenerateWordForAllSupplier/{lang}")]
-        public ActionResult GenerateWordForAllSupplier(string lang)
-        {
-            string strTemplateFile = "";
-            string strExportFile = "";
-            using (WordDocument document = new WordDocument())
-            {
-                //Opens the Word template document
-                if (lang == "ar")
-                    strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\ArabicSupplierTemplate.dotx";
-                else
-                    strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\EnglishSupplierTemplate.dotx";
+        //[HttpPost]
+        //[Route("GenerateWordForAllSupplier/{lang}")]
+        //public ActionResult GenerateWordForAllSupplier(string lang)
+        //{
+        //    string strTemplateFile = "";
+        //    string strExportFile = "";
+        //    using (WordDocument document = new WordDocument())
+        //    {
+        //        //Opens the Word template document
+        //        if (lang == "ar")
+        //            strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\ArabicSupplierTemplate.dotx";
+        //        else
+        //            strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\EnglishSupplierTemplate.dotx";
 
-                Stream docStream = System.IO.File.OpenRead(strTemplateFile);
-                document.Open(docStream, FormatType.Docx);
-                docStream.Dispose();
-
-
-                var allSuppliers = _SupplierService.GetAll().ToList();
-                MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allSuppliers);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_InsertPageBreak);
-                // document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_Event);
-                document.MailMerge.RemoveEmptyGroup = true;
-                document.MailMerge.ExecuteGroup(dataTable);
+        //        Stream docStream = System.IO.File.OpenRead(strTemplateFile);
+        //        document.Open(docStream, FormatType.Docx);
+        //        docStream.Dispose();
 
 
-                //Saves the file in the given path
-                if (lang == "ar")
-                    strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\ArabicSupplierCards.docx";
-                else
-                    strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\EnglishSupplierCards.docx";
+        //        var allSuppliers = _SupplierService.GetAll().ToList();
+        //        MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allSuppliers);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_InsertPageBreak);
+        //        // document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_Event);
+        //        document.MailMerge.RemoveEmptyGroup = true;
+        //        document.MailMerge.ExecuteGroup(dataTable);
 
 
-                docStream = System.IO.File.Create(strExportFile);
-                document.Save(docStream, FormatType.Docx);
-                docStream.Dispose();
-                document.Close();
+        //        //Saves the file in the given path
+        //        if (lang == "ar")
+        //            strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\ArabicSupplierCards.docx";
+        //        else
+        //            strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\EnglishSupplierCards.docx";
 
 
-
-            }
-            return Ok();
-        }
-        [HttpPost]
-        [Route("GenerateWordForSelectedSupplier/{lang}")]
-        public ActionResult GenerateWordForSelectedSupplier(List<Supplier> selectedSuppliers, string lang)
-        {
-            string strTemplateFile = "";
-            string strExportFile = "";
-            using (WordDocument document = new WordDocument())
-            {
-                //Opens the Word template document
-                if (lang == "ar")
-                    strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\ArabicSupplierTemplate.dotx";
-                else
-                    strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\EnglishSupplierTemplate.dotx";
-
-
-                Stream docStream = System.IO.File.OpenRead(strTemplateFile);
-                document.Open(docStream, FormatType.Docx);
-                docStream.Dispose();
-
-
-                var allSelectedSuppliers = ListSuppliers(selectedSuppliers).ToList();
-                MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allSelectedSuppliers);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_InsertPageBreak);
-                // document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_Event);
-                document.MailMerge.RemoveEmptyGroup = true;
-                document.MailMerge.ExecuteGroup(dataTable);
-
-
-                //Saves the file in the given path
-                if (lang == "ar")
-                    strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\ArabicSupplierCards.docx";
-                else
-                    strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\EnglishSupplierCards.docx";
-
-                docStream = System.IO.File.Create(strExportFile);
-                document.Save(docStream, FormatType.Docx);
-                docStream.Dispose();
-                document.Close();
+        //        docStream = System.IO.File.Create(strExportFile);
+        //        document.Save(docStream, FormatType.Docx);
+        //        docStream.Dispose();
+        //        document.Close();
 
 
 
-            }
-            return Ok();
-        }
-        private static void MergeField_Event(object sender, MergeFieldEventArgs args)
-        {
-            string fieldValue = args.FieldValue.ToString();
-            //When field value is Null or empty, then remove the field owner paragraph.
-            if (string.IsNullOrEmpty(fieldValue))
-            {
-                //Get the merge field owner paragraph and remove it from its owner text body.
-                WParagraph ownerParagraph = args.CurrentMergeField.OwnerParagraph;
-                WTextBody ownerTextBody = ownerParagraph.OwnerTextBody;
-                ownerTextBody.ChildEntities.Remove(ownerParagraph);
-            }
-        }
-        private void MergeField_InsertPageBreak(object sender, MergeFieldEventArgs args)
-        {
-            if (args.FieldName == "Notes")
-            {
-                //Gets the owner paragraph 
-                WParagraph paragraph = args.CurrentMergeField.OwnerParagraph;
-                //Appends the page break 
-                paragraph.AppendBreak(BreakType.PageBreak);
-                i++;
-            }
+        //    }
+        //    return Ok();
+        //}
+        //[HttpPost]
+        //[Route("GenerateWordForSelectedSupplier/{lang}")]
+        //public ActionResult GenerateWordForSelectedSupplier(List<Supplier> selectedSuppliers, string lang)
+        //{
+        //    string strTemplateFile = "";
+        //    string strExportFile = "";
+        //    using (WordDocument document = new WordDocument())
+        //    {
+        //        //Opens the Word template document
+        //        if (lang == "ar")
+        //            strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\ArabicSupplierTemplate.dotx";
+        //        else
+        //            strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\EnglishSupplierTemplate.dotx";
 
-        }
+
+        //        Stream docStream = System.IO.File.OpenRead(strTemplateFile);
+        //        document.Open(docStream, FormatType.Docx);
+        //        docStream.Dispose();
+
+
+        //        var allSelectedSuppliers = ListSuppliers(selectedSuppliers).ToList();
+        //        MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allSelectedSuppliers);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_InsertPageBreak);
+        //        // document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_Event);
+        //        document.MailMerge.RemoveEmptyGroup = true;
+        //        document.MailMerge.ExecuteGroup(dataTable);
+
+
+        //        //Saves the file in the given path
+        //        if (lang == "ar")
+        //            strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\ArabicSupplierCards.docx";
+        //        else
+        //            strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\SupplierTemplates\EnglishSupplierCards.docx";
+
+        //        docStream = System.IO.File.Create(strExportFile);
+        //        document.Save(docStream, FormatType.Docx);
+        //        docStream.Dispose();
+        //        document.Close();
+
+
+
+        //    }
+        //    return Ok();
+        //}
+        //private static void MergeField_Event(object sender, MergeFieldEventArgs args)
+        //{
+        //    string fieldValue = args.FieldValue.ToString();
+        //    //When field value is Null or empty, then remove the field owner paragraph.
+        //    if (string.IsNullOrEmpty(fieldValue))
+        //    {
+        //        //Get the merge field owner paragraph and remove it from its owner text body.
+        //        WParagraph ownerParagraph = args.CurrentMergeField.OwnerParagraph;
+        //        WTextBody ownerTextBody = ownerParagraph.OwnerTextBody;
+        //        ownerTextBody.ChildEntities.Remove(ownerParagraph);
+        //    }
+        //}
+        //private void MergeField_InsertPageBreak(object sender, MergeFieldEventArgs args)
+        //{
+        //    if (args.FieldName == "Notes")
+        //    {
+        //        //Gets the owner paragraph 
+        //        WParagraph paragraph = args.CurrentMergeField.OwnerParagraph;
+        //        //Appends the page break 
+        //        paragraph.AppendBreak(BreakType.PageBreak);
+        //        i++;
+        //    }
+
+        //}
         [HttpGet]
         [Route("DownloadSupplierCardPDF/{fileName}")]
         public HttpResponseMessage DownloadSupplierCardPDF(string fileName)

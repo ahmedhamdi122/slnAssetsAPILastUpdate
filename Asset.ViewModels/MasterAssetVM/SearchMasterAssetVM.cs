@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Asset.ViewModels.MasterAssetVM
 {
-   public class SearchMasterAssetVM
+   public class SearchSortMasterAssetVM
     {
-
+        public int SortOrder { get; set; }    
+        public string? SortFiled { get; set; }
         public int? ECRIId { get; set; }
         public int? OriginId { get; set; }
         public int? BrandId { get; set; }

@@ -37,6 +37,10 @@ namespace Asset.Core.Repositories
         {
             _context = context;
         }
+        public bool hasAssetWithMasterId(int id)
+        {
+            return _context.AssetDetails.Any(asset=>asset.MasterAssetId==id);
+        }
         public AssetDetail QueryAssetDetailById(int assetId)
         {
             var lstHospitalAssets = _context.AssetDetails.Include(a => a.Supplier)

@@ -26,10 +26,10 @@ using System.Net.Http;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Data;
-using Syncfusion.DocIO.DLS;
-using Syncfusion.DocIO;
-using Syncfusion.Pdf.Barcode;
-using Syncfusion.Pdf.Graphics;
+//using Syncfusion.DocIO.DLS;
+//using Syncfusion.DocIO;
+//using Syncfusion.Pdf.Barcode;
+//using Syncfusion.Pdf.Graphics;
 using System.Drawing;
 using Rectangle = iTextSharp.text.Rectangle;
 using System.Drawing.Imaging;
@@ -1415,240 +1415,240 @@ namespace Asset.API.Controllers
             domainName = "http://" + _httpContextAccessor.HttpContext.Request.Host.Value;
             return _AssetDetailService.GenerateQrCodeForAllAssets(domainName);
         }
-        [HttpPost]
-        [Route("GenerateWordForQrCodeForHospitalAssets")]
-        public ActionResult GenerateWordForQrCodeForHospitalAssets()
-        {
+        //[HttpPost]
+        //[Route("GenerateWordForQrCodeForHospitalAssets")]
+        //public ActionResult GenerateWordForQrCodeForHospitalAssets()
+        //{
 
-            using (WordDocument document = new WordDocument())
-            {
-                //Opens the Word template document
-                string strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\HospitalCardTemplate.dotx";
+        //    using (WordDocument document = new WordDocument())
+        //    {
+        //        //Opens the Word template document
+        //        string strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\HospitalCardTemplate.dotx";
 
-                Stream docStream = System.IO.File.OpenRead(strTemplateFile);
-                document.Open(docStream, FormatType.Docx);
-                docStream.Dispose();
-
-
-                var allAssets = ListAssets().ToList();
-                MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allAssets);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField2_InsertPageBreak);
-                document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField2_Event);
-                document.MailMerge.RemoveEmptyGroup = true;
-
-                document.MailMerge.ExecuteGroup(dataTable);
+        //        Stream docStream = System.IO.File.OpenRead(strTemplateFile);
+        //        document.Open(docStream, FormatType.Docx);
+        //        docStream.Dispose();
 
 
-                //Saves the file in the given path
-                string strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\HospitalCards.docx";
-                docStream = System.IO.File.Create(strExportFile);
-                document.Save(docStream, FormatType.Docx);
-                docStream.Dispose();
-                document.Close();
+        //        var allAssets = ListAssets().ToList();
+        //        MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allAssets);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField2_InsertPageBreak);
+        //        document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField2_Event);
+        //        document.MailMerge.RemoveEmptyGroup = true;
 
-            }
-            return Ok();
-        }
-        private static void MergeField2_Event(object sender, MergeFieldEventArgs args)
-        {
-            string fieldValue = args.FieldValue.ToString();
-            //When field value is Null or empty, then remove the field owner paragraph.
-            if (string.IsNullOrEmpty(fieldValue))
-            {
-                //Get the merge field owner paragraph and remove it from its owner text body.
-                WParagraph ownerParagraph = args.CurrentMergeField.OwnerParagraph;
-                WTextBody ownerTextBody = ownerParagraph.OwnerTextBody;
-                ownerTextBody.ChildEntities.Remove(ownerParagraph);
-            }
-        }
-        private void MergeField2_InsertPageBreak(object sender, MergeFieldEventArgs args)
-        {
-            if (args.FieldName == "DepartmentName")
-            {
-                //Gets the owner paragraph 
-                WParagraph paragraph = args.CurrentMergeField.OwnerParagraph;
-                //Appends the page break 
-                paragraph.AppendBreak(BreakType.PageBreak);
-                i++;
-            }
-
-        }
+        //        document.MailMerge.ExecuteGroup(dataTable);
 
 
+        //        //Saves the file in the given path
+        //        string strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\HospitalCards.docx";
+        //        docStream = System.IO.File.Create(strExportFile);
+        //        document.Save(docStream, FormatType.Docx);
+        //        docStream.Dispose();
+        //        document.Close();
 
-        /////////////////////////////////////////////////////
-        /// PoliceQr - 2
-        /////////////////////////////////////////
-        [HttpPost]
-        [Route("GenerateQrCodeForAllAssets")]
-        public bool GenerateQrCodeForAllAssets(string domainName)
-        {
-            domainName = "http://" + _httpContextAccessor.HttpContext.Request.Host.Value;
-            return _AssetDetailService.GenerateQrCodeForAllAssets(domainName);
-        }
-        [Route("GenerateWordForQrCodeForPoliceAssets")]
-        public ActionResult GenerateWordForQrCodeForAllAssets()
-        {
+        //    }
+        //    return Ok();
+        //}
+        //private static void MergeField2_Event(object sender, MergeFieldEventArgs args)
+        //{
+        //    string fieldValue = args.FieldValue.ToString();
+        //    //When field value is Null or empty, then remove the field owner paragraph.
+        //    if (string.IsNullOrEmpty(fieldValue))
+        //    {
+        //        //Get the merge field owner paragraph and remove it from its owner text body.
+        //        WParagraph ownerParagraph = args.CurrentMergeField.OwnerParagraph;
+        //        WTextBody ownerTextBody = ownerParagraph.OwnerTextBody;
+        //        ownerTextBody.ChildEntities.Remove(ownerParagraph);
+        //    }
+        //}
+        //private void MergeField2_InsertPageBreak(object sender, MergeFieldEventArgs args)
+        //{
+        //    if (args.FieldName == "DepartmentName")
+        //    {
+        //        //Gets the owner paragraph 
+        //        WParagraph paragraph = args.CurrentMergeField.OwnerParagraph;
+        //        //Appends the page break 
+        //        paragraph.AppendBreak(BreakType.PageBreak);
+        //        i++;
+        //    }
 
-            using (WordDocument document = new WordDocument())
-            {
-                //Opens the Word template document
-                string strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\PoliceCardTemplate.dotx";
-
-                Stream docStream = System.IO.File.OpenRead(strTemplateFile);
-                document.Open(docStream, FormatType.Docx);
-                docStream.Dispose();
-
-
-                var allAssets = ListAssets().ToList();
-                // DataTable dtAssets = GetAssetsAsDataTable();
-                MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allAssets);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_InsertPageBreak);
-                document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_Event);
-                document.MailMerge.RemoveEmptyGroup = true;
-
-                document.MailMerge.ExecuteGroup(dataTable);
-
-
-                //Saves the file in the given path
-                string strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\PoliceCards.docx";
-                docStream = System.IO.File.Create(strExportFile);
-                document.Save(docStream, FormatType.Docx);
-                docStream.Dispose();
-                document.Close();
-
-            }
-            return Ok();
-        }
-        private static void MergeField_Event(object sender, MergeFieldEventArgs args)
-        {
-            string fieldValue = args.FieldValue.ToString();
-            //When field value is Null or empty, then remove the field owner paragraph.
-            if (string.IsNullOrEmpty(fieldValue))
-            {
-                //Get the merge field owner paragraph and remove it from its owner text body.
-                WParagraph ownerParagraph = args.CurrentMergeField.OwnerParagraph;
-                WTextBody ownerTextBody = ownerParagraph.OwnerTextBody;
-                ownerTextBody.ChildEntities.Remove(ownerParagraph);
-            }
-        }
-        private void MergeField_InsertPageBreak(object sender, MergeFieldEventArgs args)
-        {
-            if (args.FieldName == "DepartmentName")
-            {
-                //Gets the owner paragraph 
-                WParagraph paragraph = args.CurrentMergeField.OwnerParagraph;
-                //Appends the page break 
-                paragraph.AppendBreak(BreakType.PageBreak);
-                i++;
-            }
-
-        }
-        private void InsertQRBarcode(object sender, MergeImageFieldEventArgs args)
-        {
-            if (args.FieldName == "QrFilePath")
-            {
-                ////Generates barcode image for field value.
-                System.Drawing.Image barcodeImage = GenerateQRBarcodeImage(args.FieldValue.ToString());
-                var stream = FormatImage.ToStream(barcodeImage, ImageFormat.Png);
-                args.ImageStream = stream;
-            }
-        }
-        private System.Drawing.Image GenerateQRBarcodeImage(string qrBarcodeText)
-        {
-            //Drawing QR Barcode
-            PdfQRBarcode barcode = new PdfQRBarcode();
-            //Set Error Correction Level
-            barcode.ErrorCorrectionLevel = PdfErrorCorrectionLevel.Low;
-            //Set XDimension
-            barcode.XDimension = 4;
-            barcode.Text = qrBarcodeText;
-            PdfColor pdfColor = new PdfColor();
-            //pdfColor.
-            barcode.ForeColor = pdfColor;
-
-
-            //Convert the barcode to image
-            System.Drawing.Image barcodeImage = barcode.ToImage(new SizeF(88f, 88f));
-            return barcodeImage;
-        }
+        //}
 
 
 
-        /////////////////////////////////////////////////////
-        /// UniversityQr - 3
-        /////////////////////////////////////////
-        [HttpPost]
-        [Route("GenerateQrCodeForUniversityAssets")]
-        public bool GenerateQrCodeForUniversityAssets(string domainName)
-        {
-            // domainName = "http://" + HttpContext.Request.Host.Value;
-            domainName = "http://" + _httpContextAccessor.HttpContext.Request.Host.Value;
+        ///////////////////////////////////////////////////////
+        ///// PoliceQr - 2
+        ///////////////////////////////////////////
+        //[HttpPost]
+        //[Route("GenerateQrCodeForAllAssets")]
+        //public bool GenerateQrCodeForAllAssets(string domainName)
+        //{
+        //    domainName = "http://" + _httpContextAccessor.HttpContext.Request.Host.Value;
+        //    return _AssetDetailService.GenerateQrCodeForAllAssets(domainName);
+        //}
+        //[Route("GenerateWordForQrCodeForPoliceAssets")]
+        //public ActionResult GenerateWordForQrCodeForAllAssets()
+        //{
 
-            return _AssetDetailService.GenerateQrCodeForAllAssets(domainName);
-        }
-        [Route("GenerateWordForQrCodeForUniversityAssets")]
-        public ActionResult GenerateWordForQrCodeForUniversityAssets()
-        {
+        //    using (WordDocument document = new WordDocument())
+        //    {
+        //        //Opens the Word template document
+        //        string strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\PoliceCardTemplate.dotx";
 
-            using (WordDocument document = new WordDocument())
-            {
-                //Opens the Word template document
-                string strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\UniversityCardTemplate.dotx";
-
-                Stream docStream = System.IO.File.OpenRead(strTemplateFile);
-                document.Open(docStream, FormatType.Docx);
-                docStream.Dispose();
+        //        Stream docStream = System.IO.File.OpenRead(strTemplateFile);
+        //        document.Open(docStream, FormatType.Docx);
+        //        docStream.Dispose();
 
 
-                var allAssets = ListAssets().ToList();
-                MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allAssets);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField1_InsertPageBreak);
-                document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
-                document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField1_Event);
-                document.MailMerge.RemoveEmptyGroup = true;
+        //        var allAssets = ListAssets().ToList();
+        //        // DataTable dtAssets = GetAssetsAsDataTable();
+        //        MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allAssets);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_InsertPageBreak);
+        //        document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField_Event);
+        //        document.MailMerge.RemoveEmptyGroup = true;
 
-                document.MailMerge.ExecuteGroup(dataTable);
-
-
-                //Saves the file in the given path
-                string strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\UniversityCards.docx";
-                docStream = System.IO.File.Create(strExportFile);
-                document.Save(docStream, FormatType.Docx);
-                docStream.Dispose();
-                document.Close();
-
-            }
-            return Ok();
-        }
-        private static void MergeField1_Event(object sender, MergeFieldEventArgs args)
-        {
-            string fieldValue = args.FieldValue.ToString();
-            //When field value is Null or empty, then remove the field owner paragraph.
-            if (string.IsNullOrEmpty(fieldValue))
-            {
-                //Get the merge field owner paragraph and remove it from its owner text body.
-                WParagraph ownerParagraph = args.CurrentMergeField.OwnerParagraph;
-                WTextBody ownerTextBody = ownerParagraph.OwnerTextBody;
-                ownerTextBody.ChildEntities.Remove(ownerParagraph);
-            }
-        }
-        private void MergeField1_InsertPageBreak(object sender, MergeFieldEventArgs args)
-        {
+        //        document.MailMerge.ExecuteGroup(dataTable);
 
 
-            if (args.FieldName == "DepartmentName")
-            {
-                //Gets the owner paragraph 
-                WParagraph paragraph = args.CurrentMergeField.OwnerParagraph;
-                //Appends the page break 
-                paragraph.AppendBreak(BreakType.PageBreak);
-                i++;
-            }
+        //        //Saves the file in the given path
+        //        string strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\PoliceCards.docx";
+        //        docStream = System.IO.File.Create(strExportFile);
+        //        document.Save(docStream, FormatType.Docx);
+        //        docStream.Dispose();
+        //        document.Close();
 
-        }
+        //    }
+        //    return Ok();
+        //}
+        //private static void MergeField_Event(object sender, MergeFieldEventArgs args)
+        //{
+        //    string fieldValue = args.FieldValue.ToString();
+        //    //When field value is Null or empty, then remove the field owner paragraph.
+        //    if (string.IsNullOrEmpty(fieldValue))
+        //    {
+        //        //Get the merge field owner paragraph and remove it from its owner text body.
+        //        WParagraph ownerParagraph = args.CurrentMergeField.OwnerParagraph;
+        //        WTextBody ownerTextBody = ownerParagraph.OwnerTextBody;
+        //        ownerTextBody.ChildEntities.Remove(ownerParagraph);
+        //    }
+        //}
+        //private void MergeField_InsertPageBreak(object sender, MergeFieldEventArgs args)
+        //{
+        //    if (args.FieldName == "DepartmentName")
+        //    {
+        //        //Gets the owner paragraph 
+        //        WParagraph paragraph = args.CurrentMergeField.OwnerParagraph;
+        //        //Appends the page break 
+        //        paragraph.AppendBreak(BreakType.PageBreak);
+        //        i++;
+        //    }
+
+        //}
+        //private void InsertQRBarcode(object sender, MergeImageFieldEventArgs args)
+        //{
+        //    if (args.FieldName == "QrFilePath")
+        //    {
+        //        ////Generates barcode image for field value.
+        //        System.Drawing.Image barcodeImage = GenerateQRBarcodeImage(args.FieldValue.ToString());
+        //        var stream = FormatImage.ToStream(barcodeImage, ImageFormat.Png);
+        //        args.ImageStream = stream;
+        //    }
+        //}
+        //private System.Drawing.Image GenerateQRBarcodeImage(string qrBarcodeText)
+        //{
+        //    //Drawing QR Barcode
+        //    PdfQRBarcode barcode = new PdfQRBarcode();
+        //    //Set Error Correction Level
+        //    barcode.ErrorCorrectionLevel = PdfErrorCorrectionLevel.Low;
+        //    //Set XDimension
+        //    barcode.XDimension = 4;
+        //    barcode.Text = qrBarcodeText;
+        //    PdfColor pdfColor = new PdfColor();
+        //    //pdfColor.
+        //    barcode.ForeColor = pdfColor;
+
+
+        //    //Convert the barcode to image
+        //    System.Drawing.Image barcodeImage = barcode.ToImage(new SizeF(88f, 88f));
+        //    return barcodeImage;
+        //}
+
+
+
+        ///////////////////////////////////////////////////////
+        ///// UniversityQr - 3
+        ///////////////////////////////////////////
+        //[HttpPost]
+        //[Route("GenerateQrCodeForUniversityAssets")]
+        //public bool GenerateQrCodeForUniversityAssets(string domainName)
+        //{
+        //    // domainName = "http://" + HttpContext.Request.Host.Value;
+        //    domainName = "http://" + _httpContextAccessor.HttpContext.Request.Host.Value;
+
+        //    return _AssetDetailService.GenerateQrCodeForAllAssets(domainName);
+        //}
+        //[Route("GenerateWordForQrCodeForUniversityAssets")]
+        //public ActionResult GenerateWordForQrCodeForUniversityAssets()
+        //{
+
+        //    using (WordDocument document = new WordDocument())
+        //    {
+        //        //Opens the Word template document
+        //        string strTemplateFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\UniversityCardTemplate.dotx";
+
+        //        Stream docStream = System.IO.File.OpenRead(strTemplateFile);
+        //        document.Open(docStream, FormatType.Docx);
+        //        docStream.Dispose();
+
+
+        //        var allAssets = ListAssets().ToList();
+        //        MailMergeDataTable dataTable = new MailMergeDataTable("Asset_QrCode", allAssets);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField1_InsertPageBreak);
+        //        document.MailMerge.MergeImageField += new MergeImageFieldEventHandler(InsertQRBarcode);
+        //        document.MailMerge.MergeField += new MergeFieldEventHandler(MergeField1_Event);
+        //        document.MailMerge.RemoveEmptyGroup = true;
+
+        //        document.MailMerge.ExecuteGroup(dataTable);
+
+
+        //        //Saves the file in the given path
+        //        string strExportFile = _webHostingEnvironment.ContentRootPath + @"\UploadedAttachments\QrTemplates\UniversityCards.docx";
+        //        docStream = System.IO.File.Create(strExportFile);
+        //        document.Save(docStream, FormatType.Docx);
+        //        docStream.Dispose();
+        //        document.Close();
+
+        //    }
+        //    return Ok();
+        //}
+        //private static void MergeField1_Event(object sender, MergeFieldEventArgs args)
+        //{
+        //    string fieldValue = args.FieldValue.ToString();
+        //    //When field value is Null or empty, then remove the field owner paragraph.
+        //    if (string.IsNullOrEmpty(fieldValue))
+        //    {
+        //        //Get the merge field owner paragraph and remove it from its owner text body.
+        //        WParagraph ownerParagraph = args.CurrentMergeField.OwnerParagraph;
+        //        WTextBody ownerTextBody = ownerParagraph.OwnerTextBody;
+        //        ownerTextBody.ChildEntities.Remove(ownerParagraph);
+        //    }
+        //}
+        //private void MergeField1_InsertPageBreak(object sender, MergeFieldEventArgs args)
+        //{
+
+
+        //    if (args.FieldName == "DepartmentName")
+        //    {
+        //        //Gets the owner paragraph 
+        //        WParagraph paragraph = args.CurrentMergeField.OwnerParagraph;
+        //        //Appends the page break 
+        //        paragraph.AppendBreak(BreakType.PageBreak);
+        //        i++;
+        //    }
+
+        //}
 
 
 

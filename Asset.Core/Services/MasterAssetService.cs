@@ -23,10 +23,22 @@ namespace Asset.Core.Services
 
 
         #region Main Functions
-
-        public IndexMasterAssetVM GetAll(SortAndFilterMasterAssetVM data, int pageNumber, int pageSize)
+        public  bool ExistsByNameModelAndVersion(string Name, string ModelNumber, string VersionNumber)
         {
-            return _unitOfWork.MasterAssetRepository.GetAll(data, pageNumber, pageSize);
+            return _unitOfWork.MasterAssetRepository.ExistsByNameModelAndVersion(Name,ModelNumber,VersionNumber);
+        }
+        public bool ExistsByNameArModelAndVersion(string NameAr, string ModelNumber, string VersionNumber)
+        {
+            return _unitOfWork.MasterAssetRepository.ExistsByNameArModelAndVersion(NameAr, ModelNumber, VersionNumber);
+        }
+        public bool isMasterAssetExistsUsingId(int id)
+        {
+            return _unitOfWork.MasterAssetRepository.isMasterAssetExistsUsingId(id);
+        }
+
+        public IndexMasterAssetVM GetAll(int First, int Rows, SearchSortMasterAssetVM? SearchSortObj)
+        {
+            return _unitOfWork.MasterAssetRepository.GetAll(First, Rows,SearchSortObj);
         }
 
         public IEnumerable<MasterAsset> GetAllMasterAssets()
@@ -47,10 +59,9 @@ namespace Asset.Core.Services
 
         public int Delete(int id)
         {
-            var masterAssetObj = _unitOfWork.MasterAssetRepository.GetById(id);
-            _unitOfWork.MasterAssetRepository.Delete(masterAssetObj.Id);
+            int numberOfRowsDeleted=_unitOfWork.MasterAssetRepository.Delete(id);
             _unitOfWork.CommitAsync();
-            return masterAssetObj.Id;
+            return numberOfRowsDeleted;
         }
 
         public int CountMasterAssets()

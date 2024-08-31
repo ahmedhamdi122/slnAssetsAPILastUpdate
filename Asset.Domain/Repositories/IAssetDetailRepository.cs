@@ -20,6 +20,7 @@ namespace Asset.Domain.Repositories
 {
     public interface IAssetDetailRepository
     {
+        bool hasAssetWithMasterId(int id);
         IEnumerable<IndexAssetDetailVM.GetData> GetAll();
         EditAssetDetailVM GetById(int id);
         int Add(CreateAssetDetailVM assetDetailObj);
