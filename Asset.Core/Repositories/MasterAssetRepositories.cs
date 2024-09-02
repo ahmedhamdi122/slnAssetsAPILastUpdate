@@ -15,7 +15,6 @@ namespace Asset.Core.Repositories
     {
 
         private ApplicationDbContext _context;
-
         public MasterAssetRepositories(ApplicationDbContext context)
         {
             _context = context;
@@ -411,11 +410,11 @@ namespace Asset.Core.Repositories
                 {
                     lstMasters = lstMasters.Where(x => x.NameAr.Contains(SearchSortObj.AssetNameAr));
                 }
-                if (SearchSortObj.BrandId!=null)
+                if (SearchSortObj.BrandId!=0)
                 {
                     lstMasters = lstMasters.Where(x => x.BrandId == SearchSortObj.BrandId);
                 }
-                if (SearchSortObj.OriginId != null)
+                if (SearchSortObj.OriginId != 0)
                 {
                     lstMasters = lstMasters.Where(x => x.OriginId == SearchSortObj.OriginId);
                 }
@@ -423,11 +422,11 @@ namespace Asset.Core.Repositories
                 {
                     lstMasters = lstMasters.Where(x => x.ModelNumber == SearchSortObj.ModelNumber);
                 }
-                if (SearchSortObj.CategoryId != null)
+                if (SearchSortObj.CategoryId !=0)
                 {
                     lstMasters = lstMasters.Where(x => x.CategoryId == SearchSortObj.CategoryId);
                 }
-                if (SearchSortObj.SubCategoryId != null)
+                if (SearchSortObj.SubCategoryId != 0)
                 {
                     lstMasters = lstMasters.Where(x => x.SubCategoryId == SearchSortObj.SubCategoryId);
                 }

@@ -11518,8 +11518,6 @@ namespace Asset.Core.Repositories
                 query = query.Where(b => b.WarrantyEnd != null);
                 query = query.Where(b => b.WarrantyEnd.Value.Date <= DateTime.Today.Date);
             }
-
-
             string setstartday, setstartmonth, setendday, setendmonth = "";
             DateTime startingFrom = new DateTime();
             DateTime endingTo = new DateTime();
