@@ -271,7 +271,7 @@ namespace Asset.API.Controllers
             }
             if (ExistsByNameArModelAndVersion)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "ExistsByNameArModelAndVersion", Message = "MasterAsset arabic already exist", MessageAr = "هذا الاسم مسجل سابقاً" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "ExistsByNameArModelAndVersion", Message = "Can't add because an asset with the same asset nameAr, model number, and version number already exists.", MessageAr = "لا يمكن الاضافة بسبب وجود جهاز له اسم الأصل بالعربي ورقم الموديل ورقم الإصدار بالفعل" });
             }
          
                 var savedId = _MasterAssetService.Add(MasterAssetVM);
