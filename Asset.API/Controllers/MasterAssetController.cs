@@ -230,7 +230,7 @@ namespace Asset.API.Controllers
         { 
             if(MasterAssetVM.Code==null)       
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Code", Message = "Code Required", MessageAr = "لابد من كتابه كود" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "CodeRequired", Message = "Code Required", MessageAr = "لابد من كتابه كود" });
             }
 
             if (MasterAssetVM.Code.Length > 5)
@@ -239,7 +239,7 @@ namespace Asset.API.Controllers
             }
             if (MasterAssetVM.Name==null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "name", Message = "Name Required", MessageAr = "يجب ادخال اسم" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "nameRequired", Message = "Name Required", MessageAr = "يجب ادخال اسم" });
             }
             if (MasterAssetVM.NameAr == null)
             {
@@ -247,13 +247,13 @@ namespace Asset.API.Controllers
             }
             if (MasterAssetVM.BrandId == 0 || MasterAssetVM.BrandId==null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "brnd", Message = "You shold select Brand", MessageAr = "لابد من اختيار الماركة" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "brand", Message = "You should select Brand", MessageAr = "لابد من اختيار الماركة" });
             }
             var CodeExists = _MasterAssetService.CheckMasterAssetCodeExists(MasterAssetVM.Code);
             if (CodeExists)
             {
 
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "code", Message = "MasterAsset code already exist", MessageAr = "هذا الكود مسجل سابقاً" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "codeExists", Message = "MasterAsset code already exist", MessageAr = "هذا الكود مسجل سابقاً" });
             }
             var ExistsByNameModelAndVersion=false;
             if (MasterAssetVM.Name!=null)
@@ -262,8 +262,8 @@ namespace Asset.API.Controllers
             }
             if (ExistsByNameModelAndVersion)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "name", Message = "MasterAsset already exist", MessageAr = "هذا الاصل مسجل مسبقا" });
-            }
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "ExistsByNameModelAndVersion", Message = "Can't add because an asset with the same asset name, model number, and version number already exists.", MessageAr = "لا يمكن الاضافة بسبب وجود جهاز له اسم الأصل ورقم الموديل ورقم الإصدار بالفعل" });
+                }
             var ExistsByNameArModelAndVersion = false;
             if (MasterAssetVM.NameAr != null)
             {
@@ -271,12 +271,11 @@ namespace Asset.API.Controllers
             }
             if (ExistsByNameArModelAndVersion)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "nameAr", Message = "MasterAsset arabic already exist", MessageAr = "هذا الاسم مسجل سابقاً" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "ExistsByNameArModelAndVersion", Message = "MasterAsset arabic already exist", MessageAr = "هذا الاسم مسجل سابقاً" });
             }
          
                 var savedId = _MasterAssetService.Add(MasterAssetVM);
                 return Ok(savedId);
-            
         }
 
         [HttpDelete]
@@ -293,7 +292,7 @@ namespace Asset.API.Controllers
                 var hasAssetDetailsWithMasterId = _assetDetailService.hasAssetWithMasterId(id);
                 if (hasAssetDetailsWithMasterId)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "code", Message = "Cannot delete asset: There are existing assets associated with the specified master asset", MessageAr = "لا يمكن مسح الأصل الرئيسي بسبب وجود اصىل مستشفى او أكثر مرتبط به " });
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "code", Message = "Cannot delete asset,There are existing assets associated with the specified master asset", MessageAr = "لا يمكن مسح الأصل الرئيسي بسبب وجود أصل مستشفى او أكثر مرتبط به " });
                 }
 
                    int deletedRow = _MasterAssetService.Delete(id);

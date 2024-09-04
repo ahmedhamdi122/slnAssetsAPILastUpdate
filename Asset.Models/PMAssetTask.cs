@@ -16,7 +16,6 @@ namespace Asset.Models
         public string Name { get; set; }
         [StringLength(100)]
         public string NameAr { get; set; }
-
         public int? MasterAssetId { get; set; }
         [ForeignKey("MasterAssetId")]
         public virtual MasterAsset MasterAsset { get; set; }

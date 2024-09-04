@@ -600,11 +600,11 @@ namespace Asset.Core.Repositories
         /// <returns></returns>
         public EditMasterAssetVM GetById(int id)
         {
-            var lstMasterAssets = _context.MasterAssets.Include(a => a.brand).Where(a => a.Id == id).ToList();
+            var lstMasterAssets = _context.MasterAssets.Include(a => a.brand).FirstOrDefault(a=>a.Id==id);
 
-            if (lstMasterAssets.Count > 0)
+            if (lstMasterAssets!=null)
             {
-                MasterAsset item = lstMasterAssets[0];
+                MasterAsset item = lstMasterAssets;
                 EditMasterAssetVM masterAssetObj = new EditMasterAssetVM();
                 masterAssetObj.Id = item.Id;
                 masterAssetObj.Name = item.Name;
