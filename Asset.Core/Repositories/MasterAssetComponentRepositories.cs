@@ -105,6 +105,8 @@ namespace Asset.Core.Repositories
 
         public IEnumerable<IndexMasterAssetComponentVM.GetData> GetMasterAssetComponentByMasterAssetId(int masterAssetId)
         {
+       
+
             return _context.MasterAssetComponents.Include(a => a.MasterAsset).Where(a => a.MasterAssetId == masterAssetId).ToList().Select(item => new IndexMasterAssetComponentVM.GetData
             {
                 Id = item.Id,
@@ -114,7 +116,9 @@ namespace Asset.Core.Repositories
                 AssetName = item.MasterAsset.Name,
                 AssetNameAr = item.MasterAsset.NameAr,
                 PartNo = item.PartNo,
-                Price = item.Price.ToString()
+                Price = item.Price.ToString(),
+                Description = item.Description,
+                DescriptionAr = item.DescriptionAr
             }).ToList();
         }
 

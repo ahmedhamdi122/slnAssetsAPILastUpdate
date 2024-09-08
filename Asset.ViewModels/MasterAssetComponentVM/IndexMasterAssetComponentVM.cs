@@ -23,6 +23,9 @@ namespace Asset.ViewModels.MasterAssetComponentVM
             public string AssetName { get; set; }
             public string AssetNameAr { get; set; }
 
+            public string Description { get; set; }
+            public string DescriptionAr { get; set; }
+
         }
     }
 }
