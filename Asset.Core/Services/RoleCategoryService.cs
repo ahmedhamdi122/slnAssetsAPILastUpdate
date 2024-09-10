@@ -3,6 +3,7 @@ using Asset.Domain.Services;
 using Asset.Models;
 using Asset.ViewModels.RoleCategoryVM;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 
 namespace Asset.Core.Services
@@ -38,9 +39,9 @@ namespace Asset.Core.Services
             return _unitOfWork.RoleCategory.GetById(id);
         }
 
-        public IEnumerable<IndexCategoryVM.GetData> GetAll()
+        public async Task<IEnumerable<IndexCategoryVM.GetData>> GetAll()
         {
-            return _unitOfWork.RoleCategory.GetAll();
+            return await _unitOfWork.RoleCategory.GetAll();
         }
 
 
@@ -51,11 +52,11 @@ namespace Asset.Core.Services
             return roleCategory.Id;
         }
 
-        public IndexCategoryVM SortRoleCategories( int pagenumber, int pagesize, SortRoleCategoryVM sortObj)
+        public async Task<IndexCategoryVM> LoadRoleCategories(int first, int rows, string SortField, int SortOrder)
         {
-           return _unitOfWork.RoleCategory.SortRoleCategories(pagenumber, pagesize,sortObj);
+           return await _unitOfWork.RoleCategory.LoadRoleCategories( first,rows, SortField,  SortOrder);
         }
-
+        
         public GenerateRoleCategoryOrderVM GenerateRoleCategoryOrderId()
         {
             return _unitOfWork.RoleCategory.GenerateRoleCategoryOrderId();

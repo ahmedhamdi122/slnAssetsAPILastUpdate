@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Asset.Core.Repositories
 {
@@ -33,16 +36,16 @@ namespace Asset.Core.Repositories
 
 
 
-        public IEnumerable<IndexCategoryVM.GetData> GetAll()
+        public async Task<IEnumerable<IndexCategoryVM.GetData>> GetAll()
         {
             List<IndexCategoryVM.GetData> lstRoleCategoriesVM = new List<IndexCategoryVM.GetData>();
-            var lstRoleCategories = _context.RoleCategories.OrderBy(a => a.OrderId).ToList().Select(item => new IndexCategoryVM.GetData
+            var lstRoleCategories = await _context.RoleCategories.OrderBy(a => a.OrderId).Select(item => new IndexCategoryVM.GetData
             {
                 Id = item.Id,
                 Name = item.Name,
                 NameAr = item.NameAr,
                 OrderId = item.OrderId
-            });
+            }).ToListAsync();
 
             return lstRoleCategories;
         }
@@ -112,54 +115,47 @@ namespace Asset.Core.Repositories
             return 0;
         }
 
-        public IndexCategoryVM SortRoleCategories(int pagenumber, int pagesize, SortRoleCategoryVM sortObj)
+        public async Task<IndexCategoryVM> LoadRoleCategories(int first, int rows, string SortField, int SortOrder)
         {
             IndexCategoryVM mainClass = new IndexCategoryVM();
             List<IndexCategoryVM.GetData> list = new List<IndexCategoryVM.GetData>();
-            IQueryable<RoleCategory> roleCategories = _context.RoleCategories;
-            List<RoleCategory> lstRoleCategories = _context.RoleCategories.ToList();
-            foreach (var item in lstRoleCategories)
-            {
-                IndexCategoryVM.GetData Assetobj = new IndexCategoryVM.GetData();
-                Assetobj.Id = item.Id;
-                Assetobj.Name = item.Name;
-                Assetobj.NameAr = item.NameAr;
-                Assetobj.OrderId = item.OrderId;
-                list.Add(Assetobj);
-            }
+            var query = _context.RoleCategories.OrderBy((rc) =>rc.Id).Select(roleCtegory =>
+                new IndexCategoryVM.GetData()
+                {
+                    Id = roleCtegory.Id,
+                    Name = roleCtegory.Name,
+                    NameAr = roleCtegory.NameAr,
+                    OrderId = roleCtegory.OrderId
+                }).AsQueryable();
+       
+      
 
-            if (sortObj.Name != "")
+            if (SortField=="Name")
             {
-                if (sortObj.SortStatus == "descending")
-                    list = list.OrderByDescending(d => d.Name).ToList();
+                if (SortOrder ==1)
+                    query = query.OrderBy(d => d.Name);
                 else
-                    list = list.OrderBy(d => d.Name).ToList();
-            }
-            if (sortObj.NameAr != "")
-            {
-                if (sortObj.SortStatus == "descending")
-                    list = list.OrderByDescending(d => d.NameAr).ToList();
-                else
-                    list = list.OrderBy(d => d.NameAr).ToList();
-            }
-            if (sortObj.OrderId != "0")
-            {
-                if (sortObj.SortStatus == "descending")
-                    list = list.OrderByDescending(d => d.OrderId).ToList();
-                else
-                    list = list.OrderBy(d => d.OrderId).ToList();
-            }
-            if (sortObj.Id != "0")
-            {
-                if (sortObj.SortStatus == "descending")
-                    list = list.OrderByDescending(d => d.Id).ToList();
-                else
-                    list = list.OrderBy(d => d.Id).ToList();
-            }
+                    query = query.OrderByDescending(d => d.Name);
 
-            var itemsPerPage = list.Skip((pagenumber - 1) * pagesize).Take(pagesize).ToList();
+            }
+            if (SortField == "NameAr")
+            {
+                if (SortOrder == 1)
+                    query = query.OrderBy(d => d.NameAr);
+                else
+                    query = query.OrderByDescending(d => d.NameAr);
+            }
+            if (SortField== "OrderId")
+            {
+                if (SortOrder == 1)
+                    query = query.OrderBy(d => d.OrderId);
+                else
+                    query = query.OrderByDescending(d => d.OrderId);
+
+            }
+            mainClass.Count = query.Count();
+            var itemsPerPage = await query.Skip(first).Take(rows).ToListAsync();
             mainClass.Results = itemsPerPage;
-            mainClass.Count = list.Count;
             return mainClass;
         }
 

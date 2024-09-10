@@ -8,11 +8,9 @@ namespace Asset.ViewModels.RoleCategoryVM
 {
     public class SortRoleCategoryVM
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string NameAr { get; set; }
-        public string OrderId { get; set; }
-        public string SortStatus { get; set; }
+        public string SortField { get; set; }
+        public int SortOrder { get; set; }
+     
 
     }
 }
