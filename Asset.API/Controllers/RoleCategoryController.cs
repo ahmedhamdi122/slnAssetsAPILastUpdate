@@ -1,6 +1,7 @@
 ﻿using Asset.API.Helpers;
 using Asset.Domain.Services;
 using Asset.Models;
+using Asset.ViewModels.HospitalVM;
 using Asset.ViewModels.RoleCategoryVM;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -31,9 +32,9 @@ namespace Asset.API.Controllers
 
         [HttpGet]
         [Route("ListRoleCategories")]
-        public IEnumerable<IndexCategoryVM.GetData> GetAll()
+        public async Task<IEnumerable<IndexCategoryVM.GetData>> GetAll()
         {
-            return _roleCategoryService.GetAll();
+            return  await _roleCategoryService.GetAll();
         }
 
 
@@ -101,11 +102,10 @@ namespace Asset.API.Controllers
 
 
         [HttpPost]
-        [Route("SortRoleCategories/{pagenumber}/{pagesize}")]
-        public IndexCategoryVM SortRoleCategories(int pagenumber, int pagesize, SortRoleCategoryVM sortObj)
+        [Route("LoadRoleCategories/{first}/{rows}")]
+        public async Task<IndexCategoryVM> LoadRoleCategories(int first, int rows,SortRoleCategoryVM sortVM)
         {
-            var list = _roleCategoryService.SortRoleCategories(pagenumber, pagesize, sortObj);
-            return list;
+            return await _roleCategoryService.LoadRoleCategories(first,rows, sortVM.SortField, sortVM.SortOrder);
         }
 
 
