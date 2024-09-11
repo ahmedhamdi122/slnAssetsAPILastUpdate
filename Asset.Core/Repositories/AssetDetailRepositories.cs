@@ -11369,12 +11369,10 @@ namespace Asset.Core.Repositories
             #endregion
 
             #region User Role
-
             if (data.SearchObj.UserId != null)
             {
                 var getUserById = _context.ApplicationUser.Where(a => a.Id == data.SearchObj.UserId).ToList();
                 userObj = getUserById[0];
-
                 var roles = (from userRole in _context.UserRoles
                              join role in _context.ApplicationRole on userRole.RoleId equals role.Id
                              where userRole.UserId == userObj.Id
@@ -11550,7 +11548,7 @@ namespace Asset.Core.Repositories
                 endingTo = DateTime.Today.Date;
             }
             else
-            {
+            {         
                 data.SearchObj.EndDate = DateTime.Parse(data.SearchObj.End.ToString());
                 var endyear = data.SearchObj.EndDate.Value.Year;
                 var endmonth = data.SearchObj.EndDate.Value.Month;

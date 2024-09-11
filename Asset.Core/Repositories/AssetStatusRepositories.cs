@@ -348,13 +348,6 @@ namespace Asset.Core.Repositories
             List<AssetStatusTransaction> lstStatus17 = new List<AssetStatusTransaction>();
             List<AssetStatusTransaction> lstStatus18 = new List<AssetStatusTransaction>();
             List<AssetStatusTransaction> lstStatus19 = new List<AssetStatusTransaction>();
-
-
-
-
-
-
-
             List<AssetStatusTransaction> lstTransactions = new List<AssetStatusTransaction>();
 
             ApplicationUser UserObj = new ApplicationUser();

@@ -23,7 +23,7 @@ namespace Asset.Models
 
         public DateTime? StatusDate { get; set; }
 
-
+        
         public int? HospitalId { get; set; }
         [ForeignKey("HospitalId")]
         public virtual Hospital Hospital { get; set; }

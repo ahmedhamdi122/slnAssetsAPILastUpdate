@@ -130,7 +130,7 @@ namespace Asset.Core.Repositories
        
       
 
-            if (SortField=="Name")
+            if (SortField== "name")
             {
                 if (SortOrder ==1)
                     query = query.OrderBy(d => d.Name);
@@ -145,12 +145,20 @@ namespace Asset.Core.Repositories
                 else
                     query = query.OrderByDescending(d => d.NameAr);
             }
-            if (SortField== "OrderId")
+            if (SortField== "orderId")
             {
                 if (SortOrder == 1)
                     query = query.OrderBy(d => d.OrderId);
                 else
                     query = query.OrderByDescending(d => d.OrderId);
+
+            }
+            if (SortField == "id")
+            {
+                if (SortOrder == 1)
+                    query = query.OrderBy(d => d.Id);
+                else
+                    query = query.OrderByDescending(d => d.Id);
 
             }
             mainClass.Count = query.Count();

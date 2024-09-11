@@ -18,7 +18,6 @@ namespace Asset.ViewModels.RoleCategoryVM
             public string Name { get; set; }
             public string NameAr { get; set; }
             public int? OrderId { get; set; }
-            public string RoleName { get; set; }
         }
     }
 }
