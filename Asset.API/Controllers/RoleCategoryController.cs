@@ -1,4 +1,5 @@
 ﻿using Asset.API.Helpers;
+using Asset.Core.Services;
 using Asset.Domain.Services;
 using Asset.Models;
 using Asset.ViewModels.HospitalVM;
@@ -75,20 +76,25 @@ namespace Asset.API.Controllers
 
         [HttpDelete]
         [Route("DeleteRoleCategory/{id}")]
-        public ActionResult<RoleCategory> Delete(int id)
+        public async Task<ActionResult<RoleCategory>> Delete(int id)
         {
             try
             {
 
-                //var lstRoles = await _userManager.Users.Include(a => a.RoleCategoryId == id).ToListAsync();
-                //if (lstRoles.Count > 0)
-                //{
-                //    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "role", Message = "You cannot delete this category it has related data", MessageAr = "لا يمكنك مسح هذا العنصر وذلك لارتباط بيانات بها" });
-                //}
-                //else
-                //{
-                int deletedRow = _roleCategoryService.Delete(id);
-                //  }
+                var isRoleCategoryExists = await _roleCategoryService.isRoleCategoryExistsUsingId(id);
+                if (!isRoleCategoryExists)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "masterAsset", Message = "Can't delete becuase not found", MessageAr = "لا يوجد " });
+                }
+                var hasAssetDetailsWithMasterId = await _roleCategoryService.hasRoleWithRoleCategory(id);
+                if (hasAssetDetailsWithMasterId)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "role", Message = "You cannot delete this category it has related data", MessageAr = "لا يمكنك مسح هذا العنصر وذلك لارتباط بيانات بها" });
+                }
+
+
+                //int deletedRow = await _roleCategoryService.Delete(id);
+                  
             }
             catch (DbUpdateConcurrencyException ex)
             {

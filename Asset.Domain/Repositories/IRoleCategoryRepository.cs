@@ -14,6 +14,7 @@ namespace Asset.Domain.Repositories
         int Delete(RoleCategory roleCategory);
         int Update(EditRoleCategory roleCategory);
 
+        Task<bool> isRoleCategoryExistsUsingId(int id);
 
 
         Task<IndexCategoryVM> LoadRoleCategories(int first, int rows, string SortField, int SortOrder);

@@ -10,7 +10,7 @@ namespace Asset.Core
 {
     public class UnitOfWork : IUnitOfWork
     {
-
+        private IRoleRepository _roleCategoryRepository;
         private IRoleCategoryRepository _roleCategoryRepository;
         private IOrganizationRepository _organizationRepository;
         private ISubOrganizationRepository _subOrganizationRepository;

@@ -24,7 +24,10 @@ namespace Asset.Core.Services
             return _unitOfWork.CommitAsync();
 
         }
-
+        public Task<bool> hasRoleWithRoleCategory(int id)
+        {
+            return await _unitOfWork.Role.hasRoleWithRoleCategory(id);
+        }
         public int Delete(int id)
         {
             var roleCategory = _unitOfWork.RoleCategory.GetById(id);
@@ -33,7 +36,10 @@ namespace Asset.Core.Services
 
             return roleCategory.Id;
         }
-
+        public async Task<bool> isRoleCategoryExistsUsingId(int id)
+        {
+            return await _unitOfWork.RoleCategory.isRoleCategoryExistsUsingId(id);
+        }
         public RoleCategory GetById(int id)
         {
             return _unitOfWork.RoleCategory.GetById(id);

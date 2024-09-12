@@ -15,7 +15,8 @@ namespace Asset.Domain.Services
         int Update(EditRoleCategory roleCategory);
         Task<IndexCategoryVM> LoadRoleCategories(int first, int rows, string SortField, int SortOrder);
 
-
+        Task<bool> isRoleCategoryExistsUsingId(int id);
+        Task<bool> hasRoleWithRoleCategory(int id);
         GenerateRoleCategoryOrderVM GenerateRoleCategoryOrderId();
     }
 }

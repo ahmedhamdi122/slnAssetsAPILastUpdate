@@ -1,4 +1,5 @@
-﻿using Asset.Domain.Repositories;
+﻿using Asset.Domain;
+using Asset.Domain.Repositories;
 using Asset.Models;
 using Asset.ViewModels.RoleCategoryVM;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +34,10 @@ namespace Asset.Core.Repositories
             return roleCategoryObj;
         }
 
-
+        public async Task<bool> isRoleCategoryExistsUsingId(int id)
+        {
+            return await _context.RoleCategories.AnyAsync(rc=>rc.Id==id);
+        }
 
 
         public async Task<IEnumerable<IndexCategoryVM.GetData>> GetAll()
