@@ -5,12 +5,13 @@ using Asset.Domain;
 using Asset.Core.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Contract.Core.Repositories;
+using System.Threading.Tasks;
 
 namespace Asset.Core
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private IRoleRepository _roleCategoryRepository;
+        private IRoleRepository _roleRepository;
         private IRoleCategoryRepository _roleCategoryRepository;
         private IOrganizationRepository _organizationRepository;
         private ISubOrganizationRepository _subOrganizationRepository;
@@ -116,12 +117,15 @@ namespace Asset.Core
         {
             return _context.SaveChanges();
         }
-
+        public async Task<int> CommitAsync2()
+        {
+            return await _context.SaveChangesAsync();
+        }
         public void Rollback()
         {
             _context.Dispose();
         }
-
+        public IRoleRepository Role => _roleRepository = _roleRepository ?? new RoleRepository(_context);
         public IRoleCategoryRepository RoleCategory => _roleCategoryRepository = _roleCategoryRepository ?? new RoleCategoryRepositories(_context);
 
         public IOrganizationRepository OrganizationRepository => _organizationRepository = _organizationRepository ?? new OrganizationRepositories(_context);

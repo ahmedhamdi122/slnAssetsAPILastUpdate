@@ -62,7 +62,7 @@ namespace Asset.API
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AssetConnStr")).EnableSensitiveDataLogging());
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GisConnetion")));
-
+            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IRoleCategoryService, RoleCategoryService>();
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<ISubOrganizationService, SubOrganizationService>();

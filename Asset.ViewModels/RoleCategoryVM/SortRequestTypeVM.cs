@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Asset.ViewModels.RoleCategoryVM
 {
-    public class SortRoleCategoryVM
+    public class SortSearchVM
     {
         public string SortField { get; set; }
         public int SortOrder { get; set; }
-     
+        public string search { get; set; }  
 
     }
 }

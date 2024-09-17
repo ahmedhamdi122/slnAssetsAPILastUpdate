@@ -38,7 +38,6 @@ namespace Asset.Models
             builder.Entity<Visit>().Property(g => g.Longtitude).HasColumnType("decimal(18, 8)");
 
         }
-
         public DbSet<RoleCategory> RoleCategories { get; set; }
         public DbSet<ApplicationRole> ApplicationRole { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }

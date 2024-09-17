@@ -23,9 +23,9 @@ namespace Asset.Core.Repositories
         }
 
 
-        public RoleCategory GetById(int id)
+        public async Task<RoleCategory> GetById(int id)
         {
-            var roleCategoryObj = _context.RoleCategories.Find(id);
+            var roleCategoryObj =await _context.RoleCategories.FindAsync(id);
 
             if (roleCategoryObj == null)
             {
@@ -77,15 +77,15 @@ namespace Asset.Core.Repositories
             return roleCategoryObj.Id;
         }
 
-        public int Delete(RoleCategory roleCategory)
+        public async Task<int> Delete(int id)
         {
-            var roleCategoryObj = _context.RoleCategories.Find(roleCategory.Id);
+            var roleCategoryObj = await _context.RoleCategories.FindAsync(id);
             try
             {
                 if (roleCategoryObj != null)
                 {
-                    _context.RoleCategories.Remove(roleCategory);
-                    return _context.SaveChanges();
+                     _context.RoleCategories.Remove(roleCategoryObj);
+                    return await _context.SaveChangesAsync();
                 }
             }
             catch (Exception ex)
@@ -119,7 +119,7 @@ namespace Asset.Core.Repositories
             return 0;
         }
 
-        public async Task<IndexCategoryVM> LoadRoleCategories(int first, int rows, string SortField, int SortOrder)
+        public async Task<IndexCategoryVM> LoadRoleCategories(int first, int rows, string SortField, int SortOrder, string search)
         {
             IndexCategoryVM mainClass = new IndexCategoryVM();
             List<IndexCategoryVM.GetData> list = new List<IndexCategoryVM.GetData>();

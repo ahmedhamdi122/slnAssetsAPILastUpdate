@@ -1,6 +1,8 @@
-﻿using Asset.Domain.Services;
+﻿using Asset.Core.Services;
+using Asset.Domain.Services;
 using Asset.Models;
 using Asset.ViewModels.PagingParameter;
+using Asset.ViewModels.RoleCategoryVM;
 using Asset.ViewModels.RoleVM;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -24,55 +26,43 @@ namespace Asset.API.Controllers
         private readonly ApplicationDbContext _context;
         private IPagingService _pagingService;
         private IRoleCategoryService _roleCategoryService;
-
+        private IRoleService RoleService;
         public RoleController(ApplicationDbContext context, RoleManager<ApplicationRole> applicationRole,
-            IRoleCategoryService roleCategoryService, IPagingService pagingService)
+            IRoleCategoryService roleCategoryService, IPagingService pagingService,IRoleService roleService)
         {
             _context = context;
             _applicationRole = applicationRole;
             _roleCategoryService = roleCategoryService;
             _pagingService = pagingService;
+            RoleService=roleService;
         }
 
 
-        [HttpPut]
-        [Route("ListRolesWithPages")]
-        public List<IndexRoleVM.GetData> Index(PagingParameter pageInfo)
+        //[HttpPut]
+        //[Route("ListRolesWithPages")]
+        //public List<IndexRoleVM.GetData> Index(PagingParameter pageInfo)
+        //{
+        //    List<IndexRoleVM.GetData> lstRoles = new List<IndexRoleVM.GetData>();
+        //    var rlst = _context.ApplicationRole.ToList();
+        //    var roles = _pagingService.GetAll<ApplicationRole>(pageInfo, rlst);
+        //    foreach (var item in roles)
+        //    {
+        //        IndexRoleVM.GetData roleObj = new IndexRoleVM.GetData();
+        //        roleObj.Id = item.Id;
+        //        roleObj.Name = item.Name;
+        //        roleObj.DisplayName = item.DisplayName;
+        //        roleObj.CategoryName = _roleCategoryService.GetById(item.RoleCategoryId).Name;
+        //        lstRoles.Add(roleObj);
+        //    }
+        //    return lstRoles;
+        //}
+
+
+        [HttpPost]
+        [Route("Roles/{first}/{rows}")]
+        public async Task<IndexRoleVM> getAll(int first, int rows, SortSearchVM sortSearchObj)
         {
-            List<IndexRoleVM.GetData> lstRoles = new List<IndexRoleVM.GetData>();
-            var rlst = _context.ApplicationRole.ToList();
-            var roles = _pagingService.GetAll<ApplicationRole>(pageInfo, rlst);
-            foreach (var item in roles)
-            {
-                IndexRoleVM.GetData roleObj = new IndexRoleVM.GetData();
-                roleObj.Id = item.Id;
-                roleObj.Name = item.Name;
-                roleObj.DisplayName = item.DisplayName;
-                roleObj.CategoryName = _roleCategoryService.GetById(item.RoleCategoryId).Name;
-                lstRoles.Add(roleObj);
-            }
-            return lstRoles;
-        }
-
-
-
-        [HttpGet]
-        [Route("ListRoles")]
-        public List<IndexRoleVM.GetData> ListRoles()
-        {
-            List<IndexRoleVM.GetData> lstRoles = new List<IndexRoleVM.GetData>();
-            var roles = _context.ApplicationRole.ToList();
-            //var roles = _pagingService.GetAll<ApplicationRole>(pageInfo, rlst);
-            foreach (var item in roles)
-            {
-                IndexRoleVM.GetData roleObj = new IndexRoleVM.GetData();
-                roleObj.Id = item.Id;
-                roleObj.Name = item.Name;
-                roleObj.DisplayName = item.DisplayName;
-                roleObj.CategoryName = _roleCategoryService.GetById(item.RoleCategoryId).Name;
-                lstRoles.Add(roleObj);
-            }
-            return lstRoles;
+             return await RoleService.getAll( first,  rows,  sortSearchObj);
         }
 
         [HttpGet]
@@ -88,7 +78,7 @@ namespace Asset.API.Controllers
             return await _applicationRole.FindByIdAsync(roleId);
 
         }
-
+        
 
         [HttpGet]
         [Route("GetRolesByRoleCategoryId/{catId}")]

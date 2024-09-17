@@ -11,7 +11,7 @@ namespace Asset.ViewModels.RoleVM
 
         public List<GetData> Results { get; set; }
 
-
+        public int Count { get; set; }
         public class GetData
         {
             public string Id { get; set; }

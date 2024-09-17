@@ -1,4 +1,5 @@
 ﻿using Asset.Domain.Repositories;
+using System.Threading.Tasks;
 
 
 namespace Asset.Domain
@@ -6,11 +7,12 @@ namespace Asset.Domain
     public interface IUnitOfWork
     {
         int CommitAsync();
+        Task<int> CommitAsync2();
         void Rollback();
+        IRoleRepository Role { get; }
         IRoleCategoryRepository RoleCategory { get; }
         IOrganizationRepository OrganizationRepository { get; }
         ISubOrganizationRepository SubOrganizationRepository { get; }
-
         IGovernorateRepository GovernorateRepository { get; }
         ICityRepository CityRepository { get; }
         IHospitalRepository HospitalRepository { get; }

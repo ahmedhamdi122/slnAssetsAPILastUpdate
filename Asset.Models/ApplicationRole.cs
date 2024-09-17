@@ -19,6 +19,7 @@ namespace Asset.Models
 
         [StringLength(50)]
         public  string DisplayName { get; set; }
+        public virtual RoleCategory RoleCategory { get; set; }
 
     }
 

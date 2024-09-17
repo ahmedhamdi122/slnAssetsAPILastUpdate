@@ -4,11 +4,13 @@ using Asset.Domain.Services;
 using Asset.Models;
 using Asset.ViewModels.HospitalVM;
 using Asset.ViewModels.RoleCategoryVM;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Asset.API.Controllers
@@ -19,17 +21,17 @@ namespace Asset.API.Controllers
     public class RoleCategoryController : ControllerBase
     {
         private IRoleCategoryService _roleCategoryService;
-
-
+        private ApplicationDbContext _context;
+        private IRoleService _roleService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public RoleCategoryController(IRoleCategoryService roleCategoryService, UserManager<ApplicationUser> userManager)
+        public RoleCategoryController(IRoleCategoryService roleCategoryService, UserManager<ApplicationUser> userManager, IRoleService roleService,ApplicationDbContext context)
         {
             _roleCategoryService = roleCategoryService;
             _userManager = userManager;
-
+            _roleService = roleService;
+            _context = context; 
         }
-
 
         [HttpGet]
         [Route("ListRoleCategories")]
@@ -41,9 +43,9 @@ namespace Asset.API.Controllers
 
         [HttpGet]
         [Route("GetById/{id}")]
-        public ActionResult<RoleCategory> GetById(int id)
+        public async Task<ActionResult<RoleCategory>> GetById(int id)
         {
-            return _roleCategoryService.GetById(id);
+            return await _roleCategoryService.GetById(id);
         }
 
 
@@ -76,7 +78,7 @@ namespace Asset.API.Controllers
 
         [HttpDelete]
         [Route("DeleteRoleCategory/{id}")]
-        public async Task<ActionResult<RoleCategory>> Delete(int id)
+        public  async Task<ActionResult<RoleCategory>> Delete(int id)
         {
             try
             {
@@ -84,17 +86,17 @@ namespace Asset.API.Controllers
                 var isRoleCategoryExists = await _roleCategoryService.isRoleCategoryExistsUsingId(id);
                 if (!isRoleCategoryExists)
                 {
-                    return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "masterAsset", Message = "Can't delete becuase not found", MessageAr = "لا يوجد " });
+                    return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "notFound", Message = "Can't delete becuase not found", MessageAr = "لا يوجد " });
                 }
-                var hasAssetDetailsWithMasterId = await _roleCategoryService.hasRoleWithRoleCategory(id);
-                if (hasAssetDetailsWithMasterId)
+                var isRoleWithRoleCategory = await _roleService.hasRoleWithRoleCategoryId(id);
+                if (isRoleWithRoleCategory)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "role", Message = "You cannot delete this category it has related data", MessageAr = "لا يمكنك مسح هذا العنصر وذلك لارتباط بيانات بها" });
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "roleCategoryInUse", Message = "You cannot delete this category it has related data", MessageAr = "لا يمكنك مسح هذا العنصر وذلك لارتباط بيانات بها" });
                 }
 
+                var data = _context.ApplicationRole.ToList();
+                int deletedRow = await _roleCategoryService.Delete(id);
 
-                //int deletedRow = await _roleCategoryService.Delete(id);
-                  
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -109,9 +111,9 @@ namespace Asset.API.Controllers
 
         [HttpPost]
         [Route("LoadRoleCategories/{first}/{rows}")]
-        public async Task<IndexCategoryVM> LoadRoleCategories(int first, int rows,SortRoleCategoryVM sortVM)
+        public async Task<IndexCategoryVM> LoadRoleCategories(int first, int rows, SortSearchVM SortSearchObj)
         {
-            return await _roleCategoryService.LoadRoleCategories(first,rows, sortVM.SortField, sortVM.SortOrder);
+            return await _roleCategoryService.LoadRoleCategories(first,rows, SortSearchObj.SortField, SortSearchObj.SortOrder, SortSearchObj.search);
         }
 
 

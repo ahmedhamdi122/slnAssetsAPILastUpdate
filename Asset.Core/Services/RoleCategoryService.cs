@@ -24,25 +24,19 @@ namespace Asset.Core.Services
             return _unitOfWork.CommitAsync();
 
         }
-        public Task<bool> hasRoleWithRoleCategory(int id)
+    
+        public async Task<int> Delete(int id)
         {
-            return await _unitOfWork.Role.hasRoleWithRoleCategory(id);
-        }
-        public int Delete(int id)
-        {
-            var roleCategory = _unitOfWork.RoleCategory.GetById(id);
-            _unitOfWork.RoleCategory.Delete(roleCategory);
-            _unitOfWork.CommitAsync();
-
-            return roleCategory.Id;
+            await  _unitOfWork.RoleCategory.Delete(id);
+            return await _unitOfWork.CommitAsync2();
         }
         public async Task<bool> isRoleCategoryExistsUsingId(int id)
         {
             return await _unitOfWork.RoleCategory.isRoleCategoryExistsUsingId(id);
         }
-        public RoleCategory GetById(int id)
+        public async Task<RoleCategory> GetById(int id)
         {
-            return _unitOfWork.RoleCategory.GetById(id);
+            return await _unitOfWork.RoleCategory.GetById(id);
         }
 
         public async Task<IEnumerable<IndexCategoryVM.GetData>> GetAll()
@@ -58,9 +52,9 @@ namespace Asset.Core.Services
             return roleCategory.Id;
         }
 
-        public async Task<IndexCategoryVM> LoadRoleCategories(int first, int rows, string SortField, int SortOrder)
+        public async Task<IndexCategoryVM> LoadRoleCategories(int first, int rows, string SortField, int SortOrder, string search)
         {
-           return await _unitOfWork.RoleCategory.LoadRoleCategories( first,rows, SortField,  SortOrder);
+           return await _unitOfWork.RoleCategory.LoadRoleCategories( first,rows, SortField,  SortOrder,search);
         }
         
         public GenerateRoleCategoryOrderVM GenerateRoleCategoryOrderId()

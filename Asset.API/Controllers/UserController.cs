@@ -36,61 +36,61 @@ namespace Asset.API.Controllers
         }
 
 
-        [HttpGet]
-        [Route("ListUsers")]
-        public List<IndexUserVM.GetData> Index()
-        {
-            List<IndexUserVM.GetData> lstUsers = new List<IndexUserVM.GetData>();
-            var users = _applicationUser.Users.ToList();
-            foreach (var item in users)
-            {
-                IndexUserVM.GetData userObj = new IndexUserVM.GetData();
-                userObj.Id = item.Id;
-                userObj.UserName = item.UserName;
-                userObj.DisplayName = _context.ApplicationRole.Where(a => a.Id == item.RoleId).First().DisplayName;
-                userObj.CategoryRoleName = _roleCategoryService.GetById((int)item.RoleCategoryId).Name;
-                userObj.PhoneNumber = item.PhoneNumber;
-                userObj.Email = item.Email;
-                lstUsers.Add(userObj);
-            }
-            return lstUsers;
-        }
+        //[HttpGet]
+        //[Route("ListUsers")]
+        //public List<IndexUserVM.GetData> Index()
+        //{
+        //    List<IndexUserVM.GetData> lstUsers = new List<IndexUserVM.GetData>();
+        //    var users = _applicationUser.Users.ToList();
+        //    foreach (var item in users)
+        //    {
+        //        IndexUserVM.GetData userObj = new IndexUserVM.GetData();
+        //        userObj.Id = item.Id;
+        //        userObj.UserName = item.UserName;
+        //        userObj.DisplayName = _context.ApplicationRole.Where(a => a.Id == item.RoleId).First().DisplayName;
+        //        userObj.CategoryRoleName = _roleCategoryService.GetById((int)item.RoleCategoryId).Name;
+        //        userObj.PhoneNumber = item.PhoneNumber;
+        //        userObj.Email = item.Email;
+        //        lstUsers.Add(userObj);
+        //    }
+        //    return lstUsers;
+        //}
 
-        [HttpPost]
-        [Route("ListUsersWithPaging")]
-        public IEnumerable<IndexUserVM.GetData> GetUsers(PagingParameter paging)
-        {
-            List<IndexUserVM.GetData> lstUsers = new List<IndexUserVM.GetData>();
-            var userlist = _applicationUser.Users.ToList();
-            //var users = _pagingService.GetAll<ApplicationUser>(paging, userlist);
-            foreach (var item in userlist)
-            {
-                IndexUserVM.GetData userObj = new IndexUserVM.GetData();
-                userObj.Id = item.Id;
-                userObj.UserName = item.UserName;
-                var roleNames = (from userRole in _context.UserRoles
-                                 join role in _context.ApplicationRole on userRole.RoleId equals role.Id
-                                 where userRole.UserId == item.Id
-                                 select role.Name).ToList();
-                string strRoles = "";
-                var list = new List<string>();
-                foreach (var role in roleNames)
-                {
-                    list.Add(role);
-                }
+        //[HttpPost]
+        //[Route("ListUsersWithPaging")]
+        //public IEnumerable<IndexUserVM.GetData> GetUsers(PagingParameter paging)
+        //{
+        //    List<IndexUserVM.GetData> lstUsers = new List<IndexUserVM.GetData>();
+        //    var userlist = _applicationUser.Users.ToList();
+        //    //var users = _pagingService.GetAll<ApplicationUser>(paging, userlist);
+        //    foreach (var item in userlist)
+        //    {
+        //        IndexUserVM.GetData userObj = new IndexUserVM.GetData();
+        //        userObj.Id = item.Id;
+        //        userObj.UserName = item.UserName;
+        //        var roleNames = (from userRole in _context.UserRoles
+        //                         join role in _context.ApplicationRole on userRole.RoleId equals role.Id
+        //                         where userRole.UserId == item.Id
+        //                         select role.Name).ToList();
+        //        string strRoles = "";
+        //        var list = new List<string>();
+        //        foreach (var role in roleNames)
+        //        {
+        //            list.Add(role);
+        //        }
 
-                strRoles = string.Join<string>(",", list);
-                userObj.DisplayName = strRoles;
-                userObj.CategoryRoleName = _roleCategoryService.GetById((int)item.RoleCategoryId).Name;
-                userObj.PhoneNumber = item.PhoneNumber;
-                userObj.Email = item.Email;
-                lstUsers.Add(userObj);
-            }
+        //        strRoles = string.Join<string>(",", list);
+        //        userObj.DisplayName = strRoles;
+        //        userObj.CategoryRoleName = _roleCategoryService.GetById((int)item.RoleCategoryId).Name;
+        //        userObj.PhoneNumber = item.PhoneNumber;
+        //        userObj.Email = item.Email;
+        //        lstUsers.Add(userObj);
+        //    }
 
 
-            return _pagingService.GetAll<IndexUserVM.GetData>(paging, lstUsers);
+            //return _pagingService.GetAll<IndexUserVM.GetData>(paging, lstUsers);
             //  return lstUsers;
-        }
+       // }
 
 
 
@@ -106,93 +106,93 @@ namespace Asset.API.Controllers
         //    return _pagingService.GetAll<IndexHospitalVM.GetData>(pageInfo, list);
         //}
 
-        [HttpPost]
-        [Route("SortUsers/{pagenumber}/{pagesize}")]
-        public IEnumerable<IndexUserVM.GetData> SortUsers(int pagenumber, int pagesize, UserSortVM sortObj)
-        {
+        //[HttpPost]
+        //[Route("SortUsers/{pagenumber}/{pagesize}")]
+        //public IEnumerable<IndexUserVM.GetData> SortUsers(int pagenumber, int pagesize, UserSortVM sortObj)
+        //{
 
-            PagingParameter pageInfo = new PagingParameter();
-            pageInfo.PageNumber = pagenumber;
-            pageInfo.PageSize = pagesize;
-            List<IndexUserVM.GetData> lstUsers = new List<IndexUserVM.GetData>();
-            var userlist = _applicationUser.Users.ToList();
-            foreach (var item in userlist)
-            {
-                IndexUserVM.GetData userObj = new IndexUserVM.GetData();
-                userObj.Id = item.Id;
-                userObj.UserName = item.UserName;
-                var roleNames = (from userRole in _context.UserRoles
-                                 join role in _context.ApplicationRole on userRole.RoleId equals role.Id
-                                 where userRole.UserId == item.Id
-                                 select role.Name).ToList();
-                string strRoles = "";
-                var list = new List<string>();
-                foreach (var role in roleNames)
-                {
-                    list.Add(role);
-                }
+        //    PagingParameter pageInfo = new PagingParameter();
+        //    pageInfo.PageNumber = pagenumber;
+        //    pageInfo.PageSize = pagesize;
+        //    List<IndexUserVM.GetData> lstUsers = new List<IndexUserVM.GetData>();
+        //    var userlist = _applicationUser.Users.ToList();
+        //    foreach (var item in userlist)
+        //    {
+        //        IndexUserVM.GetData userObj = new IndexUserVM.GetData();
+        //        userObj.Id = item.Id;
+        //        userObj.UserName = item.UserName;
+        //        var roleNames = (from userRole in _context.UserRoles
+        //                         join role in _context.ApplicationRole on userRole.RoleId equals role.Id
+        //                         where userRole.UserId == item.Id
+        //                         select role.Name).ToList();
+        //        string strRoles = "";
+        //        var list = new List<string>();
+        //        foreach (var role in roleNames)
+        //        {
+        //            list.Add(role);
+        //        }
 
-                strRoles = string.Join<string>(",", list);
-                userObj.DisplayName = strRoles;
-                userObj.CategoryRoleName = _roleCategoryService.GetById((int)item.RoleCategoryId).Name;
-                userObj.PhoneNumber = item.PhoneNumber;
-                userObj.Email = item.Email;
-                lstUsers.Add(userObj);
-            }
+        //        strRoles = string.Join<string>(",", list);
+        //        userObj.DisplayName = strRoles;
+        //        userObj.CategoryRoleName = _roleCategoryService.GetById((int)item.RoleCategoryId).Name;
+        //        userObj.PhoneNumber = item.PhoneNumber;
+        //        userObj.Email = item.Email;
+        //        lstUsers.Add(userObj);
+        //    }
 
-            if (sortObj.UserName != "")
-            {
-                if (sortObj.SortStatus == "descending")
-                    lstUsers = lstUsers.OrderByDescending(d => d.UserName).ToList();
-                else
-                    lstUsers = lstUsers.OrderBy(d => d.UserName).ToList();
-            }
-            if (sortObj.PhoneNumber != "")
-            {
-                if (sortObj.SortStatus == "descending")
-                    lstUsers = lstUsers.OrderByDescending(d => d.PhoneNumber).ToList();
-                else
-                    lstUsers = lstUsers.OrderBy(d => d.PhoneNumber).ToList();
-            }
-            if (sortObj.DisplayName != "")
-            {
-                if (sortObj.SortStatus == "descending")
-                    lstUsers = lstUsers.OrderByDescending(d => d.DisplayName).ToList();
-                else
-                    lstUsers = lstUsers.OrderBy(d => d.DisplayName).ToList();
-            }
+        //    if (sortObj.UserName != "")
+        //    {
+        //        if (sortObj.SortStatus == "descending")
+        //            lstUsers = lstUsers.OrderByDescending(d => d.UserName).ToList();
+        //        else
+        //            lstUsers = lstUsers.OrderBy(d => d.UserName).ToList();
+        //    }
+        //    if (sortObj.PhoneNumber != "")
+        //    {
+        //        if (sortObj.SortStatus == "descending")
+        //            lstUsers = lstUsers.OrderByDescending(d => d.PhoneNumber).ToList();
+        //        else
+        //            lstUsers = lstUsers.OrderBy(d => d.PhoneNumber).ToList();
+        //    }
+        //    if (sortObj.DisplayName != "")
+        //    {
+        //        if (sortObj.SortStatus == "descending")
+        //            lstUsers = lstUsers.OrderByDescending(d => d.DisplayName).ToList();
+        //        else
+        //            lstUsers = lstUsers.OrderBy(d => d.DisplayName).ToList();
+        //    }
 
-            if (sortObj.DisplayNameAr != "")
-            {
-                if (sortObj.SortStatus == "descending")
-                    lstUsers = lstUsers.OrderByDescending(d => d.DisplayName).ToList();
-                else
-                    lstUsers = lstUsers.OrderBy(d => d.DisplayName).ToList();
-            }
-
-
-
-
-            if (sortObj.Email != "")
-            {
-                if (sortObj.SortStatus == "descending")
-                    lstUsers = lstUsers.OrderByDescending(d => d.Email).ToList();
-                else
-                    lstUsers = lstUsers.OrderBy(d => d.Email).ToList();
-            }
-
-            if (sortObj.CategoryRoleName != "")
-            {
-                if (sortObj.SortStatus == "descending")
-                    lstUsers = lstUsers.OrderByDescending(d => d.CategoryRoleName).ToList();
-                else
-                    lstUsers = lstUsers.OrderBy(d => d.CategoryRoleName).ToList();
-            }
+        //    if (sortObj.DisplayNameAr != "")
+        //    {
+        //        if (sortObj.SortStatus == "descending")
+        //            lstUsers = lstUsers.OrderByDescending(d => d.DisplayName).ToList();
+        //        else
+        //            lstUsers = lstUsers.OrderBy(d => d.DisplayName).ToList();
+        //    }
 
 
 
-            return _pagingService.GetAll<IndexUserVM.GetData>(pageInfo, lstUsers);
-        }
+
+        //    if (sortObj.Email != "")
+        //    {
+        //        if (sortObj.SortStatus == "descending")
+        //            lstUsers = lstUsers.OrderByDescending(d => d.Email).ToList();
+        //        else
+        //            lstUsers = lstUsers.OrderBy(d => d.Email).ToList();
+        //    }
+
+        //    if (sortObj.CategoryRoleName != "")
+        //    {
+        //        if (sortObj.SortStatus == "descending")
+        //            lstUsers = lstUsers.OrderByDescending(d => d.CategoryRoleName).ToList();
+        //        else
+        //            lstUsers = lstUsers.OrderBy(d => d.CategoryRoleName).ToList();
+        //    }
+
+
+
+        //    return _pagingService.GetAll<IndexUserVM.GetData>(pageInfo, lstUsers);
+        //}
 
 
 

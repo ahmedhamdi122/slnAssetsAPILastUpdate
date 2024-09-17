@@ -9,15 +9,15 @@ namespace Asset.Domain.Repositories
   public  interface IRoleCategoryRepository
     {
          Task<IEnumerable<IndexCategoryVM.GetData>> GetAll();
-        RoleCategory GetById(int id);
+        Task<RoleCategory> GetById(int id);
         int Add(CreateRoleCategory roleCategory);
-        int Delete(RoleCategory roleCategory);
+        Task<int> Delete(int id);
         int Update(EditRoleCategory roleCategory);
 
         Task<bool> isRoleCategoryExistsUsingId(int id);
 
 
-        Task<IndexCategoryVM> LoadRoleCategories(int first, int rows, string SortField, int SortOrder);
+        Task<IndexCategoryVM> LoadRoleCategories(int first, int rows, string SortField, int SortOrder, string search);
 
         GenerateRoleCategoryOrderVM GenerateRoleCategoryOrderId();
     }
