@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-#nullable disable
-
-namespace Asset.API.Models
+namespace Asset.Models
 {
-    public partial class ScrapReason
+    public class ScrapReason
     {
-        public ScrapReason()
-        {
-            AssetScraps = new HashSet<AssetScrap>();
-        }
-
         public int Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
         public string NameAr { get; set; }
-
-        public virtual ICollection<AssetScrap> AssetScraps { get; set; }
     }
 }

@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace Asset.API.Models
+namespace Asset.Models
 {
-    public partial class SupplierExecludeReason
+    public class SupplierExecludeReason
     {
-        public SupplierExecludeReason()
-        {
-            SupplierExecludes = new HashSet<SupplierExeclude>();
-        }
 
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string NameAr { get; set; }
 
-        public virtual ICollection<SupplierExeclude> SupplierExecludes { get; set; }
+        [StringLength(50)]
+        public string Name { get; set; }
+
+        [StringLength(50)]
+        public string NameAr { get; set; }
     }
 }

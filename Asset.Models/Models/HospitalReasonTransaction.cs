@@ -1,23 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace Asset.API.Models
+namespace Asset.Models
 {
-    public partial class HospitalReasonTransaction
+   public  class HospitalReasonTransaction
     {
-        public HospitalReasonTransaction()
-        {
-            HospitalApplicationAttachments = new HashSet<HospitalApplicationAttachment>();
-        }
 
         public int Id { get; set; }
-        public int? HospitalApplicationId { get; set; }
-        public int? ReasonId { get; set; }
-        public int? HospitalId { get; set; }
 
+
+        public int? HospitalApplicationId { get; set; }
+        [ForeignKey("HospitalApplicationId")]
         public virtual HospitalApplication HospitalApplication { get; set; }
-        public virtual ICollection<HospitalApplicationAttachment> HospitalApplicationAttachments { get; set; }
+
+        public int? ReasonId { get; set; }
+
+
+        public int? HospitalId { get; set; }
+        [ForeignKey("HospitalId")]
+        public virtual Hospital Hospital { get; set; }
     }
 }

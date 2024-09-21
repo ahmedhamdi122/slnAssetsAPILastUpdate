@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace Asset.API.Models
+namespace Asset.Models
 {
-    public partial class Permission
+    public class Permission
     {
-        public Permission()
-        {
-            ModulePermissions = new HashSet<ModulePermission>();
-        }
-
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Value { get; set; }
-
-        public virtual ICollection<ModulePermission> ModulePermissions { get; set; }
+        public bool Value { get; set; }
+        public virtual ICollection<Module> Modules { get; set; }
     }
 }

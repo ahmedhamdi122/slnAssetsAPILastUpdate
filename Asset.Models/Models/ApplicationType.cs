@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace Asset.API.Models
+namespace Asset.Models
 {
-    public partial class ApplicationType
+   public class ApplicationType
     {
-        public ApplicationType()
-        {
-            HospitalApplications = new HashSet<HospitalApplication>();
-            SupplierExecludeAssets = new HashSet<SupplierExecludeAsset>();
-        }
 
         public int Id { get; set; }
+        [StringLength(5)]
         public string Code { get; set; }
-        public string Name { get; set; }
-        public string NameAr { get; set; }
 
-        public virtual ICollection<HospitalApplication> HospitalApplications { get; set; }
-        public virtual ICollection<SupplierExecludeAsset> SupplierExecludeAssets { get; set; }
+        [StringLength(50)]
+        public string Name { get; set; }
+
+        [StringLength(50)]
+        public string NameAr { get; set; }
     }
 }

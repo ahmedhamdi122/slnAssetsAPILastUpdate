@@ -1,18 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace Asset.API.Models
+namespace Asset.Models
 {
-    public partial class PmassetTaskSchedule
+    public class PMAssetTaskSchedule
     {
         public int Id { get; set; }
-        public int? PmassetTimeId { get; set; }
-        public int? PmassetTaskId { get; set; }
-        public int? HospitalId { get; set; }
 
-        public virtual PmassetTask PmassetTask { get; set; }
-        public virtual PmassetTime PmassetTime { get; set; }
+        public int? PMAssetTimeId { get; set; }
+        [ForeignKey("PMAssetTimeId")]
+        public virtual PMAssetTime PMAssetTime { get; set; }
+
+
+        public int? PMAssetTaskId { get; set; }
+        [ForeignKey("PMAssetTaskId")]
+        public virtual PMAssetTask PMAssetTask { get; set; }
+
+
+        public int? HospitalId { get; set; }
+        [ForeignKey("HospitalId")]
+        public virtual Hospital Hospital { get; set; }
+
     }
 }

@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace Asset.API.Models
+namespace Asset.Models
 {
-    public partial class PmassetTime
+    public class PMAssetTime
     {
-        public PmassetTime()
-        {
-            PmassetTaskSchedules = new HashSet<PmassetTaskSchedule>();
-        }
 
         public int Id { get; set; }
-        public int? AssetDetailId { get; set; }
-        public DateTime? Pmdate { get; set; }
-        public int? HospitalId { get; set; }
 
-        public virtual ICollection<PmassetTaskSchedule> PmassetTaskSchedules { get; set; }
+        public DateTime? PMDate { get; set; }
+
+        public int? AssetDetailId { get; set; }
+        [ForeignKey("AssetDetailId")]
+        public virtual AssetDetail AssetDetail { get; set; }
+
+        public int? HospitalId { get; set; }
+        [ForeignKey("HospitalId")]
+        public virtual Hospital Hospital { get; set; }
     }
 }

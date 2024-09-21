@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace Asset.API.Models
+namespace Asset.Models
 {
-    public partial class WorkOrderType
+    public class WorkOrderType
     {
-        public WorkOrderType()
-        {
-            WorkOrders = new HashSet<WorkOrder>();
-        }
-
         public int Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
         public string NameAr { get; set; }
-
-        public virtual ICollection<WorkOrder> WorkOrders { get; set; }
     }
 }

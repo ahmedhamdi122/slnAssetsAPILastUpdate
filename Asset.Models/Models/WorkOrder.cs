@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace Asset.API.Models
+namespace Asset.Models
 {
-    public partial class WorkOrder
+    public class WorkOrder
     {
-        public WorkOrder()
-        {
-            WorkOrderTasks = new HashSet<WorkOrderTask>();
-            WorkOrderTrackings = new HashSet<WorkOrderTracking>();
-        }
-
         public int Id { get; set; }
         public string Subject { get; set; }
         public string WorkOrderNumber { get; set; }
@@ -23,16 +19,22 @@ namespace Asset.API.Models
         public DateTime? ActualEndDate { get; set; }
         public string Note { get; set; }
         public string CreatedById { get; set; }
-        public int? WorkOrderPeriorityId { get; set; }
-        public int? WorkOrderTypeId { get; set; }
-        public int? RequestId { get; set; }
-        public int? HospitalId { get; set; }
+        [ForeignKey("CreatedById")]
+        public virtual ApplicationUser User { get; set; }
 
-        public virtual AspNetUser CreatedBy { get; set; }
-        public virtual Request Request { get; set; }
+
+        public int? WorkOrderPeriorityId { get; set; }
+        [ForeignKey("WorkOrderPeriorityId")]
         public virtual WorkOrderPeriority WorkOrderPeriority { get; set; }
+        public int? WorkOrderTypeId { get; set; }
+        [ForeignKey("WorkOrderTypeId")]
         public virtual WorkOrderType WorkOrderType { get; set; }
-        public virtual ICollection<WorkOrderTask> WorkOrderTasks { get; set; }
-        public virtual ICollection<WorkOrderTracking> WorkOrderTrackings { get; set; }
+        public int? RequestId { get; set; }
+        [ForeignKey("RequestId")]
+        public virtual Request Request { get; set; }
+
+        public int? HospitalId { get; set; }
+        [ForeignKey("HospitalId")]
+        public virtual Hospital Hospital { get; set; }
     }
 }

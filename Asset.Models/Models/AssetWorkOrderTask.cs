@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace Asset.API.Models
+namespace Asset.Models
 {
-    public partial class AssetWorkOrderTask
+    public class AssetWorkOrderTask
     {
-        public AssetWorkOrderTask()
-        {
-            WorkOrderTasks = new HashSet<WorkOrderTask>();
-        }
-
         public int Id { get; set; }
         public string Name { get; set; }
         public string NameAr { get; set; }
         public string Code { get; set; }
         public int MasterAssetId { get; set; }
-
-        public virtual ICollection<WorkOrderTask> WorkOrderTasks { get; set; }
+        [ForeignKey("MasterAssetId")]
+        public virtual MasterAsset MasterAsset { get; set; }
     }
 }

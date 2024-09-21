@@ -1,29 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace Asset.API.Models
+namespace Asset.Models
 {
-    public partial class Building
+   public class Building
     {
-        public Building()
-        {
-            AssetDetails = new HashSet<AssetDetail>();
-            AssetMovements = new HashSet<AssetMovement>();
-            Floors = new HashSet<Floor>();
-        }
-
         public int Id { get; set; }
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public string NameAr { get; set; }
-        public string Brief { get; set; }
-        public string BriefAr { get; set; }
-        public int? HospitalId { get; set; }
 
-        public virtual ICollection<AssetDetail> AssetDetails { get; set; }
-        public virtual ICollection<AssetMovement> AssetMovements { get; set; }
-        public virtual ICollection<Floor> Floors { get; set; }
+        [StringLength(15)]
+        public string Code { get; set; }
+
+        [StringLength(50)]
+        public string Name { get; set; }
+
+        [StringLength(50)]
+        public string NameAr { get; set; }
+
+        [StringLength(500)]
+        public string Brief { get; set; }
+
+        [StringLength(500)]
+        public string BriefAr { get; set; }
+
+        [ForeignKey("HospitalId")]
+        public int HospitalId { get; set; }
+        public virtual Hospital Hospital { get; set; }
+
     }
 }

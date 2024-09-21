@@ -1,15 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 
-#nullable disable
-
-namespace Asset.API.Models
+namespace Asset.Models
 {
-    public partial class RoleCategory
+   public class RoleCategory
     {
         public int Id { get; set; }
+
+        [StringLength(50)]
         public string Name { get; set; }
+
+        [StringLength(50)]
         public string NameAr { get; set; }
+
         public int? OrderId { get; set; }
+
     }
 }

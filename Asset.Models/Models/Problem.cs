@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace Asset.API.Models
+namespace Asset.Models
 {
-    public partial class Problem
+    public class Problem
     {
-        public Problem()
-        {
-            SubProblems = new HashSet<SubProblem>();
-        }
-
         public int Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
         public string NameAr { get; set; }
         public int? MasterAssetId { get; set; }
+        [ForeignKey("MasterAssetId")]
+        public virtual MasterAsset MasterAsset { get; set; }
 
-        public virtual ICollection<SubProblem> SubProblems { get; set; }
     }
 }

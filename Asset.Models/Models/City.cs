@@ -1,26 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace Asset.API.Models
+namespace Asset.Models
 {
-    public partial class City
+   public class City
     {
-        public City()
-        {
-            Hospitals = new HashSet<Hospital>();
-        }
-
         public int Id { get; set; }
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public string NameAr { get; set; }
-        public int? GovernorateId { get; set; }
-        public decimal? Latitude { get; set; }
-        public decimal? Longtitude { get; set; }
 
+        [StringLength(5)]
+        public string Code { get; set; }
+
+        [StringLength(50)]
+        public string Name { get; set; }
+
+        [StringLength(50)]
+        public string NameAr { get; set; }
+
+        public int? GovernorateId { get; set; }
+        [ForeignKey("GovernorateId")]
         public virtual Governorate Governorate { get; set; }
-        public virtual ICollection<Hospital> Hospitals { get; set; }
+
+        [Column(TypeName = "decimal(18, 8)")]
+        public decimal? Latitude { get; set; }
+        [Column(TypeName = "decimal(18, 8)")]
+        public decimal? Longtitude { get; set; }
     }
 }
