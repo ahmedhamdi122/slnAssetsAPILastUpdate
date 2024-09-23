@@ -1,6 +1,7 @@
 ﻿using Asset.Core.Services;
 using Asset.Domain.Services;
 using Asset.Models;
+using Asset.ViewModels.ModuleVM;
 using Asset.ViewModels.PagingParameter;
 using Asset.ViewModels.RoleCategoryVM;
 using Asset.ViewModels.RoleVM;
@@ -64,7 +65,14 @@ namespace Asset.API.Controllers
         {
              return await RoleService.getAll( first,  rows,  sortSearchObj);
         }
-
+        [HttpGet("/{id}")]
+        public async Task<ApplicationRole> getById(string RoleId)
+        {
+            // var role = _context.ApplicationRole.Include(r => r.RoleModulePermissions).ThenInclude(r => r.Role).Include(r => r.RoleModulePermissions).ThenInclude(r => r.Permission).Include(r => r.RoleModulePermissions).ThenInclude(r => r.Module).FirstOrDefault(r => r.Id == RoleId);
+            //  return new IndexRoleVM.GetData() { Id = role.Id, Name = role.Name, DisplayName = role.DisplayName, Category = new EditRoleCategory() { Id = role.RoleCategory.Id, Name = role.RoleCategory.Name, NameAr = role.RoleCategory.NameAr, OrderId = role.RoleCategory.OrderId }, ModuleWithPermissions = role.RoleModulePermissions.Select(rm=>new ModuleWithPermissionsVM() {Id=rm.Module.Id,Name=rm.Module.Name,NameAr=rm.Module.NameAr,}) };
+            var role = await _context.ApplicationRole.Include(r => r.RoleModulePermissions).FirstOrDefaultAsync(r => r.Id == RoleId);
+            return role;
+        }
         [HttpGet]
         [Route("getcount")]
         public int count()
@@ -75,7 +83,7 @@ namespace Asset.API.Controllers
         [Route("GetById/{roleId}")]
         public async Task<ActionResult<ApplicationRole>> GetById(string roleId)
         {
-            return await _applicationRole.FindByIdAsync(roleId);
+            return await _applicationRole.FindByIdAsync(roleId);    
 
         }
         

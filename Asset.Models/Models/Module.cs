@@ -12,5 +12,7 @@ namespace Asset.Models
         public string Name { get; set; }
         public string NameAr { get; set; }
         public virtual ICollection<Permission> Permissions { get; set;}
+        public virtual ICollection<RoleModulePermissions> RoleModulePermissions { get; set; }
+
     }
 }

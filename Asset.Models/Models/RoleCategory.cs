@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Asset.Models;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Asset.Models
 {
@@ -13,6 +15,7 @@ namespace Asset.Models
         public string NameAr { get; set; }
 
         public int? OrderId { get; set; }
+        public virtual ICollection<ApplicationRole> ApplicationRoles { get; set; }
 
     }
 }

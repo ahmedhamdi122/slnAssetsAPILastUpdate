@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Asset.ViewModels.ModuleVM;
+using Asset.ViewModels.RoleCategoryVM;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +20,8 @@ namespace Asset.ViewModels.RoleVM
             public string Name { get; set; }
             public string DisplayName { get; set; }
             public string CategoryName { get; set; }
+            public EditRoleCategory Category { get; set; }
+            public ICollection<ModuleWithPermissionsVM> ModuleWithPermissions { get; set; }
         }
     }
 }
