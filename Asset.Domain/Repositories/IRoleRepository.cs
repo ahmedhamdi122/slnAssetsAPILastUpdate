@@ -1,4 +1,5 @@
-﻿using Asset.ViewModels.RoleCategoryVM;
+﻿using Asset.Models;
+using Asset.ViewModels.RoleCategoryVM;
 using Asset.ViewModels.RoleVM;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,6 @@ namespace Asset.Domain.Repositories
     {
          Task<IndexRoleVM> getAll(int first, int rows, SortSearchVM sortSearchObj);
         Task<bool> hasRoleWithRoleCategoryId(int id);
+        Task<string> createRole(ApplicationRole createRoleVM);
     }
 }

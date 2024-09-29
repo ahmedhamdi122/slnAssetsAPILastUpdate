@@ -9,16 +9,17 @@ namespace Asset.ViewModels.ModuleVM
 {
     public class ModuleWithPermissionsVM
     {
-        public ModuleWithPermissionsVM(int id,string name,string nameAr,IEnumerable<permissionVM>permissions)
+        public ModuleWithPermissionsVM(int Id, string Name, string NameAr, IEnumerable<permissionVM> permissions)
         {
-            Id = id;
-            Name = name;
-            NameAr = nameAr;
+            id = Id;
+            name = Name;
+            nameAr = NameAr;
             Permissions = permissions;
         }
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string NameAr { get; set; }
-        public IEnumerable<permissionVM> Permissions { get; set;}
+        public int id { get; set; }
+        public string name { get; set; }
+        public string nameAr { get; set; }
+        public IEnumerable<permissionVM> Permissions { get; set; }
     }
 }
+

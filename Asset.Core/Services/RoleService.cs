@@ -25,5 +25,11 @@ namespace Asset.Core.Services
         {
             return _unitOfWork.Role.getAll(first, rows, sortSearchObj);
         }
+        public async Task<string> add(CreateRoleVM createRoleVM)
+        {
+            //return await _unitOfWork.Role.createRole(createRoleVM);
+            return "";
+
+        }
     }
 }

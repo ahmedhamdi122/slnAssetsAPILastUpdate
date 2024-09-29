@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Asset.Models.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,9 @@ namespace Asset.Models
         public string Name { get; set; }
         public string NameAr { get; set; }
         public virtual ICollection<Permission> Permissions { get; set;}
-        public virtual ICollection<RoleModulePermissions> RoleModulePermissions { get; set; }
+        public virtual ICollection<ApplicationRole> Roles { get; set; }
+        public ICollection<RoleModulePermission> RoleModulePermissions { get; set; }
+
 
     }
 }

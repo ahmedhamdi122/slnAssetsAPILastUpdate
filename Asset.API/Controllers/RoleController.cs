@@ -3,8 +3,10 @@ using Asset.Domain.Services;
 using Asset.Models;
 using Asset.ViewModels.ModuleVM;
 using Asset.ViewModels.PagingParameter;
+using Asset.ViewModels.PermissionVM;
 using Asset.ViewModels.RoleCategoryVM;
 using Asset.ViewModels.RoleVM;
+using DocumentFormat.OpenXml.Packaging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -65,27 +67,34 @@ namespace Asset.API.Controllers
         {
              return await RoleService.getAll( first,  rows,  sortSearchObj);
         }
-        [HttpGet("/{id}")]
-        public async Task<ApplicationRole> getById(string RoleId)
+
+        [HttpGet]
+        [Route("GetById/{roleId}")]
+        public async Task getById(string RoleId)
         {
-            // var role = _context.ApplicationRole.Include(r => r.RoleModulePermissions).ThenInclude(r => r.Role).Include(r => r.RoleModulePermissions).ThenInclude(r => r.Permission).Include(r => r.RoleModulePermissions).ThenInclude(r => r.Module).FirstOrDefault(r => r.Id == RoleId);
+            // var role =await _context.ApplicationRole.Include(r => r.RoleModulePermissions).ThenInclude(r => r.Role).Include(r => r.RoleModulePermissions).ThenInclude(r => r.Permission).Include(r => r.RoleModulePermissions).ThenInclude(r => r.Module).FirstOrDefaultAsync(r => r.Id == RoleId);
             //  return new IndexRoleVM.GetData() { Id = role.Id, Name = role.Name, DisplayName = role.DisplayName, Category = new EditRoleCategory() { Id = role.RoleCategory.Id, Name = role.RoleCategory.Name, NameAr = role.RoleCategory.NameAr, OrderId = role.RoleCategory.OrderId }, ModuleWithPermissions = role.RoleModulePermissions.Select(rm=>new ModuleWithPermissionsVM() {Id=rm.Module.Id,Name=rm.Module.Name,NameAr=rm.Module.NameAr,}) };
-            var role = await _context.ApplicationRole.Include(r => r.RoleModulePermissions).FirstOrDefaultAsync(r => r.Id == RoleId);
-            return role;
+            //var role = await _context.ApplicationRole.Include(r => r.Modules).Include(r=>r.RoleModulePermissions).Select(r=> new IndexRoleVM.GetData() { Id=r.Id,Name=r.Name,ModuleWithPermissions=r.Modules.Select( m=>new ModuleWithPermissionsVM(m.Id,m.Name,m.NameAr,r.RoleModulePermissions.Where(rmp=>rmp.ModuleId==m.Id).Select(rmp=>new permissionVM(rmp.Id,_context.Permissions.FirstOrDefault(p=>p.Id==rmp.Id).Name,_context.Permissions.FirstOrDefault(p=>p.Id==rmp.Id).Value)).ToList()))}).FirstOrDefaultAsync(r => r.Id == RoleId);
+            var role = await _context.ApplicationRole.Include(r=>r.RoleModulePermissions).FirstOrDefaultAsync(r=>r.Id==RoleId);
+            return ;
         }
+     
+
+        
+                 
         [HttpGet]
         [Route("getcount")]
         public int count()
         {
             return _pagingService.Count<RoleCategory>();
         }
-        [HttpGet]
-        [Route("GetById/{roleId}")]
-        public async Task<ActionResult<ApplicationRole>> GetById(string roleId)
-        {
-            return await _applicationRole.FindByIdAsync(roleId);    
+        //[HttpGet]
+        //[Route("GetById/{roleId}")]
+        //public async Task<ActionResult<ApplicationRole>> GetById(string roleId)
+        //{
+        //    return await _applicationRole.FindByIdAsync(roleId);    
 
-        }
+        //}
         
 
         [HttpGet]
@@ -110,13 +119,13 @@ namespace Asset.API.Controllers
 
         [HttpPost]
         [Route("AddRole")]
-        public async Task<IActionResult> Create(ApplicationRole role)
+        public async Task<IActionResult> Create(CreateRoleVM role)
         {
-            ApplicationRole roleObj = new ApplicationRole();
-            roleObj.DisplayName = role.DisplayName;
-            roleObj.Name = role.Name;
-            roleObj.RoleCategoryId = role.RoleCategoryId;
-            var roleresult = await _applicationRole.CreateAsync(roleObj);
+
+            
+            
+            var res = await RoleService.add(role);
+            //var roleresult = await _applicationRole.CreateAsync(roleObj);
             return Ok();
         }
 

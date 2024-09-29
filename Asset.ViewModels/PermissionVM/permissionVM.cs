@@ -8,14 +8,14 @@ namespace Asset.ViewModels.PermissionVM
 {
     public class permissionVM
     {
-        public permissionVM(int id,string name,bool value)
+        public permissionVM(int Id,string Name,bool Value)
         {
-            ID = id;
-            Name = name;
-            Value = value;
+            id = Id;
+            name = Name;
+            value = Value;
         }
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public bool Value { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+        public bool value { get; set; }
     }
 }

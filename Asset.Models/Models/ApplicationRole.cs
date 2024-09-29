@@ -1,4 +1,5 @@
 ﻿using Asset.Models;
+using Asset.Models.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,11 +20,12 @@ namespace Asset.Models
         }
 
         public  int RoleCategoryId { get; set; }
-
+        
         [StringLength(50)]
         public  string DisplayName { get; set; }
         public virtual RoleCategory RoleCategory { get; set; }
-        public virtual ICollection<RoleModulePermissions> RoleModulePermissions { get; set; }
+        public virtual ICollection<Module> Modules { get; set; }
+        public ICollection<RoleModulePermission> RoleModulePermissions { get; set; }
 
     }
 

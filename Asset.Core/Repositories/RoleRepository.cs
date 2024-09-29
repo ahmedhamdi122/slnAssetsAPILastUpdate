@@ -19,6 +19,13 @@ namespace Asset.Core.Repositories
         {
             _context=context;
         }
+        public async Task<string> createRole(ApplicationRole RoleObj)
+        {
+
+            //var role= await _context.Roles.AddAsync(RoleObj);
+            //return role;
+            return "";
+        }
         public async Task<IndexRoleVM> getAll(int first, int rows, SortSearchVM sortSearchObj)
         {
             IndexRoleVM mainClass = new IndexRoleVM();
