@@ -13,6 +13,6 @@ namespace Asset.Domain.Services
     {
         Task<IndexRoleVM> getAll(int first, int rows, SortSearchVM sortSearchObj);
         Task<bool> hasRoleWithRoleCategoryId(int id);
-        Task<string> add(CreateRoleVM createRoleVM); 
+        Task<string> AddRoleWithModulePermissionsAsync(CreateRoleVM createRoleVM); 
     }
 }

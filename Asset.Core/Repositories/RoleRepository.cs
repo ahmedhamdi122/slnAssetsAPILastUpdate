@@ -22,9 +22,9 @@ namespace Asset.Core.Repositories
         public async Task<string> createRole(ApplicationRole RoleObj)
         {
 
-            //var role= await _context.Roles.AddAsync(RoleObj);
-            //return role;
-            return "";
+             await _context.Roles.AddAsync(RoleObj);
+            await _context.SaveChangesAsync();
+            return RoleObj.Id;
         }
         public async Task<IndexRoleVM> getAll(int first, int rows, SortSearchVM sortSearchObj)
         {

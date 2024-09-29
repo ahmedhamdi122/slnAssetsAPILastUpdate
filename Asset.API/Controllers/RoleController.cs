@@ -124,7 +124,7 @@ namespace Asset.API.Controllers
 
             
             
-            var res = await RoleService.add(role);
+            var res = await RoleService.AddRoleWithModulePermissionsAsync(role);
             //var roleresult = await _applicationRole.CreateAsync(roleObj);
             return Ok();
         }
