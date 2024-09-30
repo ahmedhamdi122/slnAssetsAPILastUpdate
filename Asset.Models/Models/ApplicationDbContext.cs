@@ -40,7 +40,7 @@ namespace Asset.Models
             builder.Entity<Visit>().Property(g => g.Longtitude).HasColumnType("decimal(18, 8)");
 
         }
-        public DbSet<RoleModulePermission>roleModulePermission { get; set; }   
+        public DbSet<RoleModulePermission> roleModulePermission { get; set; }   
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Module> Modules { get; set; }
         public DbSet<RoleCategory> RoleCategories { get; set; }

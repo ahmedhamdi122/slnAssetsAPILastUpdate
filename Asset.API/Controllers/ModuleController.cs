@@ -24,7 +24,7 @@ namespace Asset.API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ModuleWithPermissionsVM>>> getAll()
         {
-            return await _context.Modules.Include(m => m.Permissions).Select(m => new ModuleWithPermissionsVM(m.Id, m.Name, m.NameAr, m.Permissions.Select(p => new permissionVM(p.Id, p.Name, p.Value)).ToList())).ToListAsync();
+            return await _context.Modules.Include(m => m.Permissions).Select(m => new ModuleWithPermissionsVM(m.Id, m.Name, m.NameAr, m.Permissions.Select(p => new permissionVM(p.Id, p.Name)).ToList())).ToListAsync();
         }
     }
 }
