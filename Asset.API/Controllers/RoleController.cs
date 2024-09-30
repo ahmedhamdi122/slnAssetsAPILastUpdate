@@ -1,4 +1,5 @@
-﻿using Asset.Core.Services;
+﻿using Asset.API.Helpers;
+using Asset.Core.Services;
 using Asset.Domain.Services;
 using Asset.Models;
 using Asset.ViewModels.ModuleVM;
@@ -121,11 +122,12 @@ namespace Asset.API.Controllers
         [Route("AddRole")]
         public async Task<IActionResult> Create(CreateRoleVM role)
         {
-
-            
-            
-            var res = await RoleService.AddRoleWithModulePermissionsAsync(role);
-            //var roleresult = await _applicationRole.CreateAsync(roleObj);
+            var error = await RoleService.ValidateModuleAndPermissionsAsync(role.ModuleIdsWithPermissions);
+            if (error != null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "notFound", Message = error, MessageAr = error });
+            }
+            await RoleService.AddRoleWithModulePermissionsAsync(role);
             return Ok();
         }
 

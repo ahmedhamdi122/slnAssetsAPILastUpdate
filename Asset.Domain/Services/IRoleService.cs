@@ -1,4 +1,5 @@
-﻿using Asset.ViewModels.RoleCategoryVM;
+﻿using Asset.ViewModels.ModuleVM;
+using Asset.ViewModels.RoleCategoryVM;
 using Asset.ViewModels.RoleVM;
 using Org.BouncyCastle.Crypto;
 using System;
@@ -13,6 +14,8 @@ namespace Asset.Domain.Services
     {
         Task<IndexRoleVM> getAll(int first, int rows, SortSearchVM sortSearchObj);
         Task<bool> hasRoleWithRoleCategoryId(int id);
-        Task<string> AddRoleWithModulePermissionsAsync(CreateRoleVM createRoleVM); 
+        Task AddRoleWithModulePermissionsAsync(CreateRoleVM createRoleVM);
+        Task<string> ValidateModuleAndPermissionsAsync(IEnumerable<ModuleIdWithPermissionsVM> ModuleIdsWithPermissions);
+    
     }
 }

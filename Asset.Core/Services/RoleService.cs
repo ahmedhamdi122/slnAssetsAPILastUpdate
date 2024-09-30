@@ -1,6 +1,7 @@
 ﻿using Asset.Domain;
 using Asset.Domain.Services;
 using Asset.Models;
+using Asset.ViewModels.ModuleVM;
 using Asset.ViewModels.RoleCategoryVM;
 using Asset.ViewModels.RoleVM;
 using System;
@@ -26,14 +27,16 @@ namespace Asset.Core.Services
         {
             return _unitOfWork.Role.getAll(first, rows, sortSearchObj);
         }
-        public async Task<string> AddRoleWithModulePermissionsAsync(CreateRoleVM createRole)
+        public async Task AddRoleWithModulePermissionsAsync(CreateRoleVM createRole)
         {
-            ApplicationRole roleObh=new ApplicationRole() { Name=createRole.Name,DisplayName=createRole.DisplayName,RoleCategoryId=createRole.RolecategoryID};
+            ApplicationRole roleObj=new ApplicationRole() { Name=createRole.Name,DisplayName=createRole.DisplayName,RoleCategoryId=createRole.RolecategoryID};
 
-            var roleId= await _unitOfWork.Role.createRole(roleObh);
-
-            return "";
-
+            var roleId= await _unitOfWork.Role.createRole(roleObj);
+            await _unitOfWork.Role.AddModulePermissionsAsync(roleId,createRole.ModuleIdsWithPermissions);
+        }
+        public async Task<string> ValidateModuleAndPermissionsAsync(IEnumerable<ModuleIdWithPermissionsVM> ModuleIdsWithPermissions)
+        {
+            return await _unitOfWork.Role.ValidateModuleAndPermissionsAsync(ModuleIdsWithPermissions);
         }
     }
 }

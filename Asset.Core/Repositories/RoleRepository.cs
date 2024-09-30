@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Asset.ViewModels.ModuleVM;
+using Asset.Models.Models;
 
 namespace Asset.Core.Repositories
 {
@@ -64,10 +66,40 @@ namespace Asset.Core.Repositories
         }
         public async Task<bool> hasRoleWithRoleCategoryId(int id)
         {
-            // return await _context.ApplicationRole.AnyAsync(r=>r.RoleCategoryId==id);
             return await _context.ApplicationRole.AnyAsync(r=> r.RoleCategoryId == id);
              
         }
+        public  async Task AddModulePermissionsAsync(string roleId,IEnumerable<ModuleIdWithPermissionsVM> ModuleIdsWithPermissions)
+        {
+            var RoleModulePermissions = ModuleIdsWithPermissions.SelectMany(mwp => mwp.permissionIDs.Select(permissionId=>new RoleModulePermission() { RoleId=roleId,ModuleId=mwp.moduleId,PermissionId= permissionId }));
+            await _context.roleModulePermission.AddRangeAsync(RoleModulePermissions);
+            await _context.SaveChangesAsync();  
+        }
+        public async Task<string?> ValidateModuleAndPermissionsAsync(IEnumerable<ModuleIdWithPermissionsVM> ModuleIdsWithPermissions)
+        {
+            foreach (var moduleIdWithPermissions in ModuleIdsWithPermissions)
+            {
+                var ModuleExists = await _context.Modules.AnyAsync(m => m.Id == moduleIdWithPermissions.moduleId);
+                if (!ModuleExists)
+                {
+                    return $"ModuleId : {moduleIdWithPermissions.moduleId} not found";
+                }
+                foreach (var permissionId in moduleIdWithPermissions.permissionIDs)
+                {
+                    var permissionIdExists = await _context.Permissions.AnyAsync(p => p.Id == permissionId);
+                    if (!permissionIdExists)
+                    {
+                        return $"permissionId : {permissionId} not found";
+                    }
+
+                 }
+            }
+            return null;
+
+        }
+
+
+
     }
 }
 
