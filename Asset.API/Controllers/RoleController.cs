@@ -2,11 +2,13 @@
 using Asset.Core.Services;
 using Asset.Domain.Services;
 using Asset.Models;
+using Asset.Models.Models;
 using Asset.ViewModels.ModuleVM;
 using Asset.ViewModels.PagingParameter;
 using Asset.ViewModels.PermissionVM;
 using Asset.ViewModels.RoleCategoryVM;
 using Asset.ViewModels.RoleVM;
+using DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using DocumentFormat.OpenXml.Packaging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -70,13 +72,51 @@ namespace Asset.API.Controllers
         }
 
         [HttpGet]
-        [Route("GetById/{roleId}")]
-        public async Task getById(string RoleId)
+        [Route("{roleId}")]
+        public async Task getById(string roleId)
         {
-            // var role =await _context.ApplicationRole.Include(r => r.RoleModulePermissions).ThenInclude(r => r.Role).Include(r => r.RoleModulePermissions).ThenInclude(r => r.Permission).Include(r => r.RoleModulePermissions).ThenInclude(r => r.Module).FirstOrDefaultAsync(r => r.Id == RoleId);
+            //var role =await _context.ApplicationRole.Include(r => r.RoleModulePermissions).ThenInclude(r => r.Role).Include(r => r.RoleModulePermissions).ThenInclude(r => r.Permission).Include(r => r.RoleModulePermissions).ThenInclude(r => r.Module).Select(r=> new RoleDetailsVM() { Name=r.Name,DisplayName=r.DisplayName,RolecategoryID=r.RoleCategoryId,ModuleWithPermissions=r.RoleModulePermissions.Select(rmp=>new ModuleWithPermissionsVM() { id=rmp.ModuleId,name=rmp.Module.Name,nameAr=rmp.Module.NameAr,Permissions= new permissionVM(rmp.Permission.Id,rmp.Permission.Name) })}).FirstOrDefaultAsync(r => r.Id == RoleId);
             //  return new IndexRoleVM.GetData() { Id = role.Id, Name = role.Name, DisplayName = role.DisplayName, Category = new EditRoleCategory() { Id = role.RoleCategory.Id, Name = role.RoleCategory.Name, NameAr = role.RoleCategory.NameAr, OrderId = role.RoleCategory.OrderId }, ModuleWithPermissions = role.RoleModulePermissions.Select(rm=>new ModuleWithPermissionsVM() {Id=rm.Module.Id,Name=rm.Module.Name,NameAr=rm.Module.NameAr,}) };
             //var role = await _context.ApplicationRole.Include(r => r.Modules).Include(r=>r.RoleModulePermissions).Select(r=> new IndexRoleVM.GetData() { Id=r.Id,Name=r.Name,ModuleWithPermissions=r.Modules.Select( m=>new ModuleWithPermissionsVM(m.Id,m.Name,m.NameAr,r.RoleModulePermissions.Where(rmp=>rmp.ModuleId==m.Id).Select(rmp=>new permissionVM(rmp.Id,_context.Permissions.FirstOrDefault(p=>p.Id==rmp.Id).Name,_context.Permissions.FirstOrDefault(p=>p.Id==rmp.Id).Value)).ToList()))}).FirstOrDefaultAsync(r => r.Id == RoleId);
-            var role = await _context.ApplicationRole.Include(r=>r.RoleModulePermissions).FirstOrDefaultAsync(r=>r.Id==RoleId);
+            // var role = await _context.ApplicationRole.Include(r=>r.RoleModulePermissions).ThenInclude(rmp=>rmp.Module).Include().FirstOrDefaultAsync(r=>r.Id==RoleId);
+            //        var role =await _context.roleModulePermission.GroupBy(r => r.ModuleId).Select(r => new { moduleId=r.Key,permisisonsId=r.Select(r=>r.PermissionId)})
+            //.ToListAsync();
+        //    var role = await _context.ApplicationRole // Assuming you have a DbSet for Roles
+        //.Where(r => r.Id == roleId)
+        //.Select(r => new RoleDetailsVM
+        //{
+        //    RolecategoryID = r.RoleCategoryId,
+        //    Name = r.Name,
+        //    DisplayName = r.DisplayName,
+        //    ModuleWithPermissions = r.RoleModulePermissions
+        //        .GroupBy(rmp => new
+        //        {
+        //            rmp.ModuleId,
+        //            ModuleName = rmp.Module.Name,  // Assuming you have Module navigation property
+        //            ModuleNameAr = rmp.Module.NameAr // Assuming this is in your Module entity
+        //        })
+        //        .Select(g => new ModuleWithPermissionsVM(
+        //            g.Key.ModuleId,
+        //            g.Key.ModuleName,
+        //            g.Key.ModuleNameAr,
+        //            g.Select(rmp => new permissionVM(rmp.PermissionId, rmp.Permission.Name)).Distinct() // Assuming Permission navigation property
+        //        ))
+        //        .ToList()
+        //})
+        //.FirstOrDefaultAsync();
+
+
+            var role = await _context.ApplicationRole
+        .Select(r => new
+        {
+            r.Id,
+            r.RoleCategoryId,
+            r.Name,
+            r.DisplayName,
+            r.RoleModulePermissions
+            
+        })
+        .FirstOrDefaultAsync(r => r.Id==roleId);
             return ;
         }
      

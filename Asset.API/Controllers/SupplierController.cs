@@ -55,7 +55,7 @@ namespace Asset.API.Controllers
             return _SupplierService.GetAll();
         }
 
-
+        
         [HttpPost]
         [Route("GetAllSuppliersWithPaging/{pagenumber}/{pagesize}")]
         public IndexSupplierVM GetAllSuppliersWithPaging(int pagenumber, int pagesize)
