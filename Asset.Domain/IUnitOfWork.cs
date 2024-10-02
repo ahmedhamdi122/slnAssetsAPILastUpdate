@@ -9,6 +9,7 @@ namespace Asset.Domain
         int CommitAsync();
         Task<int> CommitAsync2();
         void Rollback();
+        IModuleRepository ModuleRepository { get; } 
         IRoleRepository Role { get; }
         IRoleCategoryRepository RoleCategory { get; }
         IOrganizationRepository OrganizationRepository { get; }

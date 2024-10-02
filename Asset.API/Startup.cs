@@ -145,7 +145,7 @@ namespace Asset.API
             services.AddScoped<IAssetStockTakingService, AssetStockTakingService>();
             services.AddScoped<IStockTakingScheduleService, StockTakingScheduleService>();
             services.AddScoped<IManufacturerPMAssetService, ManufacturerPMAssetService>();
-
+            services.AddScoped<IModuleService, ModuleService>();
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                  .AddEntityFrameworkStores<ApplicationDbContext>()

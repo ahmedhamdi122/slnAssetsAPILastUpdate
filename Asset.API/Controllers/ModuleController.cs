@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using Asset.Domain.Services;
 
 namespace Asset.API.Controllers
 {
@@ -15,16 +16,17 @@ namespace Asset.API.Controllers
     [ApiController]
     public class ModuleController : ControllerBase
     {
-        private ApplicationDbContext _context;
-        public ModuleController(ApplicationDbContext context)
+        private IModuleService _ModuleService;
+        public ModuleController(IModuleService moduleService)
         {
-            _context = context;
+            _ModuleService = moduleService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<ModuleWithPermissionsVM>>> getAll()
+        [HttpPost]
+        [Route("{First}/{Rows}")]
+        public async Task<ModulesPermissionsResult> getAll(int First, int Rows,  SearchSortModuleVM SearchSortObj)
         {
-            return await _context.Modules.Include(m => m.Permissions).Select(m => new ModuleWithPermissionsVM(m.Id, m.Name, m.NameAr, m.Permissions.Select(p => new permissionVM(p.Id, p.Name)).ToList())).ToListAsync();
+            return await _ModuleService.getAll(First, Rows, SearchSortObj);
         }
     }
 }

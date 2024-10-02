@@ -11,6 +11,7 @@ namespace Asset.Core
 {
     public class UnitOfWork : IUnitOfWork
     {
+        private IModuleRepository _moduleRepository;
         private IRoleRepository _roleRepository;
         private IRoleCategoryRepository _roleCategoryRepository;
         private IOrganizationRepository _organizationRepository;
@@ -125,6 +126,7 @@ namespace Asset.Core
         {
             _context.Dispose();
         }
+        public IModuleRepository ModuleRepository => _moduleRepository= _moduleRepository?? new ModuleRepository(_context);
         public IRoleRepository Role => _roleRepository = _roleRepository ?? new RoleRepository(_context);
         public IRoleCategoryRepository RoleCategory => _roleCategoryRepository = _roleCategoryRepository ?? new RoleCategoryRepositories(_context);
 
