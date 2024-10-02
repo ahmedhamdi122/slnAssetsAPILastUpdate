@@ -1,4 +1,5 @@
-﻿using Asset.ViewModels.PermissionVM;
+﻿
+using Asset.ViewModels.PermissionVM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,6 @@ using System.Threading.Tasks;
 
 namespace Asset.ViewModels.ModuleVM
 {
-    public class ModulesPermissionsResult
-    {
-        public IEnumerable<ModuleWithPermissionsVM> results { get; set; }
-        public int count { get; set; }
-
-    }
     public class ModuleWithPermissionsVM
     {
         public ModuleWithPermissionsVM(int Id, string Name, string NameAr, IEnumerable<permissionVM> permissions)
@@ -28,4 +23,3 @@ namespace Asset.ViewModels.ModuleVM
         public IEnumerable<permissionVM> Permissions { get; set; }
     }
 }
-

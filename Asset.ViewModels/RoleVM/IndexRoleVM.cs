@@ -21,7 +21,7 @@ namespace Asset.ViewModels.RoleVM
             public string DisplayName { get; set; }
             public string CategoryName { get; set; }
             public EditRoleCategory Category { get; set; }
-            public IEnumerable<ModuleWithPermissionsVM> ModuleWithPermissions { get; set; }
+            public IEnumerable<ModulesPermissionsResult> ModuleWithPermissions { get; set; }
         }
     }
 }
