@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -129,14 +130,20 @@ namespace Asset.API.Controllers
         {
             return _pagingService.Count<RoleCategory>();
         }
-        //[HttpGet]
-        //[Route("GetById/{roleId}")]
-        //public async Task<ActionResult<ApplicationRole>> GetById(string roleId)
-        //{
-        //    return await _applicationRole.FindByIdAsync(roleId);    
-
-        //}
-        
+        [HttpGet]
+        [Route("GetRoleByIdForEdit/{roleId}")]
+        public async Task<ActionResult> GetById(string roleId)
+        {
+           var res= await _context.Modules.Include(m => m.Permissions).Include(m => m.RoleModulePermissions).Select(m => new{ module=m,permissions=m.Permissions,selectedPemrissionIDs=m.RoleModulePermissions.Where(r=>r.RoleId==roleId).Select(p=>p.PermissionId).ToList()}).ToListAsync();
+            return Ok();
+        }
+        [HttpGet]
+        [Route("GetRoleById/{roleId}")]
+        public async Task<ActionResult> ViewById(string roleId)
+        {
+            var res = await _context.Modules.Include(m => m.RoleModulePermissions).ThenInclude(r=>r.Permission).Where(m=>m.RoleModulePermissions.Any()).Select(m => new { module = m,selectedPemrissions = m.RoleModulePermissions.Where(r => r.RoleId == roleId).Select(p=>p.Permission.Name).ToList() }).ToListAsync();
+            return Ok();
+        }
 
         [HttpGet]
         [Route("GetRolesByRoleCategoryId/{catId}")]
