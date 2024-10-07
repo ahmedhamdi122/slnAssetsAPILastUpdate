@@ -20,7 +20,8 @@ namespace Asset.Models
         }
 
         public  int RoleCategoryId { get; set; }
-        
+        public int Counter { get; set; }
+
         [StringLength(50)]
         public  string DisplayName { get; set; }
         public virtual RoleCategory RoleCategory { get; set; }

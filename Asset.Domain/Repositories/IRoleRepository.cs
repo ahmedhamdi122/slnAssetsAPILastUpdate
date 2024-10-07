@@ -17,5 +17,7 @@ namespace Asset.Domain.Repositories
         Task<string> createRole(ApplicationRole createRoleVM);
         Task AddModulePermissionsAsync(string roleId,IEnumerable<ModuleIdWithPermissionsVM> ModuleIdsWithPermissions);
         Task<string> ValidateModuleAndPermissionsAsync(IEnumerable<ModuleIdWithPermissionsVM> ModuleIdsWithPermissions);
+        Task<bool> CheckRoleNameExists(string Name);
+        Task<bool> CheckRoleDisplayNameExists(string DisplayName);
     }
 }

@@ -29,6 +29,7 @@ namespace Asset.Core.Services
         }
         public async Task AddRoleWithModulePermissionsAsync(CreateRoleVM createRole)
         {
+            
             ApplicationRole roleObj=new ApplicationRole() { Name=createRole.Name,DisplayName=createRole.DisplayName,RoleCategoryId=createRole.RolecategoryID};
 
             var roleId= await _unitOfWork.Role.createRole(roleObj);
@@ -37,6 +38,14 @@ namespace Asset.Core.Services
         public async Task<string> ValidateModuleAndPermissionsAsync(IEnumerable<ModuleIdWithPermissionsVM> ModuleIdsWithPermissions)
         {
             return await _unitOfWork.Role.ValidateModuleAndPermissionsAsync(ModuleIdsWithPermissions);
+        }
+        public async Task<string> CheckRoleExists(string Name, string DisplayName)
+        {
+            var nameExists =await _unitOfWork.Role.CheckRoleNameExists(Name);
+            if (nameExists) return "Name";
+            var DisplayNameExists = await _unitOfWork.Role.CheckRoleDisplayNameExists(DisplayName);
+            if (DisplayNameExists) return "DisplayName";
+            return null;
         }
     }
 }

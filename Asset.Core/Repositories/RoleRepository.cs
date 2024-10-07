@@ -23,7 +23,8 @@ namespace Asset.Core.Repositories
         }
         public async Task<string> createRole(ApplicationRole RoleObj)
         {
-
+            var Counter= await _context.ApplicationRole.CountAsync();
+            RoleObj.Counter = Counter+1;
              await _context.Roles.AddAsync(RoleObj);
             await _context.SaveChangesAsync();
             return RoleObj.Id;
@@ -97,7 +98,14 @@ namespace Asset.Core.Repositories
             return null;
 
         }
-
+        public async Task<bool> CheckRoleDisplayNameExists(string DisplayName)
+        {
+            return await _context.ApplicationRole.AnyAsync(r=>r.DisplayName==DisplayName);
+        }
+        public async Task<bool> CheckRoleNameExists(string Name)
+        {
+            return await _context.ApplicationRole.AnyAsync(r => r.Name==Name);
+        }
 
 
     }

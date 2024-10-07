@@ -16,6 +16,8 @@ namespace Asset.Domain.Services
         Task<bool> hasRoleWithRoleCategoryId(int id);
         Task AddRoleWithModulePermissionsAsync(CreateRoleVM createRoleVM);
         Task<string> ValidateModuleAndPermissionsAsync(IEnumerable<ModuleIdWithPermissionsVM> ModuleIdsWithPermissions);
-    
+        Task<string> CheckRoleExists(string Name, string DisplayName);
+
+
     }
 }
