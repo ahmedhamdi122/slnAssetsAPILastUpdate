@@ -31,7 +31,6 @@ namespace Asset.Core.Services
         {
             
             ApplicationRole roleObj=new ApplicationRole() { Name=createRole.Name,DisplayName=createRole.DisplayName,RoleCategoryId=createRole.RolecategoryID};
-
             var roleId= await _unitOfWork.Role.createRole(roleObj);
             await _unitOfWork.Role.AddModulePermissionsAsync(roleId,createRole.ModuleIdsWithPermissions);
         }
