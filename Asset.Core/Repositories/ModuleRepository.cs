@@ -22,10 +22,10 @@ namespace Asset.Core.Repositories
         }
         public async Task<ModulesPermissionsResult> getAll(int First, int Rows, SearchSortModuleVM SearchSortObj)
         {
-         
+
             IQueryable<Module> Modules = _context.Modules.Include(m => m.Permissions);
-       
-      
+
+
 
             #region Search Criteria
 
@@ -48,7 +48,7 @@ namespace Asset.Core.Repositories
                     case "Name":
                         if (SearchSortObj.SortOrder == 1)
                         {
-                            Modules = Modules.OrderBy(m=>m.Name);
+                            Modules = Modules.OrderBy(m => m.Name);
                         }
                         else
                         {
@@ -74,8 +74,8 @@ namespace Asset.Core.Repositories
             #region Represent data by Paging and count
             ModulesPermissionsResult modulesWithPermissions = new ModulesPermissionsResult();
             modulesWithPermissions.count = Modules.Count();
-            if(SearchSortObj.SortOrder == 1 ) modulesWithPermissions.results = await Modules.Skip(First).Take(Rows).OrderBy(m => m.Id).Select(m => new ModuleWithPermissionsVM(m.Id, m.Name, m.NameAr, m.Permissions.Select(p => new permissionVM(p.Id, p.Name)).ToList())).ToListAsync();
-            else modulesWithPermissions.results = await Modules.Skip(First).Take(Rows).OrderByDescending(m => m.Id).Select(m => new ModuleWithPermissionsVM(m.Id, m.Name, m.NameAr, m.Permissions.Select(p => new permissionVM(p.Id, p.Name)).ToList())).ToListAsync();
+            if (SearchSortObj.SortOrder == 1) modulesWithPermissions.results = await Modules.Skip(First).Take(Rows).OrderBy(m => m.Id).Select(m => new ModuleWithPermissionsVM() {id= m.Id, name=m.Name,nameAr= m.NameAr,Permissions= m.Permissions.Select(p => new permissionVM() { id = p.Id, name = p.Name }).ToList() } ).ToListAsync();
+            else modulesWithPermissions.results = await Modules.Skip(First).Take(Rows).OrderByDescending(m => m.Id).Select(m => new ModuleWithPermissionsVM() { id = m.Id, name = m.Name, nameAr = m.NameAr, Permissions = m.Permissions.Select(p => new permissionVM() { id = p.Id, name = p.Name }).ToList() }) .ToListAsync();
 
 
             #endregion

@@ -19,5 +19,8 @@ namespace Asset.Domain.Repositories
         Task<string> ValidateModuleAndPermissionsAsync(IEnumerable<ModuleIdWithPermissionsVM> ModuleIdsWithPermissions);
         Task<bool> CheckRoleNameExists(string Name);
         Task<bool> CheckRoleDisplayNameExists(string DisplayName);
+        Task<RoleVM> getById(string roleId);
+        Task<ModulesPermissionsResult> getModulesPermissionsbyRoleId(string roleId,int first, int rows, SortSearchVM sortSearchObj);
+
     }
 }

@@ -88,11 +88,21 @@ namespace Asset.API.Controllers
         }
         [HttpGet]
         [Route("GetRoleById/{roleId}")]
-        public async Task<ActionResult> ViewById(string roleId)
+        public async Task<ActionResult<RoleVM>> ViewById(string roleId)
         {
-            var res = await _context.Modules.Include(m => m.RoleModulePermissions).ThenInclude(r=>r.Permission).Where(m=>m.RoleModulePermissions.Any()).Select(m => new { module = m,selectedPemrissions = m.RoleModulePermissions.Where(r => r.RoleId == roleId).Select(p=>p.Permission.Name).ToList() }).ToListAsync();
-            return Ok();
+            var res = await RoleService.getById(roleId);
+            if (res == null)
+                return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "notFound", Message = "not found any role contain this ID", MessageAr = ".لا يوجد أي دور بهذا الرقم" });
+
+            return res;
+           
         }
+        //[HttpGet]
+        //[Route("GetRoleById/{roleId}")]
+        //public async Task<ActionResult<ViewRoleWithModulePermissonsVM>> ViewById(string roleId)
+        //{
+        //    //return await _context.ApplicationRole.Include(r =>r.RoleModulePermissions).ThenInclude(r=>r.Permission).Include(m => m.RoleModulePermissions).ThenInclude(r => r.Module).Where(m=>m.RoleModulePermissions.Any()).Select(r => new ViewRoleWithModulePermissonsVM { Name =r.Name,DisplayName=r.DisplayName, ModulesWithPermissions = new ModuleNameWithPermissionsVM() { name = m.Name, nameAr = m.NameAr, Permissions = m.RoleModulePermissions.Where(r => r.RoleId == roleId).Select(p => p.Permission.Name).ToList() } });
+        //}
 
         [HttpGet]
         [Route("GetRolesByRoleCategoryId/{catId}")]
@@ -123,11 +133,11 @@ namespace Asset.API.Controllers
             {
                 if(Exists== "Name")
                 {
-                    return StatusCode(StatusCodes.Status409Conflict, new Response { Status = "roleExists", Message = "Role Name already exists.", MessageAr = "اسم الدور موجود بالفعل." });
+                    return StatusCode(StatusCodes.Status409Conflict, new Response { Status = "roleExists", Message = "Role Name already exists.", MessageAr = ".اسم الدور موجود بالفعل" });
                 }
                 else if(Exists== "DisplayName")
                 {
-                    return StatusCode(StatusCodes.Status409Conflict, new Response { Status = "DisplayNameroleExists", Message = "Role DisplayName already exists.", MessageAr = "اسم العرض للدور موجود بالفعل." });
+                    return StatusCode(StatusCodes.Status409Conflict, new Response { Status = "DisplayNameroleExists", Message = "Role DisplayName already exists.", MessageAr = ".اسم العرض للدور موجود بالفعل" });
                 }
             }
             var error = await RoleService.ValidateModuleAndPermissionsAsync(role.ModuleIdsWithPermissions);
@@ -139,6 +149,12 @@ namespace Asset.API.Controllers
             return Ok();
         }
 
+        [HttpGet("{roleId}/modules-permissions/{first}/{rows}")]
+        public async Task<ActionResult<ModulesPermissionsResult>> getModulesPermissionsbyRoleId(string roleId, int first, int rows, SortSearchVM sortSearchObj)
+        {
+            return await RoleService.getModulesPermissionsbyRoleId(roleId,first, rows, sortSearchObj);
+
+        }
 
         [HttpPut]
         [Route("UpdateRole")]

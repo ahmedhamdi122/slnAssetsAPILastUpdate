@@ -47,5 +47,13 @@ namespace Asset.Core.Services
             if (DisplayNameExists) return "DisplayName";
             return null;
         }
+        public async Task<RoleVM> getById(string roleId)
+        {
+            return await _unitOfWork.Role.getById(roleId);
+        }
+        public async Task<ModulesPermissionsResult> getModulesPermissionsbyRoleId(string roleId, int first, int rows, SortSearchVM sortSearchObj)
+        {
+            return await _unitOfWork.Role.getModulesPermissionsbyRoleId(roleId, first, rows, sortSearchObj);
+        }
     }
 }

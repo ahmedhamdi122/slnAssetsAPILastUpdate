@@ -28,5 +28,6 @@ namespace Asset.API.Controllers
         {
             return await _ModuleService.getAll(First, Rows, SearchSortObj);
         }
+
     }
 }

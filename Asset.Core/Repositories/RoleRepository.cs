@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Asset.ViewModels.ModuleVM;
 using Asset.Models.Models;
+using Asset.ViewModels.PermissionVM;
 
 namespace Asset.Core.Repositories
 {
@@ -105,6 +106,45 @@ namespace Asset.Core.Repositories
         public async Task<bool> CheckRoleNameExists(string Name)
         {
             return await _context.ApplicationRole.AnyAsync(r => r.Name==Name);
+        }
+        public async Task<RoleVM> getById(string roleId)
+        {
+            var role = await _context.ApplicationRole.Include(r=>r.RoleCategory).FirstOrDefaultAsync(r=>r.Id==roleId);
+            if(role!=null)
+            {
+                return new RoleVM() { Name = role.Name, DisplayName = role.DisplayName, CategoryName = new RoleCategoryNamesVM() {Name=role.RoleCategory.Name,NameAr=role.RoleCategory.NameAr  } };
+            }
+            return null;
+        }
+        public async Task<ModulesPermissionsResult> getModulesPermissionsbyRoleId(string roleId,int first, int rows, SortSearchVM sortSearchObj)
+        {
+            ModulesPermissionsResult mainClass = new ModulesPermissionsResult();
+            var query = _context.Modules
+               .Include(m => m.RoleModulePermissions).ThenInclude(r=>r.Permission).Where(m => m.RoleModulePermissions.Any(rp => rp.RoleId == roleId))
+                .AsQueryable();
+
+            if(!string.IsNullOrEmpty(sortSearchObj.search))
+            {
+                query = query.Where(m=> m.Name== sortSearchObj.search || m.NameAr== sortSearchObj.search);
+            }
+            if (sortSearchObj.SortField == "name")
+            {
+                query = sortSearchObj.SortOrder == 1 ? query.OrderBy(m => m.Name) : query.OrderByDescending(m => m.NameAr);
+            }
+         
+            mainClass.count = await query.CountAsync();
+
+            mainClass.results = await query
+                .Skip(first)
+                .Take(rows)
+                .Select(m => new ModuleWithPermissionsVM()
+                {
+                    
+                    name = m.Name,
+                    nameAr = m.NameAr,
+                    Permissions = m.RoleModulePermissions.Where(r=>r.RoleId==roleId).Select(r=> new permissionVM() { name=r.Permission.Name })
+                }).ToListAsync();
+            return mainClass;
         }
 
 
