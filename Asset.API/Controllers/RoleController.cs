@@ -149,7 +149,7 @@ namespace Asset.API.Controllers
             return Ok();
         }
 
-        [HttpGet("{roleId}/modules-permissions/{first}/{rows}")]
+        [HttpPost("{roleId}/modules-permissions/{first}/{rows}")]
         public async Task<ActionResult<ModulesPermissionsResult>> getModulesPermissionsbyRoleId(string roleId, int first, int rows, SortSearchVM sortSearchObj)
         {
             return await RoleService.getModulesPermissionsbyRoleId(roleId,first, rows, sortSearchObj);
