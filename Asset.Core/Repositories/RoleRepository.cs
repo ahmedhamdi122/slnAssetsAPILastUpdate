@@ -112,7 +112,7 @@ namespace Asset.Core.Repositories
             var role = await _context.ApplicationRole.Include(r=>r.RoleCategory).FirstOrDefaultAsync(r=>r.Id==roleId);
             if(role!=null)
             {
-                return new RoleVM() { Name = role.Name, DisplayName = role.DisplayName, CategoryName = new RoleCategoryNamesVM() {Name=role.RoleCategory.Name,NameAr=role.RoleCategory.NameAr  } };
+                return new RoleVM() { Id=role.Id,Name = role.Name, DisplayName = role.DisplayName, RoleCategory = new RoleCategoryVM() {Id=role.RoleCategory.Id,Name=role.RoleCategory.Name,NameAr=role.RoleCategory.NameAr  } };
             }
             return null;
         }
@@ -144,6 +144,30 @@ namespace Asset.Core.Repositories
                     nameAr = m.NameAr,
                     Permissions = m.RoleModulePermissions.Where(r=>r.RoleId==roleId).Select(r=> new permissionVM() { name=r.Permission.Name })
                 }).ToListAsync();
+            return mainClass;
+        }
+        public async Task<ModulesPermissionsWithSelectedPermissionIDsResult> getModulesPermissionsbyRoleIdForEdit(string roleId, int first, int rows, SortSearchVM sortSearchObj)
+        {
+            ModulesPermissionsWithSelectedPermissionIDsResult mainClass = new ModulesPermissionsWithSelectedPermissionIDsResult();
+            var query = _context.Modules.
+               Include(m => m.Permissions).Include(m => m.RoleModulePermissions)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(sortSearchObj.search))
+            {
+                query = query.Where(m => m.Name == sortSearchObj.search || m.NameAr == sortSearchObj.search);
+            }
+            if (sortSearchObj.SortField == "name")
+            {
+                query = sortSearchObj.SortOrder == 1 ? query.OrderBy(m => m.Name) : query.OrderByDescending(m => m.NameAr);
+            }
+
+            mainClass.count = await query.CountAsync();
+
+            mainClass.results = await query
+                .Skip(first)
+                .Take(rows)
+                .Select(m => new ModulePermissionsWithSelectedPermissionIdsVM() { id = m.Id, name = m.Name, nameAr = m.NameAr, Permissions = m.Permissions.Select(p => new permissionVM() { id = p.Id, name = p.Name }), selectedPemrissionIDs = m.RoleModulePermissions.Where(r => r.RoleId == roleId).Select(p => p.PermissionId).ToList() }).ToListAsync();
             return mainClass;
         }
 

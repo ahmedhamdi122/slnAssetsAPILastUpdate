@@ -55,5 +55,10 @@ namespace Asset.Core.Services
         {
             return await _unitOfWork.Role.getModulesPermissionsbyRoleId(roleId, first, rows, sortSearchObj);
         }
+        public async Task<ModulesPermissionsWithSelectedPermissionIDsResult> getModulesPermissionsbyRoleIdForEdit(string roleId, int first, int rows, SortSearchVM sortSearchObj)
+        {
+            return await _unitOfWork.Role.getModulesPermissionsbyRoleIdForEdit(roleId, first, rows, sortSearchObj);
+        }
+
     }
 }

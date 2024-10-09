@@ -19,5 +19,7 @@ namespace Asset.Domain.Services
         Task<string> CheckRoleExists(string Name, string DisplayName);
         Task<RoleVM> getById(string roleId);
         Task<ModulesPermissionsResult>getModulesPermissionsbyRoleId(string roleId,int first,int rows, SortSearchVM sortSearchObj);
+        Task<ModulesPermissionsWithSelectedPermissionIDsResult> getModulesPermissionsbyRoleIdForEdit(string roleId, int first, int rows, SortSearchVM sortSearchObj);
+
     }
 }

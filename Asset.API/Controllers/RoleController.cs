@@ -8,6 +8,7 @@ using Asset.ViewModels.PagingParameter;
 using Asset.ViewModels.PermissionVM;
 using Asset.ViewModels.RoleCategoryVM;
 using Asset.ViewModels.RoleVM;
+using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using DocumentFormat.OpenXml.Packaging;
 using Microsoft.AspNetCore.Http;
@@ -79,12 +80,11 @@ namespace Asset.API.Controllers
         {
             return _pagingService.Count<RoleCategory>();
         }
-        [HttpGet]
-        [Route("GetRoleByIdForEdit/{roleId}")]
-        public async Task<ActionResult> GetById(string roleId)
+        [HttpPost]
+        [Route("GetRoleByIdForEdit/{roleId}/{first}/{rows}")]
+        public async Task<ActionResult<ModulesPermissionsWithSelectedPermissionIDsResult>> GetByIdForEdit(string roleId, int first, int rows, SortSearchVM sortSearchObj)
         {
-           var res= await _context.Modules.Include(m => m.Permissions).Include(m => m.RoleModulePermissions).Select(m => new{ module=m,permissions=m.Permissions,selectedPemrissionIDs=m.RoleModulePermissions.Where(r=>r.RoleId==roleId).Select(p=>p.PermissionId).ToList()}).ToListAsync();
-            return Ok();
+            return await RoleService.getModulesPermissionsbyRoleIdForEdit(roleId, first, rows, sortSearchObj);
         }
         [HttpGet]
         [Route("GetRoleById/{roleId}")]
@@ -93,9 +93,7 @@ namespace Asset.API.Controllers
             var res = await RoleService.getById(roleId);
             if (res == null)
                 return StatusCode(StatusCodes.Status404NotFound, new Response { Status = "notFound", Message = "not found any role contain this ID", MessageAr = ".لا يوجد أي دور بهذا الرقم" });
-
             return res;
-           
         }
         //[HttpGet]
         //[Route("GetRoleById/{roleId}")]
@@ -149,7 +147,7 @@ namespace Asset.API.Controllers
             return Ok();
         }
 
-        [HttpGet("{roleId}/modules-permissions/{first}/{rows}")]
+        [HttpPost("{roleId}/modules-permissions/{first}/{rows}")]
         public async Task<ActionResult<ModulesPermissionsResult>> getModulesPermissionsbyRoleId(string roleId, int first, int rows, SortSearchVM sortSearchObj)
         {
             return await RoleService.getModulesPermissionsbyRoleId(roleId,first, rows, sortSearchObj);

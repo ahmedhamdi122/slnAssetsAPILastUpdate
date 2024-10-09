@@ -8,12 +8,14 @@ namespace Asset.ViewModels.RoleVM
 {
     public class RoleVM
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         public string DisplayName { get; set; }
-        public RoleCategoryNamesVM CategoryName { get; set; }
+        public RoleCategoryVM RoleCategory { get; set; }
     }
-    public class RoleCategoryNamesVM
+    public class RoleCategoryVM
     {
+        public int Id { get; set; } 
        public string Name { get; set; }
        public string NameAr { get; set; }
 
