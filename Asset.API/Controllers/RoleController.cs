@@ -67,7 +67,7 @@ namespace Asset.API.Controllers
 
 
         [HttpPost]
-        [Route("Roles/{first}/{rows}")]
+        [Route("{first}/{rows}")]
         public async Task<IndexRoleVM> getAll(int first, int rows, SortSearchVM sortSearchObj)
         {
              return await RoleService.getAll( first,  rows,  sortSearchObj);
@@ -167,13 +167,19 @@ namespace Asset.API.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteRole/{id}")]
-        public async Task<ActionResult<ApplicationRole>> Delete(string id)
+        [Route("{RoleId}")]
+        public async Task<ActionResult> Delete(string RoleId)
         {
             try
             {
-                var deleteRoleObj = await _applicationRole.FindByIdAsync(id);
-                await _applicationRole.DeleteAsync(deleteRoleObj);
+
+                bool IsRoleAssignedToUsers = await RoleService.IsRoleAssignedToUsersService(RoleId);
+                if (IsRoleAssignedToUsers) 
+                {
+                    return StatusCode(StatusCodes.Status409Conflict, new Response { Status = "IsRoleAssignedToUsers", Message = "You cannot delete this role while users are still assigned to it.", MessageAr = "لا يمكنك حذف هذا الدور بينما لا يزال هناك مستخدمون مرتبطون بها" });
+                }
+
+                await RoleService.DeleteRoleService(RoleId);
             }
             catch (DbUpdateConcurrencyException ex)
             {

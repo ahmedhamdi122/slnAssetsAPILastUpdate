@@ -20,6 +20,8 @@ namespace Asset.Domain.Services
         Task<RoleVM> getById(string roleId);
         Task<ModulesPermissionsResult>getModulesPermissionsbyRoleId(string roleId,int first,int rows, SortSearchVM sortSearchObj);
         Task<ModulesPermissionsWithSelectedPermissionIDsResult> getModulesPermissionsbyRoleIdForEdit(string roleId, int first, int rows, SortSearchVM sortSearchObj);
+        Task<bool> IsRoleAssignedToUsersService(string RoleId);
+        Task DeleteRoleService(string RoleId);
 
     }
 }

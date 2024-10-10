@@ -26,7 +26,7 @@ namespace Asset.Core.Repositories
         {
             var Counter= await _context.ApplicationRole.CountAsync();
             RoleObj.Counter = Counter+1;
-             await _context.Roles.AddAsync(RoleObj);
+             await _context.ApplicationRole.AddAsync(RoleObj);
             await _context.SaveChangesAsync();
             return RoleObj.Id;
         }
@@ -56,7 +56,7 @@ namespace Asset.Core.Repositories
 
             mainClass.Results = await query
                 .Skip(first)
-                .Take(rows)
+                .Take(rows).OrderBy(r => r.Counter)
                 .Select(role => new IndexRoleVM.GetData
                 {
                     Id = role.Id,
@@ -171,7 +171,17 @@ namespace Asset.Core.Repositories
             return mainClass;
         }
 
-
+        public async Task<bool> IsRoleAssignedToUsers(string RoleId)
+        {
+            return await _context.UserRoles.AnyAsync(u=>u.RoleId==RoleId);
+        }
+        public async Task DeleteRole(string RoleId)
+        {
+            var Role=await _context.Roles.FindAsync(RoleId);
+             _context.Roles.Remove(Role);
+            
+            await _context.SaveChangesAsync();
+        }
     }
 }
 
