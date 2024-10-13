@@ -15,11 +15,10 @@ namespace Asset.Models
         public int? OrganizationId { get; set; }
         public int? SubOrganizationId { get; set; }
         public int? HospitalId { get; set; }
-        [StringLength(450)]
-        public string RoleId { get; set; }
+        //[StringLength(450)]
+        //public string RoleId { get; set; }
         public int? RoleCategoryId { get; set; }
-        public int? SupplierId { get; set; }
-        public int? CommetieeMemberId { get; set; }
+
 
 
         [NotMapped]

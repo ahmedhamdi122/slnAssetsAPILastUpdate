@@ -186,7 +186,6 @@ namespace Asset.API.Controllers
                 string msg = ex.Message;
                 return BadRequest("Error in delete");
             }
-
             return Ok();
         }
 

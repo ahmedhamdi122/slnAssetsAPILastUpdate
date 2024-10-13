@@ -38,10 +38,10 @@ namespace Asset.Core.Services
             return _unitOfWork.RequestTracking.GetAll();
         }
 
-        public IEnumerable<IndexRequestTracking> GetAllRequestTracking(string UserId, int assetDetailId)
-        {
-            return _unitOfWork.RequestTracking.GetAll(UserId,assetDetailId);
-        }
+        //public IEnumerable<IndexRequestTracking> GetAllRequestTracking(string UserId, int assetDetailId)
+        //{
+        //    return _unitOfWork.RequestTracking.GetAll(UserId,assetDetailId);
+        //}
 
         public RequestDetails GetAllTrackingsByRequestId(int RequestId)
         {

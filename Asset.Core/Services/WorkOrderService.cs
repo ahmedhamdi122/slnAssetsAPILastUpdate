@@ -38,15 +38,15 @@ namespace Asset.Core.Services
             return _unitOfWork.WorkOrder.GetById(id);
         }
 
-        public IEnumerable<IndexWorkOrderVM> GetworkOrderByUserId(int requestId, string userId)
-        {
-            return _unitOfWork.WorkOrder.GetworkOrderByUserId(requestId, userId);
-        }
+        //public IEnumerable<IndexWorkOrderVM> GetworkOrderByUserId(int requestId, string userId)
+        //{
+        //    return _unitOfWork.WorkOrder.GetworkOrderByUserId(requestId, userId);
+        //}
 
-        public IEnumerable<IndexWorkOrderVM> GetworkOrder(string userId)
-        {
-            return _unitOfWork.WorkOrder.GetworkOrder(userId);
-        }
+        //public IEnumerable<IndexWorkOrderVM> GetworkOrder(string userId)
+        //{
+        //    return _unitOfWork.WorkOrder.GetworkOrder(userId);
+        //}
 
 
         public void UpdateWorkOrder(int id, EditWorkOrderVM editWorkOrderVM)
@@ -54,12 +54,12 @@ namespace Asset.Core.Services
             _unitOfWork.WorkOrder.Update(id, editWorkOrderVM);
         }
 
-        public IndexWorkOrderVM GetWorkOrderByRequestId(int requestId)
-        {
+        //public IndexWorkOrderVM GetWorkOrderByRequestId(int requestId)
+        //{
 
-            return _unitOfWork.WorkOrder.GetWorkOrderByRequestId(requestId);
+        //    return _unitOfWork.WorkOrder.GetWorkOrderByRequestId(requestId);
 
-        }
+        //}
 
         public IEnumerable<IndexWorkOrderVM> GetAllWorkOrdersByHospitalId(int? hospitalId)
         {
@@ -155,10 +155,10 @@ namespace Asset.Core.Services
             return _unitOfWork.WorkOrder.PrintListOfWorkOrders(workOrders);
         }
 
-        public IEnumerable<IndexWorkOrderVM> GetworkOrderByUserAssetId(int assetId, string userId)
-        {
-            return _unitOfWork.WorkOrder.GetworkOrderByUserAssetId(assetId, userId);
-        }
+        //public IEnumerable<IndexWorkOrderVM> GetworkOrderByUserAssetId(int assetId, string userId)
+        //{
+        //    return _unitOfWork.WorkOrder.GetworkOrderByUserAssetId(assetId, userId);
+        //}
 
         public IndexWorkOrderVM2 SearchWorkOrders(SearchWorkOrderVM searchObj, int pageNumber, int pageSize)
         {
@@ -170,10 +170,10 @@ namespace Asset.Core.Services
             return _unitOfWork.WorkOrder.GetAllWorkOrdersByHospitalIdAndPaging2(hospitalId, userId, statusId, pageNumber, pageSize);
         }
 
-        public IndexWorkOrderVM GetMobileWorkOrderByRequestUserId(int requestId, string userId)
-        {
-            return _unitOfWork.WorkOrder.GetMobileWorkOrderByRequestUserId(requestId, userId);
-        }
+        //public IndexWorkOrderVM GetMobileWorkOrderByRequestUserId(int requestId, string userId)
+        //{
+        //    return _unitOfWork.WorkOrder.GetMobileWorkOrderByRequestUserId(requestId, userId);
+        //}
 
         public List<IndexWorkOrderVM2.GetData> PrintListOfWorkOrders(PrintWorkOrderVM printWorkOrderObj)
         {

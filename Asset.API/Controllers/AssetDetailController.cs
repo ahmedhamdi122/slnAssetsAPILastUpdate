@@ -1309,12 +1309,12 @@ namespace Asset.API.Controllers
 
         #region Search Functions
 
-        [HttpPost]
-        [Route("SearchHospitalAssetsBySupplierId/{pageNumber}/{pageSize}")]
-        public IndexAssetDetailVM SearchHospitalAssetsBySupplierId(SearchAssetDetailVM searchObj, int pageNumber, int pageSize)
-        {
-            return _AssetDetailService.SearchHospitalAssetsBySupplierId(searchObj, pageNumber, pageSize);
-        }
+        //[HttpPost]
+        //[Route("SearchHospitalAssetsBySupplierId/{pageNumber}/{pageSize}")]
+        //public IndexAssetDetailVM SearchHospitalAssetsBySupplierId(SearchAssetDetailVM searchObj, int pageNumber, int pageSize)
+        //{
+        //    return _AssetDetailService.SearchHospitalAssetsBySupplierId(searchObj, pageNumber, pageSize);
+        //}
 
 
 

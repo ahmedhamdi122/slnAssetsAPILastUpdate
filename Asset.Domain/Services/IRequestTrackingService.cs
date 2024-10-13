@@ -11,7 +11,7 @@ namespace Asset.Domain.Services
     public interface IRequestTrackingService
     {
         IEnumerable<RequestTracking> GetAll();
-        IEnumerable<IndexRequestTracking> GetAllRequestTracking(string UserId, int assetDetailId);
+        //IEnumerable<IndexRequestTracking> GetAllRequestTracking(string UserId, int assetDetailId);
         RequestTracking GetFirstTrackForRequestByRequestId(int requestId);
         RequestTracking GetLastTrackForRequestByRequestId(int requestId);
         IndexRequestTracking GetRequestTrackingById(int id);

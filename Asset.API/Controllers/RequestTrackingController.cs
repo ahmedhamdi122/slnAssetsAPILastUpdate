@@ -22,11 +22,11 @@ namespace Asset.API.Controllers
             _requestTrackingService = requestTrackingService;
         }
         // GET: api/<RequestTrackingController>
-        [Route("GetAllRequestFromTrackingByuserId/{UserId}/{assetdetailId}")]
-        public IEnumerable<IndexRequestTracking> Get(string UserId, int assetDetailId)
-        {
-            return _requestTrackingService.GetAllRequestTracking(UserId, assetDetailId);
-        }
+        //[Route("GetAllRequestFromTrackingByuserId/{UserId}/{assetdetailId}")]
+        //public IEnumerable<IndexRequestTracking> Get(string UserId, int assetDetailId)
+        //{
+        //    return _requestTrackingService.GetAllRequestTracking(UserId, assetDetailId);
+        //}
 
         // GET api/<RequestTrackingController>/5
         [HttpGet("{id}")]

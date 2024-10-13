@@ -11,7 +11,7 @@ namespace Asset.Domain.Repositories
     public interface IRequestTrackingRepository
     {
         IEnumerable<RequestTracking> GetAll();
-        IEnumerable<IndexRequestTracking> GetAll(string UserId, int? assetDetailId);
+       // IEnumerable<IndexRequestTracking> GetAll(string UserId, int? assetDetailId);
         RequestTracking GetFirstTrackForRequestByRequestId(int requestId);
         RequestTracking GetLastTrackForRequestByRequestId(int requestId);
         IndexRequestTracking GetById(int id);

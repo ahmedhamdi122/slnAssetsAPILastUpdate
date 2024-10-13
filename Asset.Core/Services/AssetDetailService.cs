@@ -327,10 +327,10 @@ namespace Asset.Core.Services
 
         }
 
-        public IndexAssetDetailVM SearchHospitalAssetsBySupplierId(SearchAssetDetailVM searchObj, int pageNumber, int pageSize)
-        {
-            return _unitOfWork.AssetDetailRepository.SearchHospitalAssetsBySupplierId(searchObj, pageNumber, pageSize);
-        }
+        //public IndexAssetDetailVM SearchHospitalAssetsBySupplierId(SearchAssetDetailVM searchObj, int pageNumber, int pageSize)
+        //{
+        //    return _unitOfWork.AssetDetailRepository.SearchHospitalAssetsBySupplierId(searchObj, pageNumber, pageSize);
+        //}
 
         public IndexAssetDetailVM SortHospitalAssetsBySupplierId(Sort sortObj, int pageNumber, int pageSize)
         {

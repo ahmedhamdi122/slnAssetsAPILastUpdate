@@ -107,19 +107,19 @@ namespace Asset.API.Controllers.MobileController
 
 
 
-        [HttpGet]
-        [Route("GetWorkOrderByRequestId/{requestId}/{userId}")]
-        public ActionResult GetMobileWorkOrderByRequestUserId(int requestId, string userId)
-        {
+        //[HttpGet]
+        //[Route("GetWorkOrderByRequestId/{requestId}/{userId}")]
+        //public ActionResult GetMobileWorkOrderByRequestUserId(int requestId, string userId)
+        //{
 
-            var lstAssetDetail = _workOrderService.GetMobileWorkOrderByRequestUserId(requestId, userId);
-            if (lstAssetDetail != null)
-            {
-                return Ok(new { data = lstAssetDetail, msg = "Success", status = '1' });
-            }
-            else
-                return Ok(new { data = lstAssetDetail, msg = "No Data Found", status = '0' });
-        }
+        //    var lstAssetDetail = _workOrderService.GetMobileWorkOrderByRequestUserId(requestId, userId);
+        //    if (lstAssetDetail != null)
+        //    {
+        //        return Ok(new { data = lstAssetDetail, msg = "Success", status = '1' });
+        //    }
+        //    else
+        //        return Ok(new { data = lstAssetDetail, msg = "No Data Found", status = '0' });
+        //}
 
 
         [HttpPost]

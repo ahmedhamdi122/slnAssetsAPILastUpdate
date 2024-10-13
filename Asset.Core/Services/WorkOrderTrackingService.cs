@@ -39,20 +39,20 @@ namespace Asset.Core.Services
             return _unitOfWork.WorkOrderTracking.GetAllWorkOrderByWorkOrderId(WorkOrderId);
         }
 
-        public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestId(int ServiceRequestId, string userId)
-        {
-            return _unitOfWork.WorkOrderTracking.GetAllWorkOrderFromTrackingByServiceRequestId(ServiceRequestId, userId);
-        }
+        //public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestId(int ServiceRequestId, string userId)
+        //{
+        //    return _unitOfWork.WorkOrderTracking.GetAllWorkOrderFromTrackingByServiceRequestId(ServiceRequestId, userId);
+        //}
 
-        public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestUserId(int ServiceRequestId, string userId)
-        {
-            return _unitOfWork.WorkOrderTracking.GetAllWorkOrderFromTrackingByServiceRequestUserId(ServiceRequestId, userId);
-        }
+        //public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestUserId(int ServiceRequestId, string userId)
+        //{
+        //    return _unitOfWork.WorkOrderTracking.GetAllWorkOrderFromTrackingByServiceRequestUserId(ServiceRequestId, userId);
+        //}
 
-        public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByUserId(string userId)
-        {
-            return _unitOfWork.WorkOrderTracking.GetAllWorkOrderFromTrackingByUserId(userId);
-        }
+        //public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByUserId(string userId)
+        //{
+        //    return _unitOfWork.WorkOrderTracking.GetAllWorkOrderFromTrackingByUserId(userId);
+        //}
 
         public List<IndexWorkOrderTrackingVM> GetAllWorkOrderTrackingByWorkOrderId(int WorkOrderId)
         {

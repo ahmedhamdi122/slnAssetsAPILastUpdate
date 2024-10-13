@@ -57,19 +57,19 @@ namespace Asset.API.Controllers
         // GET: api/<WorkOrderController>
 
 
-        [HttpGet]
-        [Route("GetworkOrderByUserId/{requestId}/{userId}")]
-        public IEnumerable<IndexWorkOrderVM> GetworkOrderByUserId(int requestId, string userId)
-        {
-            return _workOrderService.GetworkOrderByUserId(requestId, userId);
-        }
+        //[HttpGet]
+        //[Route("GetworkOrderByUserId/{requestId}/{userId}")]
+        //public IEnumerable<IndexWorkOrderVM> GetworkOrderByUserId(int requestId, string userId)
+        //{
+        //    return _workOrderService.GetworkOrderByUserId(requestId, userId);
+        //}
 
-        [HttpGet]
-        [Route("GetworkOrderByUserAssetId/{assetId}/{userId}")]
-        public IEnumerable<IndexWorkOrderVM> GetworkOrderByUserAssetId(int assetId, string userId)
-        {
-            return _workOrderService.GetworkOrderByUserAssetId(assetId, userId);
-        }
+        //[HttpGet]
+        //[Route("GetworkOrderByUserAssetId/{assetId}/{userId}")]
+        //public IEnumerable<IndexWorkOrderVM> GetworkOrderByUserAssetId(int assetId, string userId)
+        //{
+        //    return _workOrderService.GetworkOrderByUserAssetId(assetId, userId);
+        //}
 
         [HttpGet]
         [Route("CountWorkOrdersByHospitalId/{hospitalId}/{userId}")]
@@ -266,11 +266,11 @@ namespace Asset.API.Controllers
 
 
 
-        [HttpGet("GetWorkOrderByRequestId/{requestId}")]
-        public ActionResult<IndexWorkOrderVM> GetWorkOrderByRequestId(int requestId)
-        {
-            return _workOrderService.GetWorkOrderByRequestId(requestId);
-        }
+        //[HttpGet("GetWorkOrderByRequestId/{requestId}")]
+        //public ActionResult<IndexWorkOrderVM> GetWorkOrderByRequestId(int requestId)
+        //{
+        //    return _workOrderService.GetWorkOrderByRequestId(requestId);
+        //}
 
 
 

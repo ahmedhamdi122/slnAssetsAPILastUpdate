@@ -24,24 +24,24 @@ namespace Asset.API.Controllers
             _workOrderTrackingService = workOrderTrackingService;
         }
         // GET: api/<WorkOrderTrackingController>
-        [Route("GetAllWorkOrderFromTrackingByServiceRequestId/{ServiceRequestId}")]
-        public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestId(int ServiceRequestId, string userId)
-        {
-            return _workOrderTrackingService.GetAllWorkOrderFromTrackingByServiceRequestId(ServiceRequestId, userId);
-        }
+        //[Route("GetAllWorkOrderFromTrackingByServiceRequestId/{ServiceRequestId}")]
+        //public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestId(int ServiceRequestId, string userId)
+        //{
+        //    return _workOrderTrackingService.GetAllWorkOrderFromTrackingByServiceRequestId(ServiceRequestId, userId);
+        //}
 
 
-        [Route("GetAllWorkOrderFromTrackingByUserId/{userId}")]
-        public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByUserId(string userId)
-        {
-            return _workOrderTrackingService.GetAllWorkOrderFromTrackingByUserId(userId);
-        }
+        //[Route("GetAllWorkOrderFromTrackingByUserId/{userId}")]
+        //public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByUserId(string userId)
+        //{
+        //    return _workOrderTrackingService.GetAllWorkOrderFromTrackingByUserId(userId);
+        //}
 
-        [Route("GetAllWorkOrderFromTrackingByServiceRequestUserId/{ServiceRequestId}/{userId}")]
-        public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestUserId(int ServiceRequestId, string userId)
-        {
-            return _workOrderTrackingService.GetAllWorkOrderFromTrackingByServiceRequestUserId(ServiceRequestId, userId);
-        }
+        //[Route("GetAllWorkOrderFromTrackingByServiceRequestUserId/{ServiceRequestId}/{userId}")]
+        //public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestUserId(int ServiceRequestId, string userId)
+        //{
+        //    return _workOrderTrackingService.GetAllWorkOrderFromTrackingByServiceRequestUserId(ServiceRequestId, userId);
+        //}
 
 
 

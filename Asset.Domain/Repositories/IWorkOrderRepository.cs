@@ -17,15 +17,15 @@ namespace Asset.Domain.Repositories
         int GetWorkOrdersCountByStatusIdAndPaging(int? hospitalId, string userId, int statusId);
         IEnumerable<IndexWorkOrderVM> ExportWorkOrdersByStatusId(int? hospitalId, string userId, int statusId);
         IEnumerable<IndexWorkOrderVM> GetAllWorkOrdersByHospitalId(int? hospitalId, string userId, int statusId);
-        IEnumerable<IndexWorkOrderVM> GetworkOrderByUserId(int requestId, string userId);
-        IndexWorkOrderVM GetMobileWorkOrderByRequestUserId(int requestId, string userId);
-        IEnumerable<IndexWorkOrderVM> GetworkOrderByUserAssetId(int assetId, string userId);
-        IEnumerable<IndexWorkOrderVM> GetworkOrder(string userId);
+        //IEnumerable<IndexWorkOrderVM> GetworkOrderByUserId(int requestId, string userId);
+        //IndexWorkOrderVM GetMobileWorkOrderByRequestUserId(int requestId, string userId);
+       // IEnumerable<IndexWorkOrderVM> GetworkOrderByUserAssetId(int assetId, string userId);
+       // IEnumerable<IndexWorkOrderVM> GetworkOrder(string userId);
         List<IndexWorkOrderVM> GetLastRequestAndWorkOrderByAssetId(int assetId);
         List<IndexWorkOrderVM> GetLastRequestAndWorkOrderByAssetId(int assetId, int requestId);
         IEnumerable<IndexWorkOrderVM> SearchWorkOrders(SearchWorkOrderVM searchObj);
         IndexWorkOrderVM2 SearchWorkOrders(SearchWorkOrderVM searchObj, int pageNumber, int pageSize);
-        IndexWorkOrderVM GetWorkOrderByRequestId(int requestId);
+        // GetWorkOrderByRequestId(int requestId);
      
  
         int GetTotalWorkOrdersForAssetInHospital(int assetDetailId);

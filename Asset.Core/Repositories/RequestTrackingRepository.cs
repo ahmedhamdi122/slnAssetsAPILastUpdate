@@ -62,139 +62,139 @@ namespace Asset.Core.Repositories
                 msg = ex.Message;
             }
         }
-        public IEnumerable<IndexRequestTracking> GetAll(string userId, int? assetDetailId)
-        {
-            ApplicationUser UserObj = new ApplicationUser();
-            ApplicationRole roleObj = new ApplicationRole();
-            string userRoleName = "";
-            List<IndexRequestTracking> lstRequestTrackings = new List<IndexRequestTracking>();
-            var obj = _context.ApplicationUser.Where(a => a.Id == userId).ToList();
-            if (obj.Count > 0)
-            {
-                UserObj = obj[0];
+        //public IEnumerable<IndexRequestTracking> GetAll(string userId, int? assetDetailId)
+        //{
+        //    ApplicationUser UserObj = new ApplicationUser();
+        //    ApplicationRole roleObj = new ApplicationRole();
+        //    string userRoleName = "";
+        //    List<IndexRequestTracking> lstRequestTrackings = new List<IndexRequestTracking>();
+        //    var obj = _context.ApplicationUser.Where(a => a.Id == userId).ToList();
+        //    if (obj.Count > 0)
+        //    {
+        //        UserObj = obj[0];
 
-                var lstRoles = _context.ApplicationRole.Where(a => a.Id == UserObj.RoleId).ToList();
-                if (lstRoles.Count > 0)
-                {
-                    roleObj = lstRoles[0];
-                    userRoleName = roleObj.Name;
-                }
-            }
+        //        var lstRoles = _context.ApplicationRole.Where(a => a.Id == UserObj.RoleId).ToList();
+        //        if (lstRoles.Count > 0)
+        //        {
+        //            roleObj = lstRoles[0];
+        //            userRoleName = roleObj.Name;
+        //        }
+        //    }
 
-            var ListRequestTracking = _context.RequestTracking
-                .Include(req => req.User)
-                .Include(req => req.Request.AssetDetail).Select(req => new IndexRequestTracking
-                {
-                    Id = req.Id,
-                    Description = req.Description,
-                    CreatedById = req.CreatedById,
-                    UserName = req.User.UserName,
-                    RequestId = req.RequestId != 0 ? (int)req.RequestId : 0,
-                    RequestStatusId = req.RequestStatusId != null ? (int)req.RequestStatusId : 0,
-                    StatusName = req.RequestStatus.Name,
-                    StatusNameAr = req.RequestStatus.NameAr,
-                    StatusColor = req.RequestStatus.Color,
-                    StatusIcon = req.RequestStatus.Icon,
-
-
-                    Subject = req.Request.Subject,
-                    RequestCode = req.Request.RequestCode,
-                    RequestDate = req.Request.RequestDate,
-                    AssetDetailId = assetDetailId > 0 ? assetDetailId : (int)req.Request.AssetDetailId,
-                    SerialNumber = req.Request.AssetDetail.SerialNumber,
-                    HospitalId = (int)req.User.HospitalId,
-                    GovernorateId = (int)req.User.GovernorateId,
-                    CityId = (int)req.User.CityId,
-                    OrganizationId = (int)req.User.OrganizationId,
-                    SubOrganizationId = (int)req.User.SubOrganizationId,
-                    RoleId = req.User.RoleId,
-                    AssetName = assetDetailId > 0 ? _context.MasterAssets.Where(a => a.Id == req.Request.AssetDetail.MasterAssetId).FirstOrDefault().Name : _context.MasterAssets.Where(a => a.Id == req.Request.AssetDetail.MasterAssetId).FirstOrDefault().Name,
-                    AssetNameAr = assetDetailId > 0 ? _context.MasterAssets.Where(a => a.Id == req.Request.AssetDetail.MasterAssetId).FirstOrDefault().NameAr : _context.MasterAssets.Where(a => a.Id == req.Request.AssetDetail.MasterAssetId).FirstOrDefault().NameAr,
-                }).ToList().OrderByDescending(a => a.DescriptionDate).GroupBy(r => r.RequestId);
-            foreach (var item in ListRequestTracking)
-            {
-                lstRequestTrackings.Add(item.LastOrDefault());
-            }
+        //    var ListRequestTracking = _context.RequestTracking
+        //        .Include(req => req.User)
+        //        .Include(req => req.Request.AssetDetail).Select(req => new IndexRequestTracking
+        //        {
+        //            Id = req.Id,
+        //            Description = req.Description,
+        //            CreatedById = req.CreatedById,
+        //            UserName = req.User.UserName,
+        //            RequestId = req.RequestId != 0 ? (int)req.RequestId : 0,
+        //            RequestStatusId = req.RequestStatusId != null ? (int)req.RequestStatusId : 0,
+        //            StatusName = req.RequestStatus.Name,
+        //            StatusNameAr = req.RequestStatus.NameAr,
+        //            StatusColor = req.RequestStatus.Color,
+        //            StatusIcon = req.RequestStatus.Icon,
 
 
-            if (UserObj.GovernorateId > 0 && UserObj.CityId == 0 && UserObj.HospitalId == 0)
-            {
-                lstRequestTrackings = lstRequestTrackings.Where(t => t.GovernorateId == UserObj.GovernorateId && t.AssetDetailId == assetDetailId).ToList();
-            }
-            if (UserObj.GovernorateId > 0 && UserObj.CityId > 0 && UserObj.HospitalId == 0)
-            {
-                lstRequestTrackings = lstRequestTrackings.Where(t => t.CityId == UserObj.CityId && t.AssetDetailId == assetDetailId).ToList();
-            }
-            if (UserObj.OrganizationId > 0 && UserObj.SubOrganizationId == 0 && UserObj.HospitalId == 0)
-            {
-                lstRequestTrackings = lstRequestTrackings.Where(t => t.OrganizationId == UserObj.OrganizationId && t.AssetDetailId == assetDetailId).ToList();
-            }
-            if (UserObj.OrganizationId > 0 && UserObj.SubOrganizationId > 0 && UserObj.HospitalId == 0)
-            {
-                lstRequestTrackings = lstRequestTrackings.Where(t => t.SubOrganizationId == UserObj.SubOrganizationId && t.AssetDetailId == assetDetailId).ToList();
-            }
+        //            Subject = req.Request.Subject,
+        //            RequestCode = req.Request.RequestCode,
+        //            RequestDate = req.Request.RequestDate,
+        //            AssetDetailId = assetDetailId > 0 ? assetDetailId : (int)req.Request.AssetDetailId,
+        //            SerialNumber = req.Request.AssetDetail.SerialNumber,
+        //            HospitalId = (int)req.User.HospitalId,
+        //            GovernorateId = (int)req.User.GovernorateId,
+        //            CityId = (int)req.User.CityId,
+        //            OrganizationId = (int)req.User.OrganizationId,
+        //            SubOrganizationId = (int)req.User.SubOrganizationId,
+        //            RoleId = req.User.RoleId,
+        //            AssetName = assetDetailId > 0 ? _context.MasterAssets.Where(a => a.Id == req.Request.AssetDetail.MasterAssetId).FirstOrDefault().Name : _context.MasterAssets.Where(a => a.Id == req.Request.AssetDetail.MasterAssetId).FirstOrDefault().Name,
+        //            AssetNameAr = assetDetailId > 0 ? _context.MasterAssets.Where(a => a.Id == req.Request.AssetDetail.MasterAssetId).FirstOrDefault().NameAr : _context.MasterAssets.Where(a => a.Id == req.Request.AssetDetail.MasterAssetId).FirstOrDefault().NameAr,
+        //        }).ToList().OrderByDescending(a => a.DescriptionDate).GroupBy(r => r.RequestId);
+        //    foreach (var item in ListRequestTracking)
+        //    {
+        //        lstRequestTrackings.Add(item.LastOrDefault());
+        //    }
+
+
+        //    if (UserObj.GovernorateId > 0 && UserObj.CityId == 0 && UserObj.HospitalId == 0)
+        //    {
+        //        lstRequestTrackings = lstRequestTrackings.Where(t => t.GovernorateId == UserObj.GovernorateId && t.AssetDetailId == assetDetailId).ToList();
+        //    }
+        //    if (UserObj.GovernorateId > 0 && UserObj.CityId > 0 && UserObj.HospitalId == 0)
+        //    {
+        //        lstRequestTrackings = lstRequestTrackings.Where(t => t.CityId == UserObj.CityId && t.AssetDetailId == assetDetailId).ToList();
+        //    }
+        //    if (UserObj.OrganizationId > 0 && UserObj.SubOrganizationId == 0 && UserObj.HospitalId == 0)
+        //    {
+        //        lstRequestTrackings = lstRequestTrackings.Where(t => t.OrganizationId == UserObj.OrganizationId && t.AssetDetailId == assetDetailId).ToList();
+        //    }
+        //    if (UserObj.OrganizationId > 0 && UserObj.SubOrganizationId > 0 && UserObj.HospitalId == 0)
+        //    {
+        //        lstRequestTrackings = lstRequestTrackings.Where(t => t.SubOrganizationId == UserObj.SubOrganizationId && t.AssetDetailId == assetDetailId).ToList();
+        //    }
 
 
 
-            if (UserObj.OrganizationId > 0 && UserObj.SubOrganizationId > 0 && UserObj.HospitalId > 0)
-            {
-                if (userRoleName == "Admin")
-                {
-                    lstRequestTrackings = lstRequestTrackings.ToList();
-                }
+        //    if (UserObj.OrganizationId > 0 && UserObj.SubOrganizationId > 0 && UserObj.HospitalId > 0)
+        //    {
+        //        if (userRoleName == "Admin")
+        //        {
+        //            lstRequestTrackings = lstRequestTrackings.ToList();
+        //        }
 
-                if (userRoleName == "TLHospitalManager")
-                {
-                    lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.AssetDetailId == assetDetailId).ToList();
-                }
+        //        if (userRoleName == "TLHospitalManager")
+        //        {
+        //            lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.AssetDetailId == assetDetailId).ToList();
+        //        }
 
-                if (userRoleName == "EngDepManager")
-                {
-                    lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.AssetDetailId == assetDetailId).ToList();
-                }
-                if (userRoleName == "AssetOwner")
-                {
-                    lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.CreatedById == userId && t.AssetDetailId == assetDetailId).ToList();
-                }
-                if (userRoleName == "DE")
-                {
-                    lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.CreatedById == userId && t.AssetDetailId == assetDetailId).ToList();
-                }
+        //        if (userRoleName == "EngDepManager")
+        //        {
+        //            lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.AssetDetailId == assetDetailId).ToList();
+        //        }
+        //        if (userRoleName == "AssetOwner")
+        //        {
+        //            lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.CreatedById == userId && t.AssetDetailId == assetDetailId).ToList();
+        //        }
+        //        if (userRoleName == "DE")
+        //        {
+        //            lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.CreatedById == userId && t.AssetDetailId == assetDetailId).ToList();
+        //        }
 
-            }
-            if (UserObj.GovernorateId > 0 && UserObj.CityId > 0 && UserObj.HospitalId > 0)
-            {
-                // lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId).ToList();
-
-
-                if (userRoleName == "TLHospitalManager")
-                {
-                    lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.AssetDetailId == assetDetailId).ToList();
-                }
-                if (userRoleName == "AssetOwner")
-                {
-                    lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.CreatedById == userId && t.AssetDetailId == assetDetailId).ToList();
-                }
-                //if (userRoleName == "DE")
-                //{
-                //    lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.CreatedById == userId && t.AssetDetailId == assetDetailId).ToList();
-                //}
-
-                if (userRoleName == "EngDepManager")
-                {
-                    lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.AssetDetailId == assetDetailId).ToList();
-                }
-
-            }
+        //    }
+        //    if (UserObj.GovernorateId > 0 && UserObj.CityId > 0 && UserObj.HospitalId > 0)
+        //    {
+        //        // lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId).ToList();
 
 
+        //        if (userRoleName == "TLHospitalManager")
+        //        {
+        //            lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.AssetDetailId == assetDetailId).ToList();
+        //        }
+        //        if (userRoleName == "AssetOwner")
+        //        {
+        //            lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.CreatedById == userId && t.AssetDetailId == assetDetailId).ToList();
+        //        }
+        //        //if (userRoleName == "DE")
+        //        //{
+        //        //    lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.CreatedById == userId && t.AssetDetailId == assetDetailId).ToList();
+        //        //}
+
+        //        if (userRoleName == "EngDepManager")
+        //        {
+        //            lstRequestTrackings = lstRequestTrackings.Where(t => t.HospitalId == UserObj.HospitalId && t.AssetDetailId == assetDetailId).ToList();
+        //        }
+
+        //    }
 
 
 
 
-            return lstRequestTrackings;
 
-        }
+
+        //    return lstRequestTrackings;
+
+        //}
         public List<RequestTrackingView> GetRequestTracksByRequestId(int requestId)
         {
             var trackings = _context.RequestTracking.Where(r => r.RequestId == requestId).OrderByDescending(a => a.DescriptionDate).Select(req => new RequestTrackingView

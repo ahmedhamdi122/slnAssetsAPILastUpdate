@@ -120,8 +120,8 @@ namespace Asset.API.Controllers.MobileController
                 var governorateId = user.GovernorateId;
                 var cityId = user.CityId;
                 var hospitalId = user.HospitalId;
-                var supplierId = user.SupplierId;
-                var commetieeMemberId = user.CommetieeMemberId;
+                //var supplierId = user.SupplierId;
+                //var commetieeMemberId = user.CommetieeMemberId;
 
                 var govName = user.GovernorateId > 0 ? _context.Governorates.Where(a => a.Id == user.GovernorateId).First().Name : "";
                 var cityName = user.CityId > 0 ? _context.Cities.Where(a => a.Id == user.CityId).First().Name : "";
@@ -141,33 +141,33 @@ namespace Asset.API.Controllers.MobileController
                     userRoleNames.Add(item.Name);
                 }
 
-                if (supplierId > 0)
-                {
-                    var lstSuppliers = _context.Suppliers.Where(a => a.EMail == user.Email).ToList();
-                    if (lstSuppliers.Count > 0)
-                    {
-                        var supplierObj = lstSuppliers[0];
-                        Useremail = user.Email;
-                        userName = supplierObj.Name;
-                        userNameAr = supplierObj.NameAr;
-                    }
-                }
-                if (commetieeMemberId > 0)
-                {
-                    var lstMembers = _context.CommetieeMembers.Where(a => a.EMail == user.Email).ToList();
-                    if (lstMembers.Count > 0)
-                    {
-                        var memberObj = lstMembers[0];
-                        Useremail = user.Email;
-                        userName = memberObj.Name;
-                        userNameAr = memberObj.NameAr;
-                    }
-                }
-                else
-                {
+                //if (supplierId > 0)
+                //{
+                //    var lstSuppliers = _context.Suppliers.Where(a => a.EMail == user.Email).ToList();
+                //    if (lstSuppliers.Count > 0)
+                //    {
+                //        var supplierObj = lstSuppliers[0];
+                //        Useremail = user.Email;
+                //        userName = supplierObj.Name;
+                //        userNameAr = supplierObj.NameAr;
+                //    }
+                //}
+                //if (commetieeMemberId > 0)
+                //{
+                //    var lstMembers = _context.CommetieeMembers.Where(a => a.EMail == user.Email).ToList();
+                //    if (lstMembers.Count > 0)
+                //    {
+                //        var memberObj = lstMembers[0];
+                //        Useremail = user.Email;
+                //        userName = memberObj.Name;
+                //        userNameAr = memberObj.NameAr;
+                //    }
+                //}
+                //else
+                //{
                     Useremail = user.Email;
                     userName = user.UserName;
-                }
+                //}
 
                 var lstSettings = _settingService.GetAll().ToList();
                 if (lstSettings.Count > 0)
@@ -206,8 +206,8 @@ namespace Asset.API.Controllers.MobileController
                     GovernorateId = governorateId,
                     CityId = cityId,
                     HospitalId = hospitalId,
-                    SupplierId = supplierId,
-                    CommetieeMemberId = commetieeMemberId,
+                    //SupplierId = supplierId,
+                    //CommetieeMemberId = commetieeMemberId,
                     GovernorateName = govName,
                     CityName = cityName,
                     HospitalName = hospitalName,

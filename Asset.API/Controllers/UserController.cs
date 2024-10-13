@@ -236,65 +236,65 @@ namespace Asset.API.Controllers
 
 
 
-        [HttpGet]
-        [Route("ListUsersInHospitalByEngRoleName/{hospitalId}")]
-        public async Task<List<IndexUserVM.GetData>> ListUsersInHospitalByRoleName(int hospitalId)
-        {
+        //[HttpGet]
+        //[Route("ListUsersInHospitalByEngRoleName/{hospitalId}")]
+        //public async Task<List<IndexUserVM.GetData>> ListUsersInHospitalByRoleName(int hospitalId)
+        //{
 
-            var roleObj = await _roleManager.FindByNameAsync("Eng");
-            List<IndexUserVM.GetData> lstUsers = new List<IndexUserVM.GetData>();
-            var users = _applicationUser.Users.Where(a => a.HospitalId == hospitalId && a.RoleId == roleObj.Id).ToList();
+        //    var roleObj = await _roleManager.FindByNameAsync("Eng");
+        //    List<IndexUserVM.GetData> lstUsers = new List<IndexUserVM.GetData>();
+        //    var users = _applicationUser.Users.Where(a => a.HospitalId == hospitalId && a.RoleId == roleObj.Id).ToList();
 
-            foreach (var item in users)
-            {
-                IndexUserVM.GetData userObj = new IndexUserVM.GetData();
-                userObj.Id = item.Id;
-                userObj.UserName = item.UserName;
-                lstUsers.Add(userObj);
-            }
-            return lstUsers;
-        }
-
-
-
-        [HttpGet]
-        [Route("ListUsersInHospitalByEngManagerRoleName/{hospitalId}")]
-        public async Task<List<IndexUserVM.GetData>> ListUsersInHospitalByEngManageRoleName(int hospitalId)
-        {
-
-            var roleEngManagerObj = await _roleManager.FindByNameAsync("EngManager");
-            var roleEngDepManagerObj = await _roleManager.FindByNameAsync("EngManager");
-            List<IndexUserVM.GetData> lstUsers = new List<IndexUserVM.GetData>();
-            var users = _applicationUser.Users.Where(a => a.HospitalId == hospitalId && (a.RoleId == roleEngManagerObj.Id || a.RoleId == roleEngDepManagerObj.Id)).ToList();
-
-            foreach (var item in users)
-            {
-                IndexUserVM.GetData userObj = new IndexUserVM.GetData();
-                userObj.Id = item.Id;
-                userObj.UserName = item.UserName;
-                lstUsers.Add(userObj);
-            }
-            return lstUsers;
-        }
+        //    foreach (var item in users)
+        //    {
+        //        IndexUserVM.GetData userObj = new IndexUserVM.GetData();
+        //        userObj.Id = item.Id;
+        //        userObj.UserName = item.UserName;
+        //        lstUsers.Add(userObj);
+        //    }
+        //    return lstUsers;
+        //}
 
 
 
+        //[HttpGet]
+        //[Route("ListUsersInHospitalByEngManagerRoleName/{hospitalId}")]
+        //public async Task<List<IndexUserVM.GetData>> ListUsersInHospitalByEngManageRoleName(int hospitalId)
+        //{
 
-        [HttpGet]
-        [Route("GetById/{id}")]
-        public async Task<ApplicationUser> GetById(string id)
-        {
-            var userObj = await _applicationUser.FindByIdAsync(id);
+        //    var roleEngManagerObj = await _roleManager.FindByNameAsync("EngManager");
+        //    var roleEngDepManagerObj = await _roleManager.FindByNameAsync("EngManager");
+        //    List<IndexUserVM.GetData> lstUsers = new List<IndexUserVM.GetData>();
+        //    var users = _applicationUser.Users.Where(a => a.HospitalId == hospitalId && (a.RoleId == roleEngManagerObj.Id || a.RoleId == roleEngDepManagerObj.Id)).ToList();
 
-            var RoleIds = (from userRole in _context.UserRoles
-                           join role in _roleManager.Roles on userRole.RoleId equals role.Id
-                           where userObj.Id == userRole.UserId
-                           select role.Id).ToList();
+        //    foreach (var item in users)
+        //    {
+        //        IndexUserVM.GetData userObj = new IndexUserVM.GetData();
+        //        userObj.Id = item.Id;
+        //        userObj.UserName = item.UserName;
+        //        lstUsers.Add(userObj);
+        //    }
+        //    return lstUsers;
+        //}
 
-            userObj.RoleIds = RoleIds;
-          //  userObj.HospitalId
-            return userObj;
-        }
+
+
+
+        //[HttpGet]
+        //[Route("GetById/{id}")]
+        //public async Task<ApplicationUser> GetById(string id)
+        //{
+        //    var userObj = await _applicationUser.FindByIdAsync(id);
+
+        //    var RoleIds = (from userRole in _context.UserRoles
+        //                   join role in _roleManager.Roles on userRole.RoleId equals role.Id
+        //                   where userObj.Id == userRole.UserId
+        //                   select role.Id).ToList();
+
+        //    userObj.RoleIds = RoleIds;
+        //  //  userObj.HospitalId
+        //    return userObj;
+        //}
 
 
 
@@ -305,7 +305,7 @@ namespace Asset.API.Controllers
         {
             var userExists = await _applicationUser.FindByNameAsync(userObj.UserName);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "UserExists", Message = "User already exists!", MessageAr="اسم المستخدم موجود بالفعل" });
 
 
             ApplicationUser user = new ApplicationUser();
@@ -319,9 +319,9 @@ namespace Asset.API.Controllers
             user.SubOrganizationId = userObj.SubOrganizationId;
             user.HospitalId = userObj.HospitalId;
             user.RoleCategoryId = userObj.RoleCategoryId;
-            user.RoleId = userObj.RoleId;
-            user.SupplierId = userObj.SupplierId;
-            user.CommetieeMemberId = userObj.CommetieeMemberId;
+            //user.RoleId = userObj.RoleId;
+            //user.SupplierId = userObj.SupplierId;
+           // user.CommetieeMemberId = userObj.CommetieeMemberId;
             var userResult = await _applicationUser.CreateAsync(user, user.PasswordHash);
 
 
@@ -461,7 +461,7 @@ namespace Asset.API.Controllers
             updateObj.SubOrganizationId = userObj.SubOrganizationId;
             updateObj.HospitalId = userObj.HospitalId;
             updateObj.RoleCategoryId = userObj.RoleCategoryId;
-            updateObj.RoleId = userObj.RoleId;
+            //updateObj.RoleId = userObj.RoleId;
 
             var result = await _applicationUser.UpdateAsync(updateObj);
             return Ok(new Response { Status = "Success", Message = "User updated successfully!" });

@@ -3952,211 +3952,211 @@ namespace Asset.Core.Repositories
             return mainClass;
         }
 
-        public IndexAssetDetailVM SearchHospitalAssetsBySupplierId(SearchAssetDetailVM searchObj, int pageNumber, int pageSize)
-        {
-            IndexAssetDetailVM mainClass = new IndexAssetDetailVM();
-            if (searchObj.UserId != null)
-            {
-                var userObj = _context.Users.FindAsync(searchObj.UserId);
-                ApplicationRole roleObj = new ApplicationRole();
+        //public IndexAssetDetailVM SearchHospitalAssetsBySupplierId(SearchAssetDetailVM searchObj, int pageNumber, int pageSize)
+        //{
+        //    IndexAssetDetailVM mainClass = new IndexAssetDetailVM();
+        //    if (searchObj.UserId != null)
+        //    {
+        //        var userObj = _context.Users.FindAsync(searchObj.UserId);
+        //        ApplicationRole roleObj = new ApplicationRole();
 
-                Employee empObj = new Employee();
-                List<string> userRoleNames = new List<string>();
-                var userObj1 = userObj.GetAwaiter().GetResult();
+        //        Employee empObj = new Employee();
+        //        List<string> userRoleNames = new List<string>();
+        //        var userObj1 = userObj.GetAwaiter().GetResult();
 
-                var lstRoles = _context.ApplicationRole.Where(a => a.Id == userObj1.RoleId).ToList();
-                if (lstRoles.Count > 0)
-                {
-                    roleObj = lstRoles[0];
+        //        var lstRoles = _context.ApplicationRole.Where(a => a.Id == userObj1.RoleId).ToList();
+        //        if (lstRoles.Count > 0)
+        //        {
+        //            roleObj = lstRoles[0];
 
-                    var roles = (from userRole in _context.UserRoles
-                                 join role in _context.ApplicationRole on userRole.RoleId equals role.Id
-                                 where userRole.UserId == searchObj.UserId
-                                 select role);
-                    foreach (var role in roles)
-                    {
-                        userRoleNames.Add(role.Name);
-                    }
-                }
+        //            var roles = (from userRole in _context.UserRoles
+        //                         join role in _context.ApplicationRole on userRole.RoleId equals role.Id
+        //                         where userRole.UserId == searchObj.UserId
+        //                         select role);
+        //            foreach (var role in roles)
+        //            {
+        //                userRoleNames.Add(role.Name);
+        //            }
+        //        }
 
-                IQueryable<IndexAssetDetailVM.GetData> qryListAssets = _context.AssetDetails.Include(a => a.MasterAsset)
-                    .Include(a => a.MasterAsset.brand).Include(a => a.MasterAsset.AssetPeriority)
-                    .Include(a => a.Hospital)
-                    .Include(a => a.Hospital.Governorate)
-                    .Include(a => a.Hospital.City)
-                    .Include(a => a.Hospital.Organization)
-                    .Include(a => a.Hospital.SubOrganization)
-                      .Where(a => a.Hospital.Id == searchObj.HospitalId && a.SupplierId == searchObj.SupplierId)
-                    .Select(item => new IndexAssetDetailVM.GetData
-                    {
-                        Id = item.Id,
-                        Code = item.Code,
-                        SerialNumber = item.SerialNumber,
-                        CreatedBy = item.CreatedBy,
-                        HospitalId = item.HospitalId,
-                        SupplierId = item.SupplierId,
-                        DepartmentId = item.DepartmentId,
-                        Serial = item.SerialNumber,
-                        Price = item.Price,
-                        BarCode = item.Barcode,
-                        QrFilePath = item.QrFilePath,
-                        MasterAssetId = item.MasterAssetId,
-                        PeriorityId = item.MasterAsset.PeriorityId != null ? item.MasterAsset.PeriorityId : 0,
-                        PurchaseDate = item.PurchaseDate,
-                        AssetName = item.MasterAsset != null ? item.MasterAsset.Name : "",
-                        AssetNameAr = item.MasterAsset != null ? item.MasterAsset.NameAr : "",
-                        OriginId = item.MasterAsset != null ? item.MasterAsset.OriginId : 0,
-                        BrandId = item.MasterAsset != null ? item.MasterAsset.BrandId : 0,
-                        MasterImg = item.MasterAsset != null ? item.MasterAsset.AssetImg : "",
-                        BrandName = item.MasterAsset.brand != null ? item.MasterAsset.brand.Name : "",
-                        BrandNameAr = item.MasterAsset.brand != null ? item.MasterAsset.brand.NameAr : "",
-                        Model = item.MasterAsset != null ? item.MasterAsset.ModelNumber : "",
-                        DepartmentName = item.Department != null ? item.Department.Name : "",
-                        DepartmentNameAr = item.Department != null ? item.Department.NameAr : "",
-                        AssetPeriorityName = item.MasterAsset.AssetPeriority != null ? item.MasterAsset.AssetPeriority.Name : "",
-                        AssetPeriorityNameAr = item.MasterAsset.AssetPeriority != null ? item.MasterAsset.AssetPeriority.NameAr : "",
-                        HospitalName = item.Hospital != null ? item.Hospital.Name : "",
-                        HospitalNameAr = item.Hospital != null ? item.Hospital.NameAr : "",
-                        GovernorateId = item.Hospital != null ? item.Hospital.GovernorateId : 0,
-                        CityId = item.Hospital != null ? item.Hospital.CityId : 0,
-                        OrganizationId = item.Hospital != null ? item.Hospital.OrganizationId : 0,
-                        SubOrganizationId = item.Hospital != null ? item.Hospital.SubOrganizationId : 0,
-                        GovernorateName = item.Hospital.Governorate.Name,
-                        GovernorateNameAr = item.Hospital.Governorate.NameAr,
-                        CityName = item.Hospital.City != null ? item.Hospital.City.Name : "",
-                        CityNameAr = item.Hospital.City != null ? item.Hospital.City.NameAr : "",
-                        OrgName = item.Hospital.Organization != null ? item.Hospital.Organization.Name : "",
-                        OrgNameAr = item.Hospital.Organization != null ? item.Hospital.Organization.NameAr : "",
-                        SubOrgName = item.Hospital.SubOrganization != null ? item.Hospital.SubOrganization.Name : "",
-                        SubOrgNameAr = item.Hospital.SubOrganization != null ? item.Hospital.SubOrganization.NameAr : "",
-                        SupplierName = item.Supplier != null ? item.Supplier.Name : "",
-                        SupplierNameAr = item.Supplier != null ? item.Supplier.NameAr : ""
-                    }).AsQueryable();
-
-
-
-
-
-                if (searchObj.HospitalId > 0)
-                {
-                    qryListAssets = qryListAssets.Where(b => b.HospitalId == searchObj.HospitalId).AsQueryable();
-                }
-                else
-                {
-                    qryListAssets = qryListAssets.AsQueryable();
-                }
-
-
-                if (searchObj.SupplierId != 0)
-                {
-                    qryListAssets = qryListAssets.Where(a => a.SupplierId == searchObj.SupplierId).AsQueryable();
-                }
-                else
-                    qryListAssets = qryListAssets.AsQueryable();
-
-
-                //if (searchObj.GovernorateId != 0)
-                //{
-                //    qryListAssets = qryListAssets.Where(a => a.GovernorateId == searchObj.GovernorateId).AsQueryable();
-                //}
-                //else
-                //    qryListAssets = qryListAssets.AsQueryable();
-
-
-                //if (searchObj.CityId != 0)
-                //{
-                //    qryListAssets = qryListAssets.Where(a => a.CityId == searchObj.CityId).AsQueryable();
-                //}
-                //else
-                //    qryListAssets = qryListAssets.AsQueryable();
-
-
-                if (searchObj.DepartmentId != 0)
-                {
-                    qryListAssets = qryListAssets.Where(a => a.DepartmentId == searchObj.DepartmentId).AsQueryable();
-                }
-                else
-                    qryListAssets = qryListAssets.AsQueryable();
-
-
-                if (searchObj.Model != "")
-                {
-                    qryListAssets = qryListAssets.Where(a => a.Model == searchObj.Model).AsQueryable();
-                }
-                else
-                    qryListAssets = qryListAssets.AsQueryable();
-
-
-
-                if (searchObj.OriginId != 0)
-                {
-                    qryListAssets = qryListAssets.Where(a => a.OriginId == searchObj.OriginId).AsQueryable();
-                }
-                else
-                    qryListAssets = qryListAssets.AsQueryable();
-
-
-
-                if (searchObj.BrandId != 0)
-                {
-                    qryListAssets = qryListAssets.Where(a => a.BrandId == searchObj.BrandId).AsQueryable();
-                }
-                else
-                    qryListAssets = qryListAssets.AsQueryable();
-
-
-                if (searchObj.PeriorityId != null)
-                {
-                    qryListAssets = qryListAssets.Where(a => a.PeriorityId == searchObj.PeriorityId).AsQueryable();
-                }
-                else
-                    qryListAssets = qryListAssets.AsQueryable();
-
-                if (searchObj.AssetName != "")
-                {
-                    qryListAssets = qryListAssets.Where(b => b.AssetName.Contains(searchObj.AssetName)).AsQueryable();
-                }
-                if (searchObj.AssetNameAr != null)
-                {
-                    qryListAssets = qryListAssets.Where(b => b.AssetNameAr.Contains(searchObj.AssetNameAr)).AsQueryable();
-                }
-                else
-                    qryListAssets = qryListAssets.AsQueryable();
-
-
-                if (searchObj.Serial != "")
-                {
-                    qryListAssets = qryListAssets.Where(b => b.SerialNumber.Contains(searchObj.Serial)).AsQueryable();
-
-                }
-                else
-                    qryListAssets = qryListAssets.AsQueryable();
-
-                if (searchObj.Code != "")
-                {
-                    qryListAssets = qryListAssets.Where(b => b.Code.Contains(searchObj.Code)).AsQueryable();
-                }
-                else
-                    qryListAssets = qryListAssets.AsQueryable();
-
-                if (searchObj.BarCode != "")
-                {
-                    qryListAssets = qryListAssets.Where(b => b.BarCode.Contains(searchObj.BarCode)).AsQueryable();
-                }
-                else
-                    qryListAssets = qryListAssets.AsQueryable();
+        //        IQueryable<IndexAssetDetailVM.GetData> qryListAssets = _context.AssetDetails.Include(a => a.MasterAsset)
+        //            .Include(a => a.MasterAsset.brand).Include(a => a.MasterAsset.AssetPeriority)
+        //            .Include(a => a.Hospital)
+        //            .Include(a => a.Hospital.Governorate)
+        //            .Include(a => a.Hospital.City)
+        //            .Include(a => a.Hospital.Organization)
+        //            .Include(a => a.Hospital.SubOrganization)
+        //              .Where(a => a.Hospital.Id == searchObj.HospitalId && a.SupplierId == searchObj.SupplierId)
+        //            .Select(item => new IndexAssetDetailVM.GetData
+        //            {
+        //                Id = item.Id,
+        //                Code = item.Code,
+        //                SerialNumber = item.SerialNumber,
+        //                CreatedBy = item.CreatedBy,
+        //                HospitalId = item.HospitalId,
+        //                SupplierId = item.SupplierId,
+        //                DepartmentId = item.DepartmentId,
+        //                Serial = item.SerialNumber,
+        //                Price = item.Price,
+        //                BarCode = item.Barcode,
+        //                QrFilePath = item.QrFilePath,
+        //                MasterAssetId = item.MasterAssetId,
+        //                PeriorityId = item.MasterAsset.PeriorityId != null ? item.MasterAsset.PeriorityId : 0,
+        //                PurchaseDate = item.PurchaseDate,
+        //                AssetName = item.MasterAsset != null ? item.MasterAsset.Name : "",
+        //                AssetNameAr = item.MasterAsset != null ? item.MasterAsset.NameAr : "",
+        //                OriginId = item.MasterAsset != null ? item.MasterAsset.OriginId : 0,
+        //                BrandId = item.MasterAsset != null ? item.MasterAsset.BrandId : 0,
+        //                MasterImg = item.MasterAsset != null ? item.MasterAsset.AssetImg : "",
+        //                BrandName = item.MasterAsset.brand != null ? item.MasterAsset.brand.Name : "",
+        //                BrandNameAr = item.MasterAsset.brand != null ? item.MasterAsset.brand.NameAr : "",
+        //                Model = item.MasterAsset != null ? item.MasterAsset.ModelNumber : "",
+        //                DepartmentName = item.Department != null ? item.Department.Name : "",
+        //                DepartmentNameAr = item.Department != null ? item.Department.NameAr : "",
+        //                AssetPeriorityName = item.MasterAsset.AssetPeriority != null ? item.MasterAsset.AssetPeriority.Name : "",
+        //                AssetPeriorityNameAr = item.MasterAsset.AssetPeriority != null ? item.MasterAsset.AssetPeriority.NameAr : "",
+        //                HospitalName = item.Hospital != null ? item.Hospital.Name : "",
+        //                HospitalNameAr = item.Hospital != null ? item.Hospital.NameAr : "",
+        //                GovernorateId = item.Hospital != null ? item.Hospital.GovernorateId : 0,
+        //                CityId = item.Hospital != null ? item.Hospital.CityId : 0,
+        //                OrganizationId = item.Hospital != null ? item.Hospital.OrganizationId : 0,
+        //                SubOrganizationId = item.Hospital != null ? item.Hospital.SubOrganizationId : 0,
+        //                GovernorateName = item.Hospital.Governorate.Name,
+        //                GovernorateNameAr = item.Hospital.Governorate.NameAr,
+        //                CityName = item.Hospital.City != null ? item.Hospital.City.Name : "",
+        //                CityNameAr = item.Hospital.City != null ? item.Hospital.City.NameAr : "",
+        //                OrgName = item.Hospital.Organization != null ? item.Hospital.Organization.Name : "",
+        //                OrgNameAr = item.Hospital.Organization != null ? item.Hospital.Organization.NameAr : "",
+        //                SubOrgName = item.Hospital.SubOrganization != null ? item.Hospital.SubOrganization.Name : "",
+        //                SubOrgNameAr = item.Hospital.SubOrganization != null ? item.Hospital.SubOrganization.NameAr : "",
+        //                SupplierName = item.Supplier != null ? item.Supplier.Name : "",
+        //                SupplierNameAr = item.Supplier != null ? item.Supplier.NameAr : ""
+        //            }).AsQueryable();
 
 
 
 
 
-                mainClass.Results = qryListAssets.ToList().Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                mainClass.Count = qryListAssets.ToList().Count;
-                return mainClass;
+        //        if (searchObj.HospitalId > 0)
+        //        {
+        //            qryListAssets = qryListAssets.Where(b => b.HospitalId == searchObj.HospitalId).AsQueryable();
+        //        }
+        //        else
+        //        {
+        //            qryListAssets = qryListAssets.AsQueryable();
+        //        }
 
-            }
-            return mainClass;
-        }
+
+        //        if (searchObj.SupplierId != 0)
+        //        {
+        //            qryListAssets = qryListAssets.Where(a => a.SupplierId == searchObj.SupplierId).AsQueryable();
+        //        }
+        //        else
+        //            qryListAssets = qryListAssets.AsQueryable();
+
+
+        //        //if (searchObj.GovernorateId != 0)
+        //        //{
+        //        //    qryListAssets = qryListAssets.Where(a => a.GovernorateId == searchObj.GovernorateId).AsQueryable();
+        //        //}
+        //        //else
+        //        //    qryListAssets = qryListAssets.AsQueryable();
+
+
+        //        //if (searchObj.CityId != 0)
+        //        //{
+        //        //    qryListAssets = qryListAssets.Where(a => a.CityId == searchObj.CityId).AsQueryable();
+        //        //}
+        //        //else
+        //        //    qryListAssets = qryListAssets.AsQueryable();
+
+
+        //        if (searchObj.DepartmentId != 0)
+        //        {
+        //            qryListAssets = qryListAssets.Where(a => a.DepartmentId == searchObj.DepartmentId).AsQueryable();
+        //        }
+        //        else
+        //            qryListAssets = qryListAssets.AsQueryable();
+
+
+        //        if (searchObj.Model != "")
+        //        {
+        //            qryListAssets = qryListAssets.Where(a => a.Model == searchObj.Model).AsQueryable();
+        //        }
+        //        else
+        //            qryListAssets = qryListAssets.AsQueryable();
+
+
+
+        //        if (searchObj.OriginId != 0)
+        //        {
+        //            qryListAssets = qryListAssets.Where(a => a.OriginId == searchObj.OriginId).AsQueryable();
+        //        }
+        //        else
+        //            qryListAssets = qryListAssets.AsQueryable();
+
+
+
+        //        if (searchObj.BrandId != 0)
+        //        {
+        //            qryListAssets = qryListAssets.Where(a => a.BrandId == searchObj.BrandId).AsQueryable();
+        //        }
+        //        else
+        //            qryListAssets = qryListAssets.AsQueryable();
+
+
+        //        if (searchObj.PeriorityId != null)
+        //        {
+        //            qryListAssets = qryListAssets.Where(a => a.PeriorityId == searchObj.PeriorityId).AsQueryable();
+        //        }
+        //        else
+        //            qryListAssets = qryListAssets.AsQueryable();
+
+        //        if (searchObj.AssetName != "")
+        //        {
+        //            qryListAssets = qryListAssets.Where(b => b.AssetName.Contains(searchObj.AssetName)).AsQueryable();
+        //        }
+        //        if (searchObj.AssetNameAr != null)
+        //        {
+        //            qryListAssets = qryListAssets.Where(b => b.AssetNameAr.Contains(searchObj.AssetNameAr)).AsQueryable();
+        //        }
+        //        else
+        //            qryListAssets = qryListAssets.AsQueryable();
+
+
+        //        if (searchObj.Serial != "")
+        //        {
+        //            qryListAssets = qryListAssets.Where(b => b.SerialNumber.Contains(searchObj.Serial)).AsQueryable();
+
+        //        }
+        //        else
+        //            qryListAssets = qryListAssets.AsQueryable();
+
+        //        if (searchObj.Code != "")
+        //        {
+        //            qryListAssets = qryListAssets.Where(b => b.Code.Contains(searchObj.Code)).AsQueryable();
+        //        }
+        //        else
+        //            qryListAssets = qryListAssets.AsQueryable();
+
+        //        if (searchObj.BarCode != "")
+        //        {
+        //            qryListAssets = qryListAssets.Where(b => b.BarCode.Contains(searchObj.BarCode)).AsQueryable();
+        //        }
+        //        else
+        //            qryListAssets = qryListAssets.AsQueryable();
+
+
+
+
+
+        //        mainClass.Results = qryListAssets.ToList().Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        //        mainClass.Count = qryListAssets.ToList().Count;
+        //        return mainClass;
+
+        //    }
+        //    return mainClass;
+        //}
 
         public IndexAssetDetailVM SortHospitalAssetsBySupplierId(Sort sortObj, int pageNumber, int pageSize)
         {

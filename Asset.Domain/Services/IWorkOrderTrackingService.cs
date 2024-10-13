@@ -11,9 +11,9 @@ namespace Asset.Domain.Services
     public interface IWorkOrderTrackingService
     {
         IEnumerable<WorkOrderTracking> GetAll();
-        IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestId(int ServiceRequestId,string userId);
-        IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestUserId(int ServiceRequestId, string userId);
-        IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByUserId(string userId);
+       // IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestId(int ServiceRequestId,string userId);
+        //IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestUserId(int ServiceRequestId, string userId);
+        //IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByUserId(string userId);
 
         WorkOrderTracking GetFirstTrackForWorkOrderByWorkOrderId(int woId);
 
