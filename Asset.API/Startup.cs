@@ -147,9 +147,20 @@ namespace Asset.API
             services.AddScoped<IManufacturerPMAssetService, ManufacturerPMAssetService>();
             services.AddScoped<IModuleService, ModuleService>();
 
-            services.AddIdentity<ApplicationUser, ApplicationRole>()
-                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            //services.AddIdentity<ApplicationUser, ApplicationRole>()
+            //     .AddEntityFrameworkStores<ApplicationDbContext>()
+            //    .AddDefaultTokenProviders();
+
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                // Optionally remove password requirements if you're not using passwords
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 0; // Set length to 0 to effectively disable password validation
+            })
+        .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
 
@@ -175,18 +186,6 @@ namespace Asset.API
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
                 };
             });
-
-            //services.AddIdentity<ApplicationUser, IdentityRole>(opt =>
-            //{
-            //    opt.Password.RequiredLength = 6;
-            //    opt.Password.RequireDigit = true;
-            //    opt.Password.RequireUppercase = false;
-            //    opt.Password.RequireNonAlphanumeric = true;
-
-            //  //  opt.User.RequireUniqueEmail = true;
-            //})
-            // .AddEntityFrameworkStores<ApplicationDbContext>()
-            // .AddDefaultTokenProviders();
 
 
 

@@ -44,14 +44,14 @@ namespace Asset.API.Controllers
         //    var users = _applicationUser.Users.ToList();
         //    foreach (var item in users)
         //    {
-        //        IndexUserVM.GetData userObj = new IndexUserVM.GetData();
-        //        userObj.Id = item.Id;
-        //        userObj.UserName = item.UserName;
-        //        userObj.DisplayName = _context.ApplicationRole.Where(a => a.Id == item.RoleId).First().DisplayName;
-        //        userObj.CategoryRoleName = _roleCategoryService.GetById((int)item.RoleCategoryId).Name;
-        //        userObj.PhoneNumber = item.PhoneNumber;
-        //        userObj.Email = item.Email;
-        //        lstUsers.Add(userObj);
+        //        IndexUserVM.GetData newUser = new IndexUserVM.GetData();
+        //        newUser.Id = item.Id;
+        //        newUser.UserName = item.UserName;
+        //        newUser.DisplayName = _context.ApplicationRole.Where(a => a.Id == item.RoleId).First().DisplayName;
+        //        newUser.CategoryRoleName = _roleCategoryService.GetById((int)item.RoleCategoryId).Name;
+        //        newUser.PhoneNumber = item.PhoneNumber;
+        //        newUser.Email = item.Email;
+        //        lstUsers.Add(newUser);
         //    }
         //    return lstUsers;
         //}
@@ -65,9 +65,9 @@ namespace Asset.API.Controllers
         //    //var users = _pagingService.GetAll<ApplicationUser>(paging, userlist);
         //    foreach (var item in userlist)
         //    {
-        //        IndexUserVM.GetData userObj = new IndexUserVM.GetData();
-        //        userObj.Id = item.Id;
-        //        userObj.UserName = item.UserName;
+        //        IndexUserVM.GetData newUser = new IndexUserVM.GetData();
+        //        newUser.Id = item.Id;
+        //        newUser.UserName = item.UserName;
         //        var roleNames = (from userRole in _context.UserRoles
         //                         join role in _context.ApplicationRole on userRole.RoleId equals role.Id
         //                         where userRole.UserId == item.Id
@@ -80,11 +80,11 @@ namespace Asset.API.Controllers
         //        }
 
         //        strRoles = string.Join<string>(",", list);
-        //        userObj.DisplayName = strRoles;
-        //        userObj.CategoryRoleName = _roleCategoryService.GetById((int)item.RoleCategoryId).Name;
-        //        userObj.PhoneNumber = item.PhoneNumber;
-        //        userObj.Email = item.Email;
-        //        lstUsers.Add(userObj);
+        //        newUser.DisplayName = strRoles;
+        //        newUser.CategoryRoleName = _roleCategoryService.GetById((int)item.RoleCategoryId).Name;
+        //        newUser.PhoneNumber = item.PhoneNumber;
+        //        newUser.Email = item.Email;
+        //        lstUsers.Add(newUser);
         //    }
 
 
@@ -118,9 +118,9 @@ namespace Asset.API.Controllers
         //    var userlist = _applicationUser.Users.ToList();
         //    foreach (var item in userlist)
         //    {
-        //        IndexUserVM.GetData userObj = new IndexUserVM.GetData();
-        //        userObj.Id = item.Id;
-        //        userObj.UserName = item.UserName;
+        //        IndexUserVM.GetData newUser = new IndexUserVM.GetData();
+        //        newUser.Id = item.Id;
+        //        newUser.UserName = item.UserName;
         //        var roleNames = (from userRole in _context.UserRoles
         //                         join role in _context.ApplicationRole on userRole.RoleId equals role.Id
         //                         where userRole.UserId == item.Id
@@ -133,11 +133,11 @@ namespace Asset.API.Controllers
         //        }
 
         //        strRoles = string.Join<string>(",", list);
-        //        userObj.DisplayName = strRoles;
-        //        userObj.CategoryRoleName = _roleCategoryService.GetById((int)item.RoleCategoryId).Name;
-        //        userObj.PhoneNumber = item.PhoneNumber;
-        //        userObj.Email = item.Email;
-        //        lstUsers.Add(userObj);
+        //        newUser.DisplayName = strRoles;
+        //        newUser.CategoryRoleName = _roleCategoryService.GetById((int)item.RoleCategoryId).Name;
+        //        newUser.PhoneNumber = item.PhoneNumber;
+        //        newUser.Email = item.Email;
+        //        lstUsers.Add(newUser);
         //    }
 
         //    if (sortObj.UserName != "")
@@ -221,10 +221,10 @@ namespace Asset.API.Controllers
             var users = _applicationUser.Users.Where(a => a.HospitalId == HospitalId).ToList();
             foreach (var item in users)
             {
-                IndexUserVM.GetData userObj = new IndexUserVM.GetData();
-                userObj.Id = item.Id;
-                userObj.UserName = item.UserName;
-                lstUsers.Add(userObj);
+                IndexUserVM.GetData newUser = new IndexUserVM.GetData();
+                newUser.Id = item.Id;
+                newUser.UserName = item.UserName;
+                lstUsers.Add(newUser);
             }
             return lstUsers;
         }
@@ -247,10 +247,10 @@ namespace Asset.API.Controllers
 
         //    foreach (var item in users)
         //    {
-        //        IndexUserVM.GetData userObj = new IndexUserVM.GetData();
-        //        userObj.Id = item.Id;
-        //        userObj.UserName = item.UserName;
-        //        lstUsers.Add(userObj);
+        //        IndexUserVM.GetData newUser = new IndexUserVM.GetData();
+        //        newUser.Id = item.Id;
+        //        newUser.UserName = item.UserName;
+        //        lstUsers.Add(newUser);
         //    }
         //    return lstUsers;
         //}
@@ -269,10 +269,10 @@ namespace Asset.API.Controllers
 
         //    foreach (var item in users)
         //    {
-        //        IndexUserVM.GetData userObj = new IndexUserVM.GetData();
-        //        userObj.Id = item.Id;
-        //        userObj.UserName = item.UserName;
-        //        lstUsers.Add(userObj);
+        //        IndexUserVM.GetData newUser = new IndexUserVM.GetData();
+        //        newUser.Id = item.Id;
+        //        newUser.UserName = item.UserName;
+        //        lstUsers.Add(newUser);
         //    }
         //    return lstUsers;
         //}
@@ -284,16 +284,16 @@ namespace Asset.API.Controllers
         //[Route("GetById/{id}")]
         //public async Task<ApplicationUser> GetById(string id)
         //{
-        //    var userObj = await _applicationUser.FindByIdAsync(id);
+        //    var newUser = await _applicationUser.FindByIdAsync(id);
 
         //    var RoleIds = (from userRole in _context.UserRoles
         //                   join role in _roleManager.Roles on userRole.RoleId equals role.Id
-        //                   where userObj.Id == userRole.UserId
+        //                   where newUser.Id == userRole.UserId
         //                   select role.Id).ToList();
 
-        //    userObj.RoleIds = RoleIds;
-        //  //  userObj.HospitalId
-        //    return userObj;
+        //    newUser.RoleIds = RoleIds;
+        //  //  newUser.HospitalId
+        //    return newUser;
         //}
 
 
@@ -301,27 +301,24 @@ namespace Asset.API.Controllers
 
         [HttpPost]
         [Route("AddUser")]
-        public async Task<IActionResult> Create(ApplicationUser userObj)
+        public async Task<IActionResult> Create(CreateUserVM newUser)
         {
-            var userExists = await _applicationUser.FindByNameAsync(userObj.UserName);
+            var userExists = await _applicationUser.FindByNameAsync(newUser.UserName);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "UserExists", Message = "User already exists!", MessageAr="اسم المستخدم موجود بالفعل" });
 
 
             ApplicationUser user = new ApplicationUser();
-            user.UserName = userObj.UserName;
-            user.PasswordHash = userObj.PasswordHash;
-            user.Email = userObj.Email;
-            user.PhoneNumber = userObj.PhoneNumber;
-            user.GovernorateId = userObj.GovernorateId;
-            user.CityId = userObj.CityId;
-            user.OrganizationId = userObj.OrganizationId;
-            user.SubOrganizationId = userObj.SubOrganizationId;
-            user.HospitalId = userObj.HospitalId;
-            user.RoleCategoryId = userObj.RoleCategoryId;
-            //user.RoleId = userObj.RoleId;
-            //user.SupplierId = userObj.SupplierId;
-           // user.CommetieeMemberId = userObj.CommetieeMemberId;
+            user.UserName = newUser.UserName;
+            user.PasswordHash = newUser.Password;
+            user.Email = newUser.Email;
+            user.PhoneNumber = newUser.PhoneNumber;
+            user.GovernorateId = newUser.GovernorateId;
+            user.CityId = newUser.CityId;
+            user.OrganizationId = newUser.OrganizationId;
+            user.SubOrganizationId = newUser.SubOrganizationId;
+            user.HospitalId = newUser.HospitalId;
+            user.RoleCategoryId = newUser.RoleCategoryId;
             var userResult = await _applicationUser.CreateAsync(user, user.PasswordHash);
 
 
@@ -332,143 +329,133 @@ namespace Asset.API.Controllers
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = error.Description, MessageAr = error.Description });
                 }
             }
-            else
-            {
-                foreach (var role in userObj.RoleIds)
-                {
-                    var roleName = _context.ApplicationRole.Where(a => a.Id == role).FirstOrDefault().Name;
-                    await _applicationUser.AddToRoleAsync(user, roleName);
-                }
 
-                //foreach (var role in userObj.userRoleIds)
-                //{
-                //    var roleName = _context.ApplicationRole.Where(a => a.Id == role.Id).FirstOrDefault().Name;
-                //    await _applicationUser.AddToRoleAsync(user, roleName);
-                //}
-            }
+            var UserRoles =  newUser.RoleIds.Select(roleId=>{return new IdentityUserRole<string> { UserId = user.Id, RoleId = roleId }; });
+            await _context.UserRoles.AddRangeAsync(UserRoles);
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
 
-        [HttpPut]
-        [Route("UpdateUser")]
-        public async Task<IActionResult> Update(ApplicationUser userObj)
-        {
-            var updateObj = await _context.ApplicationUser.FindAsync(userObj.Id);
-            if (userObj.RoleIds.Count > 0)
-            {
-                var lstUserRoles = _context.UserRoles.Where(a => a.UserId == userObj.Id).ToList();
-                foreach (var roleUserObj in lstUserRoles)
-                {
-                    _context.UserRoles.Remove(roleUserObj);
-                    _context.SaveChanges();
-                }
+        //[HttpPut]
+        //[Route("UpdateUser")]
+        //public async Task<IActionResult> Update(ApplicationUser newUser)
+        //{
+        //    var updateObj = await _context.ApplicationUser.FindAsync(newUser.Id);
+        //    if (newUser.RoleIds.Count > 0)
+        //    {
+        //        var lstUserRoles = _context.UserRoles.Where(a => a.UserId == newUser.Id).ToList();
+        //        foreach (var rolenewUser in lstUserRoles)
+        //        {
+        //            _context.UserRoles.Remove(rolenewUser);
+        //            _context.SaveChanges();
+        //        }
 
 
-                foreach (var itm in userObj.RoleIds)
-                {
-                    var roleName = _context.ApplicationRole.Where(a => a.Id == itm).FirstOrDefault().Name;
-                    if (roleName == "VisitEngineer")
-                    {
-                        var lstEngineers = _context.Engineers.Where(a => a.Email == updateObj.Email).ToList();
-                        if (lstEngineers.Count > 0)
-                        {
-                            updateObj.Email = userObj.Email;
+        //        foreach (var itm in newUser.RoleIds)
+        //        {
+        //            var roleName = _context.ApplicationRole.Where(a => a.Id == itm).FirstOrDefault().Name;
+        //            if (roleName == "VisitEngineer")
+        //            {
+        //                var lstEngineers = _context.Engineers.Where(a => a.Email == updateObj.Email).ToList();
+        //                if (lstEngineers.Count > 0)
+        //                {
+        //                    updateObj.Email = newUser.Email;
 
-                            var engObj = lstEngineers[0];
-                            engObj.Email = userObj.Email;
-                            engObj.Phone = userObj.PhoneNumber;
-                            engObj.WhatsApp = userObj.PhoneNumber;
-                            _context.Entry(engObj).State = EntityState.Modified;
-                            _context.SaveChanges();
-                        }
-                    }
-                    if (roleName == "VisitEngineerManager")
-                    {
-                        var lstEngineers = _context.Engineers.Where(a => a.Email == updateObj.Email).ToList();
-                        if (lstEngineers.Count > 0)
-                        {
-                            updateObj.Email = userObj.Email;
+        //                    var engObj = lstEngineers[0];
+        //                    engObj.Email = newUser.Email;
+        //                    engObj.Phone = newUser.PhoneNumber;
+        //                    engObj.WhatsApp = newUser.PhoneNumber;
+        //                    _context.Entry(engObj).State = EntityState.Modified;
+        //                    _context.SaveChanges();
+        //                }
+        //            }
+        //            if (roleName == "VisitEngineerManager")
+        //            {
+        //                var lstEngineers = _context.Engineers.Where(a => a.Email == updateObj.Email).ToList();
+        //                if (lstEngineers.Count > 0)
+        //                {
+        //                    updateObj.Email = newUser.Email;
 
-                            var engObj = lstEngineers[0];
-                            engObj.Email = userObj.Email;
-                            engObj.Phone = userObj.PhoneNumber;
-                            engObj.WhatsApp = userObj.PhoneNumber;
-                            _context.Entry(engObj).State = EntityState.Modified;
-                            _context.SaveChanges();
-                        }
-                    }
-                    if (roleName == "AssetOwner")
-                    {
-                        var lstEmployees = _context.Employees.Where(a => a.Email == updateObj.Email).ToList();
-                        if (lstEmployees.Count > 0)
-                        {
-                            updateObj.Email = userObj.Email;
+        //                    var engObj = lstEngineers[0];
+        //                    engObj.Email = newUser.Email;
+        //                    engObj.Phone = newUser.PhoneNumber;
+        //                    engObj.WhatsApp = newUser.PhoneNumber;
+        //                    _context.Entry(engObj).State = EntityState.Modified;
+        //                    _context.SaveChanges();
+        //                }
+        //            }
+        //            if (roleName == "AssetOwner")
+        //            {
+        //                var lstEmployees = _context.Employees.Where(a => a.Email == updateObj.Email).ToList();
+        //                if (lstEmployees.Count > 0)
+        //                {
+        //                    updateObj.Email = newUser.Email;
 
-                            var empObj = lstEmployees[0];
-                            empObj.Email = userObj.Email;
-                            empObj.Phone = userObj.PhoneNumber;
-                            empObj.WhatsApp = userObj.PhoneNumber;
-                            _context.Entry(empObj).State = EntityState.Modified;
-                            _context.SaveChanges();
-                        }
-                    }
+        //                    var empObj = lstEmployees[0];
+        //                    empObj.Email = newUser.Email;
+        //                    empObj.Phone = newUser.PhoneNumber;
+        //                    empObj.WhatsApp = newUser.PhoneNumber;
+        //                    _context.Entry(empObj).State = EntityState.Modified;
+        //                    _context.SaveChanges();
+        //                }
+        //            }
 
-                    if (roleName == "EngDepManager")
-                    {
-                        var lstEmployees = _context.Employees.Where(a => a.Email == updateObj.Email).ToList();
-                        if (lstEmployees.Count > 0)
-                        {
-                            updateObj.Email = userObj.Email;
+        //            if (roleName == "EngDepManager")
+        //            {
+        //                var lstEmployees = _context.Employees.Where(a => a.Email == updateObj.Email).ToList();
+        //                if (lstEmployees.Count > 0)
+        //                {
+        //                    updateObj.Email = newUser.Email;
 
-                            var empObj = lstEmployees[0];
-                            empObj.Email = userObj.Email;
-                            empObj.Phone = userObj.PhoneNumber;
-                            empObj.WhatsApp = userObj.PhoneNumber;
-                            _context.Entry(empObj).State = EntityState.Modified;
-                            _context.SaveChanges();
-                        }
-                    }
-                    if (roleName == "TLHospitalManager")
-                    {
-                        var lstEmployees = _context.Employees.Where(a => a.Email == updateObj.Email).ToList();
-                        if (lstEmployees.Count > 0)
-                        {
-                            updateObj.Email = userObj.Email;
+        //                    var empObj = lstEmployees[0];
+        //                    empObj.Email = newUser.Email;
+        //                    empObj.Phone = newUser.PhoneNumber;
+        //                    empObj.WhatsApp = newUser.PhoneNumber;
+        //                    _context.Entry(empObj).State = EntityState.Modified;
+        //                    _context.SaveChanges();
+        //                }
+        //            }
+        //            if (roleName == "TLHospitalManager")
+        //            {
+        //                var lstEmployees = _context.Employees.Where(a => a.Email == updateObj.Email).ToList();
+        //                if (lstEmployees.Count > 0)
+        //                {
+        //                    updateObj.Email = newUser.Email;
 
-                            var empObj = lstEmployees[0];
-                            empObj.Email = userObj.Email;
-                            empObj.Phone = userObj.PhoneNumber;
-                            empObj.WhatsApp = userObj.PhoneNumber;
-                            _context.Entry(empObj).State = EntityState.Modified;
-                            _context.SaveChanges();
-                        }
-                    }
-                   else
-                    {
+        //                    var empObj = lstEmployees[0];
+        //                    empObj.Email = newUser.Email;
+        //                    empObj.Phone = newUser.PhoneNumber;
+        //                    empObj.WhatsApp = newUser.PhoneNumber;
+        //                    _context.Entry(empObj).State = EntityState.Modified;
+        //                    _context.SaveChanges();
+        //                }
+        //            }
+        //           else
+        //            {
 
-                        updateObj.Email = userObj.Email;
-                        updateObj.PhoneNumber = userObj.PhoneNumber;
-                    }
-                    await _applicationUser.AddToRoleAsync(updateObj, roleName);
-                }
+        //                updateObj.Email = newUser.Email;
+        //                updateObj.PhoneNumber = newUser.PhoneNumber;
+        //            }
+        //            await _applicationUser.AddToRoleAsync(updateObj, roleName);
+        //        }
 
-            }
-            updateObj.UserName = userObj.UserName;
-            updateObj.GovernorateId = userObj.GovernorateId;
-            updateObj.CityId = userObj.CityId;
-            updateObj.OrganizationId = userObj.OrganizationId;
-            updateObj.SubOrganizationId = userObj.SubOrganizationId;
-            updateObj.HospitalId = userObj.HospitalId;
-            updateObj.RoleCategoryId = userObj.RoleCategoryId;
-            //updateObj.RoleId = userObj.RoleId;
+        //    }
+        //    updateObj.UserName = newUser.UserName;
+        //    updateObj.GovernorateId = newUser.GovernorateId;
+        //    updateObj.CityId = newUser.CityId;
+        //    updateObj.OrganizationId = newUser.OrganizationId;
+        //    updateObj.SubOrganizationId = newUser.SubOrganizationId;
+        //    updateObj.HospitalId = newUser.HospitalId;
+        //    updateObj.RoleCategoryId = newUser.RoleCategoryId;
+        //    //updateObj.RoleId = newUser.RoleId;
 
-            var result = await _applicationUser.UpdateAsync(updateObj);
-            return Ok(new Response { Status = "Success", Message = "User updated successfully!" });
+        //    var result = await _applicationUser.UpdateAsync(updateObj);
+        //    return Ok(new Response { Status = "Success", Message = "User updated successfully!" });
 
-            //await _applicationUser.UpdateAsync(updateObj);
-            //return Ok();
-        }
+        //    //await _applicationUser.UpdateAsync(updateObj);
+        //    //return Ok();
+        //}
 
         [HttpDelete]
         [Route("DeleteUser/{id}")]

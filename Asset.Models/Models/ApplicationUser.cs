@@ -22,9 +22,9 @@ namespace Asset.Models
 
 
         [NotMapped]
-        public List<string> RoleIds { get; set; }
+        public IEnumerable<string> RoleIds { get; set; }
 
         [NotMapped]
-        public List<ApplicationRole> userRoleIds { get; set; }
+        public IEnumerable<ApplicationRole> userRoleIds { get; set; }
     }
 }
