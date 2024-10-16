@@ -1,6 +1,7 @@
 ﻿using Asset.API.Helpers;
 using Asset.Domain.Services;
 using Asset.Models;
+using Asset.Models.Models;
 using Asset.ViewModels.PagingParameter;
 using Asset.ViewModels.UserVM;
 using Microsoft.AspNetCore.Http;
@@ -330,7 +331,7 @@ namespace Asset.API.Controllers
                 }
             }
 
-            var UserRoles =  newUser.RoleIds.Select(roleId=>{return new IdentityUserRole<string> { UserId = user.Id, RoleId = roleId }; });
+            var UserRoles =  newUser.RoleIds.Select(roleId=>{return new ApplicationUserRole { UserId = user.Id, RoleId = roleId }; });
             await _context.UserRoles.AddRangeAsync(UserRoles);
             await _context.SaveChangesAsync();
             return Ok();

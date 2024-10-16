@@ -155,10 +155,10 @@ namespace Asset.API
             {
                 // Optionally remove password requirements if you're not using passwords
                 options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
+                options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 0; // Set length to 0 to effectively disable password validation
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 8;
             })
         .AddEntityFrameworkStores<ApplicationDbContext>();
 

@@ -27,6 +27,8 @@ namespace Asset.Models
         public virtual RoleCategory RoleCategory { get; set; }
         public virtual ICollection<Module> Modules { get; set; }
         public ICollection<RoleModulePermission> RoleModulePermissions { get; set; }
+        public ICollection<ApplicationUserRole> UserRoles { get; set; }
+        
 
     }
 

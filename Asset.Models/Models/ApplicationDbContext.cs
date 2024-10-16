@@ -40,11 +40,11 @@ namespace Asset.Models
 
             builder.Entity<Visit>().Property(g => g.Latitude).HasColumnType("decimal(18, 8)");
             builder.Entity<Visit>().Property(g => g.Longtitude).HasColumnType("decimal(18, 8)");
-            builder.Entity<IdentityUserRole<string>>()
+            builder.Entity<ApplicationUserRole>()
        .ToTable("AspNetUserRoles");
 
         }
-        public DbSet<IdentityUserRole<string>> UserRoles { get; set; }
+        public DbSet<ApplicationUserRole> UserRoles { get; set; }
         public DbSet<RoleModulePermission> roleModulePermission { get; set; }   
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Module> Modules { get; set; }
