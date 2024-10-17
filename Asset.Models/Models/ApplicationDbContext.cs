@@ -44,7 +44,6 @@ namespace Asset.Models
        .ToTable("AspNetUserRoles");
 
         }
-        public DbSet<ApplicationUserRole> UserRoles { get; set; }
         public DbSet<RoleModulePermission> roleModulePermission { get; set; }   
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Module> Modules { get; set; }

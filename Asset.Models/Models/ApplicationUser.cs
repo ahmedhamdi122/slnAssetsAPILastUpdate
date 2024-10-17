@@ -24,6 +24,6 @@ namespace Asset.Models
         [NotMapped]
         public IEnumerable<string> RoleIds { get; set; }
 
-        public ICollection<ApplicationUserRole> userRoles { get; set; }
+        public ICollection<ApplicationRole> Roles { get; set; }
     }
 }
