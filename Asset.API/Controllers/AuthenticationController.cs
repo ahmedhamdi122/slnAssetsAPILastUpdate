@@ -58,8 +58,8 @@ namespace Asset.API.Controllers
             string userName = "";
             string userNameAr = "";
             var user = await _userManager.FindByNameAsync(userObj.Username);
-            var userRoles = await _context.ApplicationUser.Include(u => u.Roles).ThenInclude(r=>r.RoleModulePermissions).Select(u=> new { userName = u.UserName, roles = u.Roles.Select(r => new { r.Name,permissions=r.RoleModulePermissions }) }).FirstOrDefaultAsync(u=>u.userName== "test12");
-            return Ok(userRoles);
+           // var userRoles = await _context.ApplicationUser.Include(u => u.Roles).ThenInclude(r=>r.RoleModulePermissions).Select(u=> new { userName = u.UserName, roles = u.Roles.Select(r => new { r.Name,permissions=r.RoleModulePermissions }) }).FirstOrDefaultAsync(u=>u.userName== "test12");
+            return Ok(user);
 
     //        if (user == null)
     //            return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "UserNotFound", Message = "There is no account associated with this username", MessageAr = "لا يوجد حساب مرتبط  باسم المستخدم " });
