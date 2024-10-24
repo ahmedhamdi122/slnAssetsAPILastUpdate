@@ -1,4 +1,5 @@
 ﻿using Asset.Domain.Repositories;
+using Asset.Domain.Services;
 using System.Threading.Tasks;
 
 
@@ -9,6 +10,8 @@ namespace Asset.Domain
         int CommitAsync();
         Task<int> CommitAsync2();
         void Rollback();
+         IUserRepository UserRepository { get; }
+
         IModuleRepository ModuleRepository { get; } 
         IRoleRepository RoleRepository { get; }
         IRoleCategoryRepository RoleCategory { get; }

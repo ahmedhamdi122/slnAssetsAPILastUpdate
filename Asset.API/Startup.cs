@@ -146,6 +146,7 @@ namespace Asset.API
             services.AddScoped<IStockTakingScheduleService, StockTakingScheduleService>();
             services.AddScoped<IManufacturerPMAssetService, ManufacturerPMAssetService>();
             services.AddScoped<IModuleService, ModuleService>();
+            services.AddScoped<IUserService, UserService>();
 
             //services.AddIdentity<ApplicationUser, ApplicationRole>()
             //     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -155,14 +156,12 @@ namespace Asset.API
             {
                 // Optionally remove password requirements if you're not using passwords
                 options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = true;
+                options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = true;
-                options.Password.RequiredLength = 8;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 1;
             })
         .AddEntityFrameworkStores<ApplicationDbContext>();
-
-
 
             // Adding Authentication  
             services.AddAuthentication(options =>

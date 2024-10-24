@@ -1,8 +1,10 @@
 ﻿using Asset.API.Helpers;
+using Asset.Core.Services;
 using Asset.Domain.Services;
 using Asset.Models;
 using Asset.Models.Models;
 using Asset.ViewModels.PagingParameter;
+using Asset.ViewModels.RoleCategoryVM;
 using Asset.ViewModels.UserVM;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -24,16 +26,16 @@ namespace Asset.API.Controllers
         UserManager<ApplicationUser> _applicationUser;
         RoleManager<ApplicationRole> _roleManager;
         private IRoleCategoryService _roleCategoryService;
-        private IPagingService _pagingService;
+        private IUserService UserService;
         private readonly ApplicationDbContext _context;
         public UserController(UserManager<ApplicationUser> applicationUser, RoleManager<ApplicationRole> roleManager,
-            ApplicationDbContext context, IRoleCategoryService roleCategoryService, IPagingService pagingService)
+            ApplicationDbContext context, IRoleCategoryService roleCategoryService, IUserService userService)
         {
             _applicationUser = applicationUser;
             _roleManager = roleManager;
             _roleCategoryService = roleCategoryService;
             _context = context;
-            _pagingService = pagingService;
+            UserService = userService;
         }
 
 
@@ -57,41 +59,12 @@ namespace Asset.API.Controllers
         //    return lstUsers;
         //}
 
-        //[HttpPost]
-        //[Route("ListUsersWithPaging")]
-        //public IEnumerable<IndexUserVM.GetData> GetUsers(PagingParameter paging)
-        //{
-        //    List<IndexUserVM.GetData> lstUsers = new List<IndexUserVM.GetData>();
-        //    var userlist = _applicationUser.Users.ToList();
-        //    //var users = _pagingService.GetAll<ApplicationUser>(paging, userlist);
-        //    foreach (var item in userlist)
-        //    {
-        //        IndexUserVM.GetData newUser = new IndexUserVM.GetData();
-        //        newUser.Id = item.Id;
-        //        newUser.UserName = item.UserName;
-        //        var roleNames = (from userRole in _context.UserRoles
-        //                         join role in _context.ApplicationRole on userRole.RoleId equals role.Id
-        //                         where userRole.UserId == item.Id
-        //                         select role.Name).ToList();
-        //        string strRoles = "";
-        //        var list = new List<string>();
-        //        foreach (var role in roleNames)
-        //        {
-        //            list.Add(role);
-        //        }
-
-        //        strRoles = string.Join<string>(",", list);
-        //        newUser.DisplayName = strRoles;
-        //        newUser.CategoryRoleName = _roleCategoryService.GetById((int)item.RoleCategoryId).Name;
-        //        newUser.PhoneNumber = item.PhoneNumber;
-        //        newUser.Email = item.Email;
-        //        lstUsers.Add(newUser);
-        //    }
-
-
-            //return _pagingService.GetAll<IndexUserVM.GetData>(paging, lstUsers);
-            //  return lstUsers;
-       // }
+        [HttpPost]
+        [Route("{first}/{rows}")]
+        public async Task<UserResultVM> GetUsers(int first, int rows, SortSearchVM sortSearchObj)
+        {
+            return await UserService.GetAll(first, rows, sortSearchObj);
+        }
 
 
 
