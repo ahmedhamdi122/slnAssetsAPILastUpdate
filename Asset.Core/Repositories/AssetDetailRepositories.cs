@@ -11369,7 +11369,7 @@ namespace Asset.Core.Repositories
             #endregion
 
             #region User Role
-            if (data.SearchObj.UserId != null)
+            if (data.SearchObj!=null && data.SearchObj.UserId != null)
             {
                 var getUserById = _context.ApplicationUser.Where(a => a.Id == data.SearchObj.UserId).ToList();
                 userObj = getUserById[0];
@@ -11426,466 +11426,473 @@ namespace Asset.Core.Repositories
             #endregion
 
             #region Search Criteria
-            if (data.SearchObj.HospitalId != 0)
+            if (data.SearchObj != null)
             {
-                query = query.Where(x => x.HospitalId == data.SearchObj.HospitalId);
-            }
-            if (!string.IsNullOrEmpty(data.SearchObj.AssetName))
-            {
-                query = query.Where(x => x.MasterAsset.Name.Contains(data.SearchObj.AssetName));
-            }
-            if (!string.IsNullOrEmpty(data.SearchObj.AssetNameAr))
-            {
-                query = query.Where(x => x.MasterAsset.NameAr.Contains(data.SearchObj.AssetNameAr));
-            }
-            if (!string.IsNullOrEmpty(data.SearchObj.BarCode))
-            {
-                query = query.Where(x => x.Barcode.Contains(data.SearchObj.BarCode));
-            }
-            if (!string.IsNullOrEmpty(data.SearchObj.Serial))
-            {
-                query = query.Where(x => x.SerialNumber.Contains(data.SearchObj.Serial));
-            }
-            if (data.SearchObj.BrandId != 0)
-            {
-                query = query.Where(x => x.MasterAsset.BrandId == data.SearchObj.BrandId);
-            }
-            if (data.SearchObj.OriginId != 0)
-            {
-                query = query.Where(x => x.MasterAsset.OriginId == data.SearchObj.OriginId);
-            }
-            if (data.SearchObj.SupplierId != 0)
-            {
-                query = query.Where(x => x.SupplierId == data.SearchObj.SupplierId);
-            }
-            if (data.SearchObj.MasterAssetId != 0)
-            {
-                query = query.Where(x => x.MasterAssetId == data.SearchObj.MasterAssetId);
-            }
-            if (data.SearchObj.DepartmentId != 0)
-            {
-                query = query.Where(x => x.DepartmentId == data.SearchObj.DepartmentId);
-            }
-            if (data.SearchObj.Model != "")
-            {
-                query = query.Where(x => x.MasterAsset.ModelNumber == data.SearchObj.Model);
-            }
-            if (data.SearchObj.StatusId != 0)
-            {
-                List<int?> ids = new List<int?>();
-                if (data.SearchObj.HospitalId == 0)
+                if (data.SearchObj.HospitalId != 0)
                 {
-                    var allIds = _context.AssetStatusTransactions
-                       //.Where(a => a.AssetStatusId == data.SearchObj.StatusId)
-                       .OrderByDescending(a => a.StatusDate).ToList().GroupBy(a => a.AssetDetailId)
-                       //.Select(x => x.FirstOrDefault().AssetDetailId)
-                       .ToList();
-
-                    foreach (var itm in allIds)
+                    query = query.Where(x => x.HospitalId == data.SearchObj.HospitalId);
+                }
+                if (!string.IsNullOrEmpty(data.SearchObj.AssetName))
+                {
+                    query = query.Where(x => x.MasterAsset.Name.Contains(data.SearchObj.AssetName));
+                }
+                if (!string.IsNullOrEmpty(data.SearchObj.AssetNameAr))
+                {
+                    query = query.Where(x => x.MasterAsset.NameAr.Contains(data.SearchObj.AssetNameAr));
+                }
+                if (!string.IsNullOrEmpty(data.SearchObj.BarCode))
+                {
+                    query = query.Where(x => x.Barcode.Contains(data.SearchObj.BarCode));
+                }
+                if (!string.IsNullOrEmpty(data.SearchObj.Serial))
+                {
+                    query = query.Where(x => x.SerialNumber.Contains(data.SearchObj.Serial));
+                }
+                if (data.SearchObj.BrandId != 0)
+                {
+                    query = query.Where(x => x.MasterAsset.BrandId == data.SearchObj.BrandId);
+                }
+                if (data.SearchObj.OriginId != 0)
+                {
+                    query = query.Where(x => x.MasterAsset.OriginId == data.SearchObj.OriginId);
+                }
+                if (data.SearchObj.SupplierId != 0)
+                {
+                    query = query.Where(x => x.SupplierId == data.SearchObj.SupplierId);
+                }
+                if (data.SearchObj.MasterAssetId != 0)
+                {
+                    query = query.Where(x => x.MasterAssetId == data.SearchObj.MasterAssetId);
+                }
+                if (data.SearchObj.DepartmentId != 0)
+                {
+                    query = query.Where(x => x.DepartmentId == data.SearchObj.DepartmentId);
+                }
+                if (data.SearchObj.Model != "")
+                {
+                    query = query.Where(x => x.MasterAsset.ModelNumber == data.SearchObj.Model);
+                }
+                if (data.SearchObj.StatusId != 0)
+                {
+                    List<int?> ids = new List<int?>();
+                    if (data.SearchObj.HospitalId == 0)
                     {
-                        if (itm.FirstOrDefault().AssetStatusId == data.SearchObj.StatusId)
+                        var allIds = _context.AssetStatusTransactions
+                           //.Where(a => a.AssetStatusId == data.SearchObj.StatusId)
+                           .OrderByDescending(a => a.StatusDate).ToList().GroupBy(a => a.AssetDetailId)
+                           //.Select(x => x.FirstOrDefault().AssetDetailId)
+                           .ToList();
+
+                        foreach (var itm in allIds)
                         {
-                            ids.Add(itm.FirstOrDefault().AssetDetailId);
+                            if (itm.FirstOrDefault().AssetStatusId == data.SearchObj.StatusId)
+                            {
+                                ids.Add(itm.FirstOrDefault().AssetDetailId);
+                            }
                         }
                     }
-                }
-                else
-                {
-                    var allIds = _context.AssetStatusTransactions
-                                        .Where(a => a.HospitalId == data.SearchObj.HospitalId)
-                                        .OrderByDescending(a => a.StatusDate).ToList().GroupBy(a => a.AssetDetailId)
-                                        .ToList();
-
-                    foreach (var itm in allIds)
+                    else
                     {
-                        if (itm.FirstOrDefault().AssetStatusId == data.SearchObj.StatusId)
+                        var allIds = _context.AssetStatusTransactions
+                                            .Where(a => a.HospitalId == data.SearchObj.HospitalId)
+                                            .OrderByDescending(a => a.StatusDate).ToList().GroupBy(a => a.AssetDetailId)
+                                            .ToList();
+
+                        foreach (var itm in allIds)
                         {
-                            ids.Add(itm.FirstOrDefault().AssetDetailId);
+                            if (itm.FirstOrDefault().AssetStatusId == data.SearchObj.StatusId)
+                            {
+                                ids.Add(itm.FirstOrDefault().AssetDetailId);
+                            }
                         }
                     }
+                    query = query.Where(list => ids.Contains(list.Id));
                 }
-                query = query.Where(list => ids.Contains(list.Id));
-            }
-            if (data.SearchObj.WarrantyTypeId == 1)
-            {
-                query = query.Where(b => b.WarrantyEnd != null);
-                query = query.Where(b => b.WarrantyEnd.Value.Date >= DateTime.Today.Date);
-            }
-            else if (data.SearchObj.WarrantyTypeId == 2)
-            {
-                query = query.Where(b => b.WarrantyEnd != null);
-                query = query.Where(b => b.WarrantyEnd.Value.Date <= DateTime.Today.Date);
-            }
-            string setstartday, setstartmonth, setendday, setendmonth = "";
-            DateTime startingFrom = new DateTime();
-            DateTime endingTo = new DateTime();
-            if (data.SearchObj.Start == "")
-            {
-                startingFrom = DateTime.Parse("1900-01-01").Date;
-            }
-            else
-            {
-                data.SearchObj.StartDate = DateTime.Parse(data.SearchObj.Start.ToString());
-                var startyear = data.SearchObj.StartDate.Value.Year;
-                var startmonth = data.SearchObj.StartDate.Value.Month;
-                var startday = data.SearchObj.StartDate.Value.Day;
-                if (startday < 10)
-                    setstartday = data.SearchObj.StartDate.Value.Day.ToString().PadLeft(2, '0');
-                else
-                    setstartday = data.SearchObj.StartDate.Value.Day.ToString();
-
-                if (startmonth < 10)
-                    setstartmonth = data.SearchObj.StartDate.Value.Month.ToString().PadLeft(2, '0');
-                else
-                    setstartmonth = data.SearchObj.StartDate.Value.Month.ToString();
-
-                var sDate = startyear + "/" + setstartmonth + "/" + setstartday;
-                startingFrom = DateTime.Parse(sDate);
-            }
-
-            if (data.SearchObj.End == "")
-            {
-                endingTo = DateTime.Today.Date;
-            }
-            else
-            {         
-                data.SearchObj.EndDate = DateTime.Parse(data.SearchObj.End.ToString());
-                var endyear = data.SearchObj.EndDate.Value.Year;
-                var endmonth = data.SearchObj.EndDate.Value.Month;
-                var endday = data.SearchObj.EndDate.Value.Day;
-                if (endday < 10)
-                    setendday = data.SearchObj.EndDate.Value.Day.ToString().PadLeft(2, '0');
-                else
-                    setendday = data.SearchObj.EndDate.Value.Day.ToString();
-                if (endmonth < 10)
-                    setendmonth = data.SearchObj.EndDate.Value.Month.ToString().PadLeft(2, '0');
-                else
-                    setendmonth = data.SearchObj.EndDate.Value.Month.ToString();
-                var eDate = endyear + "/" + setendmonth + "/" + setendday;
-                endingTo = DateTime.Parse(eDate);
-            }
-            if (data.SearchObj.Start != "" && data.SearchObj.End != "")
-            {
-                query = query.Where(a => a.WarrantyEnd.Value.Date >= startingFrom.Date && a.WarrantyEnd.Value.Date <= endingTo.Date);
-            }
-
-            string setcontractstartday, setcontractstartmonth, setcontractendday, setcontractendmonth = "";
-            DateTime? startingContractFrom = new DateTime();
-            DateTime? endingContractTo = new DateTime();
-            if (data.SearchObj.ContractStart == "")
-            {
-                startingContractFrom = DateTime.Parse("1900-01-01").Date;
-            }
-            else
-            {
-                data.SearchObj.ContractStartDate = DateTime.Parse(data.SearchObj.ContractStart.ToString());
-                var startcontractyear = data.SearchObj.ContractStartDate.Value.Year;
-                var startcontractmonth = data.SearchObj.ContractStartDate.Value.Month;
-                var startcontractday = data.SearchObj.ContractStartDate.Value.Day;
-                if (startcontractday < 10)
-                    setcontractstartday = data.SearchObj.ContractStartDate.Value.Day.ToString().PadLeft(2, '0');
-                else
-                    setcontractstartday = data.SearchObj.ContractStartDate.Value.Day.ToString();
-
-                if (startcontractmonth < 10)
-                    setcontractstartmonth = data.SearchObj.ContractStartDate.Value.Month.ToString().PadLeft(2, '0');
-                else
-                    setcontractstartmonth = data.SearchObj.ContractStartDate.Value.Month.ToString();
-
-                var sDate = startcontractyear + "/" + setcontractstartmonth + "/" + setcontractstartday;
-                startingContractFrom = DateTime.Parse(sDate);
-            }
-            if (data.SearchObj.ContractEnd == "")
-            {
-                endingContractTo = DateTime.Today.Date;
-            }
-            else
-            {
-                data.SearchObj.ContractEndDate = DateTime.Parse(data.SearchObj.ContractEnd.ToString());
-                var endcontractyear = data.SearchObj.ContractEndDate.Value.Year;
-                var endcontractmonth = data.SearchObj.ContractEndDate.Value.Month;
-                var endcontractday = data.SearchObj.ContractEndDate.Value.Day;
-                if (endcontractday < 10)
-                    setcontractendday = data.SearchObj.ContractEndDate.Value.Day.ToString().PadLeft(2, '0');
-                else
-                    setcontractendday = data.SearchObj.ContractEndDate.Value.Day.ToString();
-                if (endcontractmonth < 10)
-                    setcontractendmonth = data.SearchObj.ContractEndDate.Value.Month.ToString().PadLeft(2, '0');
-                else
-                    setcontractendmonth = data.SearchObj.ContractEndDate.Value.Month.ToString();
-                var eDate = endcontractyear + "/" + setcontractendmonth + "/" + setcontractendday;
-                endingContractTo = DateTime.Parse(eDate);
-            }
-            if (data.SearchObj.ContractStart != "" && data.SearchObj.ContractEnd != "")
-            {
-                List<AssetDetail> assetsInContract = new List<AssetDetail>();
-                if (data.SearchObj.HospitalId != 0)
+                if (data.SearchObj.WarrantyTypeId == 1)
                 {
-                    assetsInContract = _context.ContractDetails.Include(a => a.MasterContract).Include(a => a.AssetDetail)
-                        .Where(a => a.HospitalId == data.SearchObj.HospitalId &&
-                         (a.MasterContract.From.Value.Date >= startingContractFrom.Value.Date && a.MasterContract.From.Value.Date <= endingContractTo.Value.Date) ||
-                         (a.MasterContract.To.Value.Date >= startingContractFrom.Value.Date && a.MasterContract.To.Value.Date <= endingContractTo.Value.Date))
-                        .ToList().GroupBy(a => a.AssetDetailId).Select(a => a.FirstOrDefault().AssetDetail).ToList();
+                    query = query.Where(b => b.WarrantyEnd != null);
+                    query = query.Where(b => b.WarrantyEnd.Value.Date >= DateTime.Today.Date);
+                }
+                else if (data.SearchObj.WarrantyTypeId == 2)
+                {
+                    query = query.Where(b => b.WarrantyEnd != null);
+                    query = query.Where(b => b.WarrantyEnd.Value.Date <= DateTime.Today.Date);
+                }
+                string setstartday, setstartmonth, setendday, setendmonth = "";
+                DateTime startingFrom = new DateTime();
+                DateTime endingTo = new DateTime();
+                if (data.SearchObj.Start == "")
+                {
+                    startingFrom = DateTime.Parse("1900-01-01").Date;
                 }
                 else
                 {
-                    assetsInContract = _context.ContractDetails.Include(a => a.MasterContract).Include(a => a.AssetDetail)
-                                        .Where(a =>
-                                         (a.MasterContract.From.Value.Date >= startingContractFrom.Value.Date && a.MasterContract.From.Value.Date <= endingContractTo.Value.Date) ||
-                                         (a.MasterContract.To.Value.Date >= startingContractFrom.Value.Date && a.MasterContract.To.Value.Date <= endingContractTo.Value.Date))
-                                        .ToList().GroupBy(a => a.AssetDetailId).Select(a => a.FirstOrDefault().AssetDetail).ToList();
+                    data.SearchObj.StartDate = DateTime.Parse(data.SearchObj.Start.ToString());
+                    var startyear = data.SearchObj.StartDate.Value.Year;
+                    var startmonth = data.SearchObj.StartDate.Value.Month;
+                    var startday = data.SearchObj.StartDate.Value.Day;
+                    if (startday < 10)
+                        setstartday = data.SearchObj.StartDate.Value.Day.ToString().PadLeft(2, '0');
+                    else
+                        setstartday = data.SearchObj.StartDate.Value.Day.ToString();
+
+                    if (startmonth < 10)
+                        setstartmonth = data.SearchObj.StartDate.Value.Month.ToString().PadLeft(2, '0');
+                    else
+                        setstartmonth = data.SearchObj.StartDate.Value.Month.ToString();
+
+                    var sDate = startyear + "/" + setstartmonth + "/" + setstartday;
+                    startingFrom = DateTime.Parse(sDate);
                 }
-                query = query.Where(Ids => assetsInContract.Contains(Ids));
-            }
 
-
-            if (data.SearchObj.ContractTypeId == 1)
-            {
-                List<AssetDetail> assetsOutContract = new List<AssetDetail>();
-                if (data.SearchObj.HospitalId != 0)
+                if (data.SearchObj.End == "")
                 {
-                    assetsOutContract = _context.ContractDetails.Include(a => a.MasterContract).Include(a => a.AssetDetail)
-                      .Where(a => a.HospitalId == data.SearchObj.HospitalId && a.MasterContract.ContractDate >= DateTime.Today.Date).ToList()
-                      .GroupBy(a => a.AssetDetailId).Select(a => a.FirstOrDefault().AssetDetail).ToList();
+                    endingTo = DateTime.Today.Date;
                 }
                 else
                 {
-                    assetsOutContract = _context.ContractDetails.Include(a => a.MasterContract).Include(a => a.AssetDetail)
-                     .Where(a => a.MasterContract.ContractDate >= DateTime.Today.Date).ToList()
+                    data.SearchObj.EndDate = DateTime.Parse(data.SearchObj.End.ToString());
+                    var endyear = data.SearchObj.EndDate.Value.Year;
+                    var endmonth = data.SearchObj.EndDate.Value.Month;
+                    var endday = data.SearchObj.EndDate.Value.Day;
+                    if (endday < 10)
+                        setendday = data.SearchObj.EndDate.Value.Day.ToString().PadLeft(2, '0');
+                    else
+                        setendday = data.SearchObj.EndDate.Value.Day.ToString();
+                    if (endmonth < 10)
+                        setendmonth = data.SearchObj.EndDate.Value.Month.ToString().PadLeft(2, '0');
+                    else
+                        setendmonth = data.SearchObj.EndDate.Value.Month.ToString();
+                    var eDate = endyear + "/" + setendmonth + "/" + setendday;
+                    endingTo = DateTime.Parse(eDate);
+                }
+                if (data.SearchObj.Start != "" && data.SearchObj.End != "")
+                {
+                    query = query.Where(a => a.WarrantyEnd.Value.Date >= startingFrom.Date && a.WarrantyEnd.Value.Date <= endingTo.Date);
+                }
+
+                string setcontractstartday, setcontractstartmonth, setcontractendday, setcontractendmonth = "";
+                DateTime? startingContractFrom = new DateTime();
+                DateTime? endingContractTo = new DateTime();
+                if (data.SearchObj.ContractStart == "")
+                {
+                    startingContractFrom = DateTime.Parse("1900-01-01").Date;
+                }
+                else
+                {
+                    data.SearchObj.ContractStartDate = DateTime.Parse(data.SearchObj.ContractStart.ToString());
+                    var startcontractyear = data.SearchObj.ContractStartDate.Value.Year;
+                    var startcontractmonth = data.SearchObj.ContractStartDate.Value.Month;
+                    var startcontractday = data.SearchObj.ContractStartDate.Value.Day;
+                    if (startcontractday < 10)
+                        setcontractstartday = data.SearchObj.ContractStartDate.Value.Day.ToString().PadLeft(2, '0');
+                    else
+                        setcontractstartday = data.SearchObj.ContractStartDate.Value.Day.ToString();
+
+                    if (startcontractmonth < 10)
+                        setcontractstartmonth = data.SearchObj.ContractStartDate.Value.Month.ToString().PadLeft(2, '0');
+                    else
+                        setcontractstartmonth = data.SearchObj.ContractStartDate.Value.Month.ToString();
+
+                    var sDate = startcontractyear + "/" + setcontractstartmonth + "/" + setcontractstartday;
+                    startingContractFrom = DateTime.Parse(sDate);
+                }
+                if (data.SearchObj.ContractEnd == "")
+                {
+                    endingContractTo = DateTime.Today.Date;
+                }
+                else
+                {
+                    data.SearchObj.ContractEndDate = DateTime.Parse(data.SearchObj.ContractEnd.ToString());
+                    var endcontractyear = data.SearchObj.ContractEndDate.Value.Year;
+                    var endcontractmonth = data.SearchObj.ContractEndDate.Value.Month;
+                    var endcontractday = data.SearchObj.ContractEndDate.Value.Day;
+                    if (endcontractday < 10)
+                        setcontractendday = data.SearchObj.ContractEndDate.Value.Day.ToString().PadLeft(2, '0');
+                    else
+                        setcontractendday = data.SearchObj.ContractEndDate.Value.Day.ToString();
+                    if (endcontractmonth < 10)
+                        setcontractendmonth = data.SearchObj.ContractEndDate.Value.Month.ToString().PadLeft(2, '0');
+                    else
+                        setcontractendmonth = data.SearchObj.ContractEndDate.Value.Month.ToString();
+                    var eDate = endcontractyear + "/" + setcontractendmonth + "/" + setcontractendday;
+                    endingContractTo = DateTime.Parse(eDate);
+                }
+                if (data.SearchObj.ContractStart != "" && data.SearchObj.ContractEnd != "")
+                {
+                    List<AssetDetail> assetsInContract = new List<AssetDetail>();
+                    if (data.SearchObj.HospitalId != 0)
+                    {
+                        assetsInContract = _context.ContractDetails.Include(a => a.MasterContract).Include(a => a.AssetDetail)
+                            .Where(a => a.HospitalId == data.SearchObj.HospitalId &&
+                             (a.MasterContract.From.Value.Date >= startingContractFrom.Value.Date && a.MasterContract.From.Value.Date <= endingContractTo.Value.Date) ||
+                             (a.MasterContract.To.Value.Date >= startingContractFrom.Value.Date && a.MasterContract.To.Value.Date <= endingContractTo.Value.Date))
+                            .ToList().GroupBy(a => a.AssetDetailId).Select(a => a.FirstOrDefault().AssetDetail).ToList();
+                    }
+                    else
+                    {
+                        assetsInContract = _context.ContractDetails.Include(a => a.MasterContract).Include(a => a.AssetDetail)
+                                            .Where(a =>
+                                             (a.MasterContract.From.Value.Date >= startingContractFrom.Value.Date && a.MasterContract.From.Value.Date <= endingContractTo.Value.Date) ||
+                                             (a.MasterContract.To.Value.Date >= startingContractFrom.Value.Date && a.MasterContract.To.Value.Date <= endingContractTo.Value.Date))
+                                            .ToList().GroupBy(a => a.AssetDetailId).Select(a => a.FirstOrDefault().AssetDetail).ToList();
+                    }
+                    query = query.Where(Ids => assetsInContract.Contains(Ids));
+                }
+
+
+                if (data.SearchObj.ContractTypeId == 1)
+                {
+                    List<AssetDetail> assetsOutContract = new List<AssetDetail>();
+                    if (data.SearchObj.HospitalId != 0)
+                    {
+                        assetsOutContract = _context.ContractDetails.Include(a => a.MasterContract).Include(a => a.AssetDetail)
+                          .Where(a => a.HospitalId == data.SearchObj.HospitalId && a.MasterContract.ContractDate >= DateTime.Today.Date).ToList()
+                          .GroupBy(a => a.AssetDetailId).Select(a => a.FirstOrDefault().AssetDetail).ToList();
+                    }
+                    else
+                    {
+                        assetsOutContract = _context.ContractDetails.Include(a => a.MasterContract).Include(a => a.AssetDetail)
+                         .Where(a => a.MasterContract.ContractDate >= DateTime.Today.Date).ToList()
+                         .GroupBy(a => a.AssetDetailId).Select(a => a.FirstOrDefault().AssetDetail).ToList();
+                    }
+                    query = query.Where(Ids => assetsOutContract.Contains(Ids));
+                }
+                else if (data.SearchObj.ContractTypeId == 2)
+                {
+                    List<AssetDetail> notInContract = new List<AssetDetail>();
+                    if (data.SearchObj.HospitalId != 0)
+                    {
+                        notInContract = _context.ContractDetails.Include(a => a.MasterContract).Include(a => a.AssetDetail)
+                         .Where(a => a.HospitalId == data.SearchObj.HospitalId && a.MasterContract.ContractDate != null && a.MasterContract.ContractDate <= DateTime.Today.Date).ToList()
+                         .GroupBy(a => a.AssetDetailId).Select(a => a.FirstOrDefault().AssetDetail).ToList();
+                    }
+                    else
+                    {
+                        notInContract = _context.ContractDetails.Include(a => a.MasterContract).Include(a => a.AssetDetail)
+                     .Where(a => a.MasterContract.ContractDate != null && a.MasterContract.ContractDate <= DateTime.Today.Date).ToList()
                      .GroupBy(a => a.AssetDetailId).Select(a => a.FirstOrDefault().AssetDetail).ToList();
-                }
-                query = query.Where(Ids => assetsOutContract.Contains(Ids));
-            }
-            else if (data.SearchObj.ContractTypeId == 2)
-            {
-                List<AssetDetail> notInContract = new List<AssetDetail>();
-                if (data.SearchObj.HospitalId != 0)
-                {
-                    notInContract = _context.ContractDetails.Include(a => a.MasterContract).Include(a => a.AssetDetail)
-                     .Where(a => a.HospitalId == data.SearchObj.HospitalId && a.MasterContract.ContractDate != null && a.MasterContract.ContractDate <= DateTime.Today.Date).ToList()
-                     .GroupBy(a => a.AssetDetailId).Select(a => a.FirstOrDefault().AssetDetail).ToList();
-                }
-                else
-                {
-                    notInContract = _context.ContractDetails.Include(a => a.MasterContract).Include(a => a.AssetDetail)
-                 .Where(a => a.MasterContract.ContractDate != null && a.MasterContract.ContractDate <= DateTime.Today.Date).ToList()
-                 .GroupBy(a => a.AssetDetailId).Select(a => a.FirstOrDefault().AssetDetail).ToList();
-                }
-                query = query.Where(Ids => notInContract.Contains(Ids));
+                    }
+                    query = query.Where(Ids => notInContract.Contains(Ids));
 
+                }
             }
 
             #endregion
 
             #region Sort Criteria
-
-            switch (data.SortObj.SortBy)
+            if (data.SortObj != null)
             {
-                case "Barcode":
-                case "الباركود":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
+
+
+                switch (data.SortObj.SortBy)
+                {
+                    case "Barcode":
+                    case "الباركود":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.Barcode);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.Barcode);
+                        }
+                        break;
+                    case "Serial":
+                    case "السيريال":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.SerialNumber);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.SerialNumber);
+                        }
+                        break;
+                    case "Model":
+                    case "الموديل":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.MasterAsset.ModelNumber);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.MasterAsset.ModelNumber);
+                        }
+                        break;
+                    case "Name":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query.OrderBy(x => x.MasterAsset.Name);
+                        }
+                        else
+                        {
+                            query.OrderByDescending(x => x.MasterAsset.Name);
+                        }
+                        break;
+
+                    case "الاسم":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.MasterAsset.NameAr);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.MasterAsset.NameAr);
+                        }
+                        break;
+                    case "Hospital":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.Hospital.Name);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.Hospital.Name);
+                        }
+                        break;
+
+                    case "المستشفى":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.Hospital.NameAr);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.Hospital.NameAr);
+                        }
+                        break;
+                    case "Brands":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.MasterAsset.brand.Name);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.MasterAsset.brand.Name);
+                        }
+                        break;
+                    case "الماركات":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.MasterAsset.brand.NameAr);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.MasterAsset.brand.NameAr);
+                        }
+                        break;
+                    case "Department":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.Department.Name);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.Department.Name);
+                        }
+                        break;
+                    case "القسم":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.Department.NameAr);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.Department.NameAr);
+                        }
+                        break;
+                    case "Governorate":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.Hospital.Governorate.Name);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.Hospital.Governorate.Name);
+                        }
+                        break;
+
+                    case "المحافظة":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.Hospital.Governorate.NameAr);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.Hospital.Governorate.NameAr);
+                        }
+                        break;
+
+                    case "City":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.Hospital.City.Name);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.Hospital.City.Name);
+                        }
+                        break;
+
+                    case "المدينة":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.Hospital.City.NameAr);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.Hospital.City.NameAr);
+                        }
+                        break;
+
+                    case "Organization":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.Hospital.Organization.Name);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.Hospital.Organization.Name);
+                        }
+                        break;
+
+                    case "الهيئة":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.Hospital.Organization.NameAr);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.Hospital.Organization.NameAr);
+                        }
+                        break;
+
+                    case "SubOrganization":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.Hospital.SubOrganization.Name);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.Hospital.SubOrganization.Name);
+                        }
+                        break;
+
+                    case "هيئة فرعية":
+                        if (data.SortObj.SortStatus == "ascending")
+                        {
+                            query = query.OrderBy(x => x.Hospital.SubOrganization.NameAr);
+                        }
+                        else
+                        {
+                            query = query.OrderByDescending(x => x.Hospital.SubOrganization.NameAr);
+                        }
+                        break;
+                    default:
                         query = query.OrderBy(x => x.Barcode);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Barcode);
-                    }
-                    break;
-                case "Serial":
-                case "السيريال":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.SerialNumber);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.SerialNumber);
-                    }
-                    break;
-                case "Model":
-                case "الموديل":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.MasterAsset.ModelNumber);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.MasterAsset.ModelNumber);
-                    }
-                    break;
-                case "Name":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query.OrderBy(x => x.MasterAsset.Name);
-                    }
-                    else
-                    {
-                        query.OrderByDescending(x => x.MasterAsset.Name);
-                    }
-                    break;
-
-                case "الاسم":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.MasterAsset.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.MasterAsset.NameAr);
-                    }
-                    break;
-                case "Hospital":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.Name);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.Name);
-                    }
-                    break;
-
-                case "المستشفى":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.NameAr);
-                    }
-                    break;
-                case "Brands":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.MasterAsset.brand.Name);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.MasterAsset.brand.Name);
-                    }
-                    break;
-                case "الماركات":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.MasterAsset.brand.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.MasterAsset.brand.NameAr);
-                    }
-                    break;
-                case "Department":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Department.Name);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Department.Name);
-                    }
-                    break;
-                case "القسم":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Department.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Department.NameAr);
-                    }
-                    break;
-                case "Governorate":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.Governorate.Name);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.Governorate.Name);
-                    }
-                    break;
-
-                case "المحافظة":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.Governorate.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.Governorate.NameAr);
-                    }
-                    break;
-
-                case "City":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.City.Name);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.City.Name);
-                    }
-                    break;
-
-                case "المدينة":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.City.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.City.NameAr);
-                    }
-                    break;
-
-                case "Organization":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.Organization.Name);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.Organization.Name);
-                    }
-                    break;
-
-                case "الهيئة":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.Organization.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.Organization.NameAr);
-                    }
-                    break;
-
-                case "SubOrganization":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.SubOrganization.Name);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.SubOrganization.Name);
-                    }
-                    break;
-
-                case "هيئة فرعية":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.SubOrganization.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.SubOrganization.NameAr);
-                    }
-                    break;
-                default:
-                    query = query.OrderBy(x => x.Barcode);
-                    break;
+                        break;
+                }
             }
 
             #endregion
@@ -11897,12 +11904,10 @@ namespace Asset.Core.Repositories
                 lstResults = query;
             else
                 lstResults = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-
-
             #endregion
 
             #region Loop to get Items after serach and sort
-            foreach (var item in lstResults.ToList())
+            foreach (var item in lstResults)
             {
 
                 IndexAssetDetailVM.GetData getDataobj = new IndexAssetDetailVM.GetData();
