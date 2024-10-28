@@ -21,6 +21,7 @@ using Asset.Domain;
 using System.Net.Mail;
 using Asset.Domain.Services;
 using Microsoft.EntityFrameworkCore;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Asset.API.Controllers
 {
@@ -57,10 +58,31 @@ namespace Asset.API.Controllers
             string Useremail = "";
             string userName = "";
             string userNameAr = "";
-            var user = await _userManager.FindByNameAsync(userObj.Username);
-          //  var ModuleWithPermissions = await _context.ApplicationUser.Include(u => u.Roles).ThenInclude(r=>r.RoleModulePermissions).Select(u=> new { moduleName = u.Roles.Select(r=>r.), roles = u.Roles.Select(r => new { r.Name,permissions=r.RoleModulePermissions }) }).FirstOrDefaultAsync(u=>u.userName== "test12");
-            return Ok(user);
+            //var user = await _userManager.FindByNameAsync(userObj.Username);
+            var modules = await _context.Users
+       .Where(u => u.UserName == userObj.Username)
+       .SelectMany(u => u.Roles)
+       .SelectMany(r => r.RoleModulePermissions)
+       .Select(rmp => new
+       {
+           rmp.Module.Id,
+           rmp.Module.Name,
+           PermissionName = rmp.Permission.Name
+       })
+       .Distinct()
+       .ToListAsync();
 
+            var moduleDtos = modules
+                .GroupBy(m => new { m.Id, m.Name })
+                .Select(g => new
+                {
+                    ModuleId = g.Key.Id,
+                    ModuleName = g.Key.Name,
+                    Permissions = g.Select(p => p.PermissionName).Distinct().ToList()
+                })
+                .ToList();
+            return Ok(moduleDtos);
+            
     //        if (user == null)
     //            return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "UserNotFound", Message = "There is no account associated with this username", MessageAr = "لا يوجد حساب مرتبط  باسم المستخدم " });
     //        var userpass = await _userManager.CheckPasswordAsync(user, userObj.PasswordHash);

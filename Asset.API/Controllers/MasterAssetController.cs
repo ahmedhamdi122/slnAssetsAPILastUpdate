@@ -172,13 +172,11 @@ namespace Asset.API.Controllers
             try
             {
                 int id = MasterAssetVM.Id;
-                if (MasterAssetVM.Code != null)
+                if (MasterAssetVM.Code == null)
                 {
-                    var lstCode = _MasterAssetService.GetAllMasterAssets().Where(a => (a.Code == MasterAssetVM.Code && a.Code != null) && a.Id != id).ToList();
-                    if (lstCode.Count > 0)
-                    {
-                        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "code", Message = "MasterAsset code already exist", MessageAr = "هذا الكود مسجل سابقاً" });
-                    }
+
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "code", Message = "MasterAsset code already exist", MessageAr = "هذا الكود مسجل سابقاً" });
+
                 }
                 var lstNames = _MasterAssetService.GetAllMasterAssets().ToList().Where(a => a.Name == MasterAssetVM.Name && a.ModelNumber == MasterAssetVM.ModelNumber && (a.VersionNumber == MasterAssetVM.VersionNumber && a.VersionNumber != null) && a.Id != id).ToList();
                 if (lstNames.Count > 0)

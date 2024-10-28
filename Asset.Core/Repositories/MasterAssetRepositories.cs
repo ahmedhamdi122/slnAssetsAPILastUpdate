@@ -406,27 +406,27 @@ namespace Asset.Core.Repositories
                 {
                     lstMasters = lstMasters.Where(x => x.Name.Contains(SearchSortObj.AssetName));
                 }
-                if (!string.IsNullOrEmpty(SearchSortObj.AssetNameAr))
+                else if (!string.IsNullOrEmpty(SearchSortObj.AssetNameAr))
                 {
                     lstMasters = lstMasters.Where(x => x.NameAr.Contains(SearchSortObj.AssetNameAr));
                 }
-                if (SearchSortObj.BrandId!=0)
+                else if (SearchSortObj.BrandId!=0)
                 {
                     lstMasters = lstMasters.Where(x => x.BrandId == SearchSortObj.BrandId);
                 }
-                if (SearchSortObj.OriginId != 0)
+               else if(SearchSortObj.OriginId != 0)
                 {
                     lstMasters = lstMasters.Where(x => x.OriginId == SearchSortObj.OriginId);
                 }
-                if (!string.IsNullOrEmpty(SearchSortObj.ModelNumber))
+               else if (!string.IsNullOrEmpty(SearchSortObj.ModelNumber))
                 {
                     lstMasters = lstMasters.Where(x => x.ModelNumber == SearchSortObj.ModelNumber);
                 }
-                if (SearchSortObj.CategoryId !=0)
+               else if (SearchSortObj.CategoryId !=0)
                 {
                     lstMasters = lstMasters.Where(x => x.CategoryId == SearchSortObj.CategoryId);
                 }
-                if (SearchSortObj.SubCategoryId != 0)
+               else if(SearchSortObj.SubCategoryId != 0)
                 {
                     lstMasters = lstMasters.Where(x => x.SubCategoryId == SearchSortObj.SubCategoryId);
                 }
