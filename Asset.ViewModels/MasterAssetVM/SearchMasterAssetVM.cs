@@ -9,16 +9,13 @@ namespace Asset.ViewModels.MasterAssetVM
    public class SearchSortMasterAssetVM
     {
         public int SortOrder { get; set; }    
-        public string? SortFiled { get; set; }
+        public string SortFiled { get; set; }
         public int ECRIId { get; set; }
         public int OriginId { get; set; }
         public int BrandId { get; set; }
 
         public int CategoryId { get; set; }
         public int SubCategoryId { get; set; }
-
-
-
         public string Code { get; set; }
         public string ModelNumber { get; set; }
         public string AssetName { get; set; }
