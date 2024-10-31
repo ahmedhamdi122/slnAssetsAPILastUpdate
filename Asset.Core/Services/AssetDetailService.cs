@@ -14,7 +14,9 @@ using Asset.ViewModels.PmAssetTimeVM;
 using Asset.ViewModels.RequestVM;
 using Asset.ViewModels.SupplierVM;
 using Asset.ViewModels.WorkOrderVM;
+using Org.BouncyCastle.Crypto;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -430,9 +432,9 @@ namespace Asset.Core.Services
             return _unitOfWork.AssetDetailRepository.GroupAssetDetailsByDepartment(data);
         }
 
-        public IndexAssetDetailVM ListHospitalAssets(SortAndFilterVM data, int pageNumber, int pageSize)
+        public IndexAssetDetailVM ListHospitalAssets(SortAndFilterVM data,int  first,int rows)
         {
-            return _unitOfWork.AssetDetailRepository.ListHospitalAssets(data, pageNumber, pageSize);
+            return _unitOfWork.AssetDetailRepository.ListHospitalAssets(data, first, rows);
         }
 
         public IndexAssetDetailVM GenericReportGetAssetsByUserIdAndPaging(string userId, int pageNumber, int pageSize)

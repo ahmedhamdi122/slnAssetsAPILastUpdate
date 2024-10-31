@@ -1358,10 +1358,10 @@ namespace Asset.API.Controllers
 
 
         [HttpPost]
-        [Route("ListHospitalAssets/{pageNumber}/{pageSize}")]
-        public IndexAssetDetailVM ListHospitalAssets(SortAndFilterVM data, int pageNumber, int pageSize)
+        [Route("ListHospitalAssets/{first}/{rows}")]
+        public IndexAssetDetailVM ListHospitalAssets(SortAndFilterVM? data, int first, int rows)
         {
-            return _AssetDetailService.ListHospitalAssets(data, pageNumber, pageSize);
+            return _AssetDetailService.ListHospitalAssets(data, first, rows);
         }
 
         [HttpPost]

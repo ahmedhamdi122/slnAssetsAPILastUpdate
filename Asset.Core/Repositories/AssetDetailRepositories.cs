@@ -11356,7 +11356,7 @@ namespace Asset.Core.Repositories
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
         /// <returns>IndexAssetDetailVM</returns>
-        public IndexAssetDetailVM ListHospitalAssets(SortAndFilterVM data, int pageNumber, int pageSize)
+        public IndexAssetDetailVM ListHospitalAssets(SortAndFilterVM data, int first, int rows)
         {
 
             #region Initial Variables
@@ -11900,10 +11900,10 @@ namespace Asset.Core.Repositories
             #region Count data and fiter By Paging
             IQueryable<AssetDetail> lstResults = null;
             mainClass.Count = query.Count();
-            if (pageNumber == 0 && pageSize == 0)
+            if (first == 0 && rows == 0)
                 lstResults = query;
             else
-                lstResults = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                lstResults = query.Skip(first).Take(rows);
             #endregion
 
             #region Loop to get Items after serach and sort
