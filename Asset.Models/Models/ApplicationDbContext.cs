@@ -1,4 +1,5 @@
-﻿using Asset.Models;
+﻿using Asset.API;
+using Asset.Models;
 using Asset.Models.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -58,6 +59,7 @@ namespace Asset.Models
         public DbSet<RoleModulePermission> roleModulePermission { get; set; }   
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Module> Modules { get; set; }
+        public DbSet<Section> Sections { get; set; }
         public DbSet<RoleCategory> RoleCategories { get; set; }
         public DbSet<ApplicationRole> ApplicationRole { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }

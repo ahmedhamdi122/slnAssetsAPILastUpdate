@@ -59,6 +59,8 @@ namespace Asset.API.Controllers
             string userName = "";
             string userNameAr = "";
          var user = await _userManager.FindByNameAsync(userObj.Username);
+            //var SWM = await _context.Sections.Include(s=>s.ParentSection).Include(s=>s.InverseParentSection).Include(s=>s.Modules).ToListAsync();
+            //var modules=await _context.Modules.Where().ToListAsync();   
             //     var modules = await _context.Users
             //.Where(u => u.UserName == userObj.Username)
             //.SelectMany(u => u.Roles)

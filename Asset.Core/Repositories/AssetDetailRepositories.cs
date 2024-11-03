@@ -11373,14 +11373,14 @@ namespace Asset.Core.Repositories
             {
                 var getUserById = _context.ApplicationUser.Where(a => a.Id == data.SearchObj.UserId).ToList();
                 userObj = getUserById[0];
-                var roles = (from userRole in _context.UserRoles
-                             join role in _context.ApplicationRole on userRole.RoleId equals role.Id
-                             where userRole.UserId == userObj.Id
-                             select role);
-                foreach (var role in roles)
-                {
-                    userRoleNames.Add(role.Name);
-                }
+                //var roles = (from userRole in _context.UserRoles
+                //             join role in _context.ApplicationRole on userRole.RoleId equals role.Id
+                //             where userRole.UserId == userObj.Id
+                //             select role);
+                //foreach (var role in roles)
+                //{
+                //    userRoleNames.Add(role.Name);
+                //}
                 var lstEmployees = _context.Employees.Where(a => a.Email == userObj.Email).ToList();
                 if (lstEmployees.Count > 0)
                 {
@@ -11388,12 +11388,13 @@ namespace Asset.Core.Repositories
                 }
             }
             #endregion
-
             #region Load Data Depend on User
             if (userObj.HospitalId > 0)
             {
-                if ((userRoleNames.Contains("AssetOwner") || userRoleNames.Contains("SRCreator")) &&
-                    !userRoleNames.Contains("TLHospitalManager") && !userRoleNames.Contains("EngDepManager"))
+                // may can show all assets
+                // may show all for asset
+                var isAssetOwner=_context.AssetOwners.Any(a=>a.EmployeeId==empObj.Id);
+                if(isAssetOwner)
                 {
                     query = (from detail in query
                              join owner in _context.AssetOwners on detail.Id equals owner.AssetDetailId
@@ -11402,10 +11403,14 @@ namespace Asset.Core.Repositories
                              select detail);
                 }
                 else
+                {
                     query = query;
+
+                }
             }
             else
             {
+            
                 if (userObj.GovernorateId > 0 && userObj.CityId == 0 && userObj.OrganizationId == 0 && userObj.SubOrganizationId == 0 && userObj.HospitalId == 0)
                 {
                     query = query.Where(a => a.Hospital.GovernorateId == userObj.GovernorateId);
