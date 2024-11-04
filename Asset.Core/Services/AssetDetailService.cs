@@ -33,7 +33,10 @@ namespace Asset.Core.Services
         {
             _unitOfWork = unitOfWork;
         }
-
+        public bool CheckAssetDetailCodeExists(string code)
+        {
+            return _unitOfWork.AssetDetailRepository.CheckAssetDetailCodeExists(code);
+        }
         public int Add(CreateAssetDetailVM assetDetailObj)
         {
             return _unitOfWork.AssetDetailRepository.Add(assetDetailObj);

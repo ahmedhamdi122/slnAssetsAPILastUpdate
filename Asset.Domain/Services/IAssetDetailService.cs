@@ -156,6 +156,7 @@ namespace Asset.Domain.Services
          List<IndexAssetDetailVM.GetData> PrintListOfPMWorkOrders(SortAndFilterVM data);
 
 
+        bool CheckAssetDetailCodeExists(string code);
 
 
 
@@ -169,6 +170,6 @@ namespace Asset.Domain.Services
 
 
 
-     
+
     }
 }

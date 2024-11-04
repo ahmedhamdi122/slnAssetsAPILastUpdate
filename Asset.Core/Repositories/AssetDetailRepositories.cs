@@ -41,6 +41,10 @@ namespace Asset.Core.Repositories
         {
             return _context.AssetDetails.Any(asset=>asset.MasterAssetId==id);
         }
+        public bool CheckAssetDetailCodeExists(string code)
+        {
+            return _context.AssetDetails.Any(a=>a.Code==code);
+        }
         public AssetDetail QueryAssetDetailById(int assetId)
         {
             var lstHospitalAssets = _context.AssetDetails.Include(a => a.Supplier)
@@ -12262,7 +12266,8 @@ namespace Asset.Core.Repositories
                     if (model.OperationDate != "")
                         assetDetailObj.OperationDate = DateTime.Parse(model.OperationDate);
                     assetDetailObj.PONumber = model.PONumber;
-                    assetDetailObj.DepartmentId = model.DepartmentId;
+                    if (model.DepartmentId!=0)
+                        assetDetailObj.DepartmentId = model.DepartmentId;
                     if (model.SupplierId > 0)
                         assetDetailObj.SupplierId = model.SupplierId;
                     assetDetailObj.HospitalId = model.HospitalId;

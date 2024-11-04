@@ -197,12 +197,15 @@ namespace Asset.API.Controllers
         /// </summary>
         /// <param name="AssetDetailVM"></param>
         /// <returns></returns>
+
+        
+
         [HttpPost]
         [Route("AddAssetDetail")]
         public ActionResult Add(CreateAssetDetailVM AssetDetailVM)
         {
-            var lstCode = _AssetDetailService.GetAll().ToList().Where(a => a.Code == AssetDetailVM.Code).ToList();
-            if (lstCode.Count > 0)
+            var CodeExists = _AssetDetailService.CheckAssetDetailCodeExists(AssetDetailVM.Code);
+            if (CodeExists)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "code", Message = "Asset code already exist", MessageAr = "هذا الكود مسجل سابقاً" });
             }
@@ -241,11 +244,11 @@ namespace Asset.API.Controllers
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "move", Message = "You cannot delete this asset it has movement", MessageAr = "لا يمكن مسح هذا الأصل لأن له حركات في المستشفى" });
                 }
-                //var lstRequests = _requestService.GetAllRequestsByAssetId(id, int.Parse(assetObj.HospitalId.ToString())).ToList();
-                //if (lstRequests.Count > 0)
-                //{
-                //    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "request", Message = "You cannot delete this asset it has requests", MessageAr = "لا يمكن مسح هذا الأصل لأن له بلاغات أعطال " });
-                //}
+                var lstRequests = _requestService.GetAllRequestsByAssetId(id, int.Parse(assetObj.HospitalId.ToString())).ToList();
+                if (lstRequests.Count > 0)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "request", Message = "You cannot delete this asset it has requests", MessageAr = "لا يمكن مسح هذا الأصل لأن له بلاغات أعطال " });
+                }
                 var lstWO = _workOrderService.GetLastRequestAndWorkOrderByAssetId(id).ToList();
                 if (lstWO.Count > 0)
                 {
