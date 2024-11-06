@@ -100,20 +100,18 @@ namespace Asset.ViewModels.AssetDetailVM
         public string SortField { get; set; }
         public string SortStatus { get; set; }
 
+        public string masterAssetNameAr { get; set; }
+        public string masterAssetName { get; set; }
 
-        public string Start { get; set; }
-        public string End { get; set; }
+        public string StrWarrantyStartDate { get; set; }
+        public string StrWarrantyEndDate { get; set; }
+        public string StrPurchaseStartDate { get; set; }
+        public string StrPurchasEndDate { get; set; }
 
         public DateTime? PurchaseDateFrom { get; set; }
         public DateTime? PurchaseDateTo { get; set; }
-
-      
-        //public DateTime? PurchaseDate { get; set; }
-        //public DateTime? FromPurchaseDate { get; set; }
-        //public DateTime? ToPurchaseDate { get; set; }
-
-        public string ContractStart { get; set; }
-        public string ContractEnd { get; set; }
+        public string StrContractStartDate { get; set; }
+        public string StrContractEndDate { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public DateTime? ContractStartDate { get; set; }

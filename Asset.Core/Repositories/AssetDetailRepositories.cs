@@ -17,8 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using QRCoder;
 using System.Drawing;
-
-
 using System.Threading.Tasks;
 using System.IO;
 using Asset.ViewModels.RequestVM;
@@ -10087,14 +10085,14 @@ namespace Asset.Core.Repositories
             string setstartday, setstartmonth, setendday, setendmonth = "";
             DateTime? startingFrom = new DateTime();
             DateTime? endingTo = new DateTime();
-            if (data.SearchObj.Start == "")
+            if (data.SearchObj.StrPurchaseStartDate == "")
             {
                 data.SearchObj.PurchaseDateFrom = DateTime.Parse("01/01/1900");
                 startingFrom = DateTime.Parse("01/01/1900");
             }
             else
             {
-                data.SearchObj.PurchaseDateFrom = DateTime.Parse(data.SearchObj.Start.ToString());
+                data.SearchObj.PurchaseDateFrom = DateTime.Parse(data.SearchObj.StrPurchaseStartDate.ToString());
 
                 var startyear = data.SearchObj.PurchaseDateFrom.Value.Year;
                 var startmonth = data.SearchObj.PurchaseDateFrom.Value.Month;
@@ -10113,14 +10111,14 @@ namespace Asset.Core.Repositories
                 startingFrom = DateTime.Parse(sDate);//.AddDays(1);
             }
 
-            if (data.SearchObj.End == "")
+            if (data.SearchObj.StrPurchasEndDate == "")
             {
                 data.SearchObj.PurchaseDateTo = DateTime.Today.Date;
                 endingTo = DateTime.Today.Date;
             }
             else
             {
-                data.SearchObj.PurchaseDateTo = DateTime.Parse(data.SearchObj.End.ToString());
+                data.SearchObj.PurchaseDateTo = DateTime.Parse(data.SearchObj.StrPurchasEndDate.ToString());
                 var endyear = data.SearchObj.PurchaseDateTo.Value.Year;
                 var endmonth = data.SearchObj.PurchaseDateTo.Value.Month;
                 var endday = data.SearchObj.PurchaseDateTo.Value.Day;
@@ -11530,13 +11528,13 @@ namespace Asset.Core.Repositories
                 string setstartday, setstartmonth, setendday, setendmonth = "";
                 DateTime startingFrom = new DateTime();
                 DateTime endingTo = new DateTime();
-                if (data.SearchObj.Start == "")
+                if (data.SearchObj.StrWarrantyStartDate == "")
                 {
                     startingFrom = DateTime.Parse("1900-01-01").Date;
                 }
                 else
                 {
-                    data.SearchObj.StartDate = DateTime.Parse(data.SearchObj.Start.ToString());
+                    data.SearchObj.StartDate = DateTime.Parse(data.SearchObj.StrWarrantyStartDate.ToString());
                     var startyear = data.SearchObj.StartDate.Value.Year;
                     var startmonth = data.SearchObj.StartDate.Value.Month;
                     var startday = data.SearchObj.StartDate.Value.Day;
@@ -11554,13 +11552,13 @@ namespace Asset.Core.Repositories
                     startingFrom = DateTime.Parse(sDate);
                 }
 
-                if (data.SearchObj.End == "")
+                if (data.SearchObj.StrWarrantyEndDate == "")
                 {
                     endingTo = DateTime.Today.Date;
                 }
                 else
                 {
-                    data.SearchObj.EndDate = DateTime.Parse(data.SearchObj.End.ToString());
+                    data.SearchObj.EndDate = DateTime.Parse(data.SearchObj.StrWarrantyEndDate.ToString());
                     var endyear = data.SearchObj.EndDate.Value.Year;
                     var endmonth = data.SearchObj.EndDate.Value.Month;
                     var endday = data.SearchObj.EndDate.Value.Day;
@@ -11575,7 +11573,7 @@ namespace Asset.Core.Repositories
                     var eDate = endyear + "/" + setendmonth + "/" + setendday;
                     endingTo = DateTime.Parse(eDate);
                 }
-                if (data.SearchObj.Start != "" && data.SearchObj.End != "")
+                if (data.SearchObj.StrWarrantyStartDate != "" && data.SearchObj.StrWarrantyEndDate != "")
                 {
                     query = query.Where(a => a.WarrantyEnd.Value.Date >= startingFrom.Date && a.WarrantyEnd.Value.Date <= endingTo.Date);
                 }
@@ -11583,13 +11581,13 @@ namespace Asset.Core.Repositories
                 string setcontractstartday, setcontractstartmonth, setcontractendday, setcontractendmonth = "";
                 DateTime? startingContractFrom = new DateTime();
                 DateTime? endingContractTo = new DateTime();
-                if (data.SearchObj.ContractStart == "")
+                if (data.SearchObj.StrContractStartDate == "")
                 {
                     startingContractFrom = DateTime.Parse("1900-01-01").Date;
                 }
                 else
                 {
-                    data.SearchObj.ContractStartDate = DateTime.Parse(data.SearchObj.ContractStart.ToString());
+                    data.SearchObj.ContractStartDate = DateTime.Parse(data.SearchObj.StrContractStartDate.ToString());
                     var startcontractyear = data.SearchObj.ContractStartDate.Value.Year;
                     var startcontractmonth = data.SearchObj.ContractStartDate.Value.Month;
                     var startcontractday = data.SearchObj.ContractStartDate.Value.Day;
@@ -11606,13 +11604,13 @@ namespace Asset.Core.Repositories
                     var sDate = startcontractyear + "/" + setcontractstartmonth + "/" + setcontractstartday;
                     startingContractFrom = DateTime.Parse(sDate);
                 }
-                if (data.SearchObj.ContractEnd == "")
+                if (data.SearchObj.StrContractEndDate == "")
                 {
                     endingContractTo = DateTime.Today.Date;
                 }
                 else
                 {
-                    data.SearchObj.ContractEndDate = DateTime.Parse(data.SearchObj.ContractEnd.ToString());
+                    data.SearchObj.ContractEndDate = DateTime.Parse(data.SearchObj.StrContractEndDate.ToString());
                     var endcontractyear = data.SearchObj.ContractEndDate.Value.Year;
                     var endcontractmonth = data.SearchObj.ContractEndDate.Value.Month;
                     var endcontractday = data.SearchObj.ContractEndDate.Value.Day;
@@ -11627,7 +11625,7 @@ namespace Asset.Core.Repositories
                     var eDate = endcontractyear + "/" + setcontractendmonth + "/" + setcontractendday;
                     endingContractTo = DateTime.Parse(eDate);
                 }
-                if (data.SearchObj.ContractStart != "" && data.SearchObj.ContractEnd != "")
+                if (data.SearchObj.StrContractStartDate != "" && data.SearchObj.StrContractStartDate != "")
                 {
                     List<AssetDetail> assetsInContract = new List<AssetDetail>();
                     if (data.SearchObj.HospitalId != 0)
@@ -12545,7 +12543,9 @@ namespace Asset.Core.Repositories
                 assetDetailObj.ReceivingDate = model.ReceivingDate != null ? DateTime.Parse(model.ReceivingDate) : null;
                 assetDetailObj.OperationDate = model.OperationDate != null ? DateTime.Parse(model.OperationDate) : null;
                 assetDetailObj.PONumber = model.PONumber;
-                assetDetailObj.DepartmentId = model.DepartmentId;
+                if(model.DepartmentId!=0)
+                { assetDetailObj.DepartmentId = model.DepartmentId; }
+             
                 assetDetailObj.SupplierId = model.SupplierId;
                 assetDetailObj.HospitalId = model.HospitalId;
                 assetDetailObj.MasterAssetId = model.MasterAssetId;

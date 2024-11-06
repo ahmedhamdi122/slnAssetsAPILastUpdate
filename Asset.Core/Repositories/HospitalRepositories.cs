@@ -877,62 +877,46 @@ namespace Asset.Core.Repositories
         {
 
             List<IndexHospitalVM.GetData> lstData = new List<IndexHospitalVM.GetData>();
-            var list = _context.Hospitals
-                         .Include(a => a.Governorate)
-                         .Include(a => a.City)
-                         .Include(a => a.Organization)
-                         .Include(a => a.SubOrganization)
-                         .ToList();
+
+
+            var query = _context.Hospitals
+               .Include(a => a.Governorate)
+               .Include(a => a.City)
+               .Include(a => a.Organization)
+               .Include(a => a.SubOrganization)
+               .AsQueryable();
 
             if (govId != 0)
             {
-                list = list.Where(a => a.GovernorateId == govId).ToList();
+                query = query.Where(a => a.GovernorateId == govId);
             }
-            else
-                list = list.ToList();
 
             if (cityId != 0)
             {
-                list = list.Where(a => a.CityId == cityId).ToList();
+                query = query.Where(a => a.CityId == cityId);
             }
-            else
-                list = list.ToList();
-
 
             if (orgId != 0)
             {
-                list = list.Where(a => a.OrganizationId == orgId).ToList();
+                query = query.Where(a => a.OrganizationId == orgId);
             }
-            else
-                list = list.ToList();
-
-
 
             if (subOrgId != 0)
             {
-                list = list.Where(a => a.SubOrganizationId == subOrgId).ToList();
+                query = query.Where(a => a.SubOrganizationId == subOrgId);
             }
-            else
-                list = list.ToList();
+            var list = query.ToList();
 
-
-            foreach (var item in list)
+            lstData = list.Select(item => new IndexHospitalVM.GetData
             {
-                IndexHospitalVM.GetData getDataObj = new IndexHospitalVM.GetData();
-                getDataObj.Id = item.Id;
-                getDataObj.Code = item.Code;
-                getDataObj.Name = item.Name;
-                getDataObj.NameAr = item.NameAr;
-                lstData.Add(getDataObj);
-            }
-
-
-
+                Id = item.Id,
+                Code = item.Code,
+                Name = item.Name,
+                NameAr = item.NameAr
+            }).ToList();
             return lstData;
+            #endregion
+
         }
-
-
-        #endregion
-
     }
 }
