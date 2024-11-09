@@ -12,7 +12,7 @@ namespace Asset.Domain.Repositories
     public interface IMasterAssetRepository
     {
         #region Main Functions
-        IndexMasterAssetVM GetAll(int First, int Rows,SearchSortMasterAssetVM? SearchSortObj);
+        Task<IndexMasterAssetVM> GetAll(int First, int Rows,SearchSortMasterAssetVM? SearchSortObj);
         IEnumerable<MasterAsset> GetAllMasterAssets();
         IEnumerable<IndexMasterAssetVM.GetData> GetListMasterAsset();
         EditMasterAssetVM GetById(int id);

@@ -14,7 +14,7 @@ namespace Asset.Domain.Services
     public interface IMasterAssetService
     {
         #region Main Functions
-        IndexMasterAssetVM GetAll(int First,int Rows,SearchSortMasterAssetVM? SearchSortObj);
+        Task<IndexMasterAssetVM> GetAll(int First,int Rows,SearchSortMasterAssetVM? SearchSortObj);
         IEnumerable<MasterAsset> GetAllMasterAssets();
         IEnumerable<IndexMasterAssetVM.GetData> GetListMasterAsset();
         EditMasterAssetVM GetById(int id);

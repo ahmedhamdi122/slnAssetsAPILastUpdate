@@ -36,9 +36,9 @@ namespace Asset.Core.Services
             return _unitOfWork.MasterAssetRepository.isMasterAssetExistsUsingId(id);
         }
 
-        public IndexMasterAssetVM GetAll(int First, int Rows, SearchSortMasterAssetVM? SearchSortObj)
+        public async Task<IndexMasterAssetVM> GetAll(int First, int Rows, SearchSortMasterAssetVM? SearchSortObj)
         {
-            return _unitOfWork.MasterAssetRepository.GetAll(First, Rows,SearchSortObj);
+            return await _unitOfWork.MasterAssetRepository.GetAll(First, Rows,SearchSortObj);
         }
 
         public IEnumerable<MasterAsset> GetAllMasterAssets()

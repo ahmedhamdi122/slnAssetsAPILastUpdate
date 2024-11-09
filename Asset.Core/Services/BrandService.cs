@@ -19,12 +19,23 @@ namespace Asset.Core.Services
             _unitOfWork = unitOfWork;
         }
 
-        public int Add(CreateBrandVM brandObj)
+        public async Task<int> Add(CreateBrandVM brandObj)
         {
-            return _unitOfWork.BrandRepository.Add(brandObj);
+            return await _unitOfWork.BrandRepository.Add(brandObj);
 
         }
-
+        public async Task<Boolean> CheckNameBrandExistsBeforeAsync(string Name)
+        {
+            return await _unitOfWork.BrandRepository.CheckNameBrandExistsBeforeAsync(Name);
+        }
+        public async Task<Boolean> CheckNameArBrandExistsBeforeAsync(string NameAr)
+        {
+            return await _unitOfWork.BrandRepository.CheckNameArBrandExistsBeforeAsync(NameAr);
+        }
+        public async Task<Boolean> CheckCodeBrandExistsBeforeAsync(string code)
+        {
+            return await _unitOfWork.BrandRepository.CheckCodeBrandExistsBeforeAsync(code);
+        }
         public IEnumerable<IndexBrandVM.GetData> AutoCompleteBrandName(string brandName)
         {
             return _unitOfWork.BrandRepository.AutoCompleteBrandName(brandName);

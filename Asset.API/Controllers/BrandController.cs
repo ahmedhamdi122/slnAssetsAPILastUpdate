@@ -53,7 +53,7 @@ namespace Asset.API.Controllers
         [Route("ListAllBrands/{pageNumber}/{pageSize}")]
         public IndexBrandVM ListAllBrands(SortAndFilterBrandVM data, int pageNumber, int pageSize)
         {
-            return _BrandService.ListBrands(data,pageNumber,pageSize);
+            return _BrandService.ListBrands(data, pageNumber, pageSize);
         }
 
 
@@ -63,7 +63,7 @@ namespace Asset.API.Controllers
         {
             return _BrandService.GetTop10Brands(hospitalId);
         }
-       
+
 
         [HttpPost]
         [Route("SortBrands/{pagenumber}/{pagesize}")]
@@ -160,34 +160,33 @@ namespace Asset.API.Controllers
 
         [HttpPost]
         [Route("AddBrand")]
-        public ActionResult Add(CreateBrandVM BrandVM)
+        public async Task<ActionResult> Add(CreateBrandVM BrandVM)
         {
             if (BrandVM.Code.Length > 5)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "codelen", Message = "Brand code exceed 5 characters", MessageAr = "هذا الكود لا يتعدى  خمس أرقام " });
             }
-            var lstbrandsCode = _BrandService.GetAllBrands().ToList().Where(a => a.Code == BrandVM.Code).ToList();
-            if (lstbrandsCode.Count > 0)
+            var CodeBrandExists = await _BrandService.CheckCodeBrandExistsBeforeAsync(BrandVM.Code);
+            if (CodeBrandExists)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "code", Message = "Brand code already exist", MessageAr = "هذا الكود مسجل سابقاً" });
             }
-            var lstbrandsNames = _BrandService.GetAllBrands().ToList().Where(a => a.Name == BrandVM.Name).ToList();
-            if (lstbrandsNames.Count > 0)
+            var NameBrandExists = await _BrandService.CheckNameBrandExistsBeforeAsync(BrandVM.Name);
+            if (NameBrandExists)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "name", Message = "Brand name already exist", MessageAr = "هذا الاسم مسجل سابقاً" });
             }
-            var lstbrandsArNames = _BrandService.GetAllBrands().ToList().Where(a => a.NameAr == BrandVM.NameAr).ToList();
-            if (lstbrandsArNames.Count > 0)
+            var NameArBrandExists = await _BrandService.CheckNameBrandExistsBeforeAsync(BrandVM.Name);
+            if (NameArBrandExists)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "name", Message = "Brand arabic name already exist", MessageAr = "هذا الاسم مسجل سابقاً" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "nameAr", Message = "Brand arabic name already exist", MessageAr = "هذا الاسم العربي مسجل سابقاً" });
             }
-            else
-            {
-                var savedId = _BrandService.Add(BrandVM);
-                var brandObj = _BrandService.GetById(savedId);
-                return Ok(savedId);
-            }
+
+            var brandId = await _BrandService.Add(BrandVM);
+            return Ok(brandId);
         }
+    
+        
 
         [HttpDelete]
         [Route("DeleteBrand/{id}")]

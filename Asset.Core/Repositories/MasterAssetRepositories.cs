@@ -29,7 +29,7 @@ namespace Asset.Core.Repositories
         }
         public bool isMasterAssetExistsUsingId(int id)
         {
-            return _context.MasterAssets.Any(x => x.Id == id);    
+            return _context.MasterAssets.Any(x => x.Id == id);
         }
         public int CountMasterAssets()
         {
@@ -391,53 +391,53 @@ namespace Asset.Core.Repositories
         /// List MasterAsset By Sort and Search Criteria with Paging
         /// </summary>
         /// <returns></returns>
-        public IndexMasterAssetVM GetAll(int First, int Rows,SearchSortMasterAssetVM SearchSortObj)
-        { 
-        #region Initial Variables
-        IQueryable<MasterAsset> lstMasters = _context.MasterAssets.Include(a => a.brand).Include(a => a.Category)
-              .Include(a => a.SubCategory).Include(a => a.ECRIS).Include(a => a.Origin).OrderBy(a => a.Code);
+        public async Task<IndexMasterAssetVM> GetAll(int First, int Rows, SearchSortMasterAssetVM SearchSortObj)
+        {
+            #region Initial Variables
+            IQueryable<MasterAsset> lstMasters = _context.MasterAssets.Include(a => a.brand).Include(a => a.Category)
+                  .Include(a => a.SubCategory).Include(a => a.ECRIS).Include(a => a.Origin);
             IndexMasterAssetVM mainClass = new IndexMasterAssetVM();
             List<IndexMasterAssetVM.GetData> list = new List<IndexMasterAssetVM.GetData>();
             #endregion
 
             #region Search Criteria
-          
-                if (!string.IsNullOrEmpty(SearchSortObj.AssetName))
-                {
-                    lstMasters = lstMasters.Where(x => x.Name.Contains(SearchSortObj.AssetName));
-                }
-                if (!string.IsNullOrEmpty(SearchSortObj.AssetNameAr))
-                {
-                    lstMasters = lstMasters.Where(x => x.NameAr.Contains(SearchSortObj.AssetNameAr));
-                }
-                 if (SearchSortObj.BrandId!=0)
-                {
-                    lstMasters = lstMasters.Where(x => x.BrandId == SearchSortObj.BrandId);
-                }
-               if(SearchSortObj.OriginId != 0)
-                {
-                    lstMasters = lstMasters.Where(x => x.OriginId == SearchSortObj.OriginId);
-                }
-                if (!string.IsNullOrEmpty(SearchSortObj.ModelNumber))
-                {
-                    lstMasters = lstMasters.Where(x => x.ModelNumber == SearchSortObj.ModelNumber);
-                }
-                if (SearchSortObj.CategoryId !=0)
-                {
-                    lstMasters = lstMasters.Where(x => x.CategoryId == SearchSortObj.CategoryId);
-                }
-                if(SearchSortObj.SubCategoryId != 0)
-                {
-                    lstMasters = lstMasters.Where(x => x.SubCategoryId == SearchSortObj.SubCategoryId);
-                }
-            
-               
+
+            if (!string.IsNullOrEmpty(SearchSortObj.AssetName))
+            {
+                lstMasters = lstMasters.Where(x => x.Name.Contains(SearchSortObj.AssetName));
+            }
+            if (!string.IsNullOrEmpty(SearchSortObj.AssetNameAr))
+            {
+                lstMasters = lstMasters.Where(x => x.NameAr.Contains(SearchSortObj.AssetNameAr));
+            }
+            if (SearchSortObj.BrandId != 0)
+            {
+                lstMasters = lstMasters.Where(x => x.BrandId == SearchSortObj.BrandId);
+            }
+            if (SearchSortObj.OriginId != 0)
+            {
+                lstMasters = lstMasters.Where(x => x.OriginId == SearchSortObj.OriginId);
+            }
+            if (!string.IsNullOrEmpty(SearchSortObj.ModelNumber))
+            {
+                lstMasters = lstMasters.Where(x => x.ModelNumber == SearchSortObj.ModelNumber);
+            }
+            if (SearchSortObj.CategoryId != 0)
+            {
+                lstMasters = lstMasters.Where(x => x.CategoryId == SearchSortObj.CategoryId);
+            }
+            if (SearchSortObj.SubCategoryId != 0)
+            {
+                lstMasters = lstMasters.Where(x => x.SubCategoryId == SearchSortObj.SubCategoryId);
+            }
+
+
 
             #endregion
 
             #region Sort Criteria
 
-            if(SearchSortObj.SortFiled != null)
+            if (SearchSortObj.SortFiled != null)
             {
                 switch (SearchSortObj.SortFiled)
                 {
@@ -455,7 +455,7 @@ namespace Asset.Core.Repositories
                     case "Model Number":
                     case "ModelNumber":
                     case "الموديل":
-                        if (SearchSortObj.SortOrder ==1)
+                        if (SearchSortObj.SortOrder == 1)
                         {
                             lstMasters = lstMasters.OrderBy(x => x.ModelNumber);
                         }
@@ -554,41 +554,41 @@ namespace Asset.Core.Repositories
                         break;
                 }
             }
-           
+
 
             #endregion
 
             #region Represent data by Paging and count
-            mainClass.Count = lstMasters.Count();
-          
-                lstMasters = lstMasters.Skip(First).Take(Rows);
+            mainClass.Count = await lstMasters.CountAsync();
 
-            
+            lstMasters = lstMasters.Skip(First).Take(Rows);
+
+
             #endregion
 
             #region Loop to get Items after serach and sort
-            foreach (var item in lstMasters.ToList())
-            {
-                IndexMasterAssetVM.GetData getDataObj = new IndexMasterAssetVM.GetData();
-                getDataObj.Id = item.Id;
-                getDataObj.Code = item.Code;
-                getDataObj.Model = item.ModelNumber;
-                getDataObj.CategoryId = item.CategoryId;
-                getDataObj.SubCategoryId = item.SubCategoryId;
-                getDataObj.ECRIName = item.ECRIId != null ? item.ECRIS.Name : "";
-                getDataObj.ECRINameAr = item.ECRIId != null ? item.ECRIS.NameAr : "";
-                getDataObj.Name = item.Name;
-                getDataObj.NameAr = item.NameAr;
-                getDataObj.OriginName = item.OriginId != null ? item.Origin.Name : "";
-                getDataObj.OriginNameAr = item.OriginId != null ? item.Origin.NameAr : "";
-                getDataObj.BrandName = item.brand != null ? item.brand.Name : "";
-                getDataObj.BrandNameAr = item.brand != null ? item.brand.NameAr : "";
-                list.Add(getDataObj);
-            }
+
+            mainClass.Results = await lstMasters.Select(item =>
+                 new IndexMasterAssetVM.GetData()
+                 {
+                     Id = item.Id,
+                     Code = item.Code,
+                     Model = item.ModelNumber,
+                     CategoryId = item.CategoryId,
+                     SubCategoryId = item.SubCategoryId,
+                     ECRIName = item.ECRIId != null ? item.ECRIS.Name : "",
+                     ECRINameAr = item.ECRIId != null ? item.ECRIS.NameAr : "",
+                     Name = item.Name,
+                     NameAr = item.NameAr,
+                     OriginName = item.OriginId != null ? item.Origin.Name : "",
+                     OriginNameAr = item.OriginId != null ? item.Origin.NameAr : "",
+                     BrandName = item.brand != null ? item.brand.Name : "",
+                     BrandNameAr = item.brand != null ? item.brand.NameAr : "",
+                 }).ToListAsync();
 
             #endregion
 
-            mainClass.Results = list;
+           
 
             return mainClass;
         }

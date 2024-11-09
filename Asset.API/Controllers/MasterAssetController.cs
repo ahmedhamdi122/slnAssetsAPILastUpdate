@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Asset.API.Controllers
 {
@@ -41,9 +42,9 @@ namespace Asset.API.Controllers
 
         [HttpPost]
         [Route("ListMasterAssets/{First}/{Rows}")]
-        public ActionResult<IndexMasterAssetVM> GetAll(int First, int Rows, [FromBody] SearchSortMasterAssetVM SearchSortObj)
+        public async Task<ActionResult<IndexMasterAssetVM>> GetAll(int First, int Rows, [FromBody] SearchSortMasterAssetVM SearchSortObj)
         {
-            return _MasterAssetService.GetAll(First, Rows,SearchSortObj);
+            return await _MasterAssetService.GetAll(First, Rows,SearchSortObj);
         }
 
         [HttpGet]

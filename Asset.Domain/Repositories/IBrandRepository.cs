@@ -10,6 +10,10 @@ namespace Asset.Domain.Repositories
 {
     public interface IBrandRepository
     {
+        Task<Boolean> CheckNameArBrandExistsBeforeAsync(string NameAr);
+        Task<Boolean> CheckNameBrandExistsBeforeAsync(string Name);
+
+        Task<Boolean> CheckCodeBrandExistsBeforeAsync(string code);
         IEnumerable<IndexBrandVM.GetData> GetAll();
         IEnumerable<Brand> GetAllBrands();
         IndexBrandVM ListBrands(SortAndFilterBrandVM data,int pageNumber, int pageSize);
@@ -18,7 +22,7 @@ namespace Asset.Domain.Repositories
         IEnumerable<IndexBrandVM.GetData> GetBrandByName(string brandName);
         IEnumerable<IndexBrandVM.GetData> AutoCompleteBrandName(string brandName);
         EditBrandVM GetById(int id);
-        int Add(CreateBrandVM brandObj);
+        Task<int> Add(CreateBrandVM brandObj);
         int Update(EditBrandVM brandObj);
         int Delete(int id);
         int CountBrands();

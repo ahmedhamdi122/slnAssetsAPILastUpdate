@@ -18,7 +18,19 @@ namespace Asset.Core.Repositories
         {
             _context = context;
         }
-        public int Add(CreateBrandVM model)
+        public async Task<Boolean> CheckNameBrandExistsBeforeAsync(string Name)
+        {
+            return await _context.Brands.AnyAsync(b => b.Name == Name);
+        }
+        public async Task<Boolean> CheckNameArBrandExistsBeforeAsync(string NameAr)
+        {
+            return await _context.Brands.AnyAsync(b => b.NameAr == NameAr);
+        }
+        public async Task<Boolean> CheckCodeBrandExistsBeforeAsync(string code)
+        {
+            return await _context.Brands.AnyAsync(b=>b.Code==code);
+        }
+        public async Task<int> Add(CreateBrandVM model)
         {
             Brand brandObj = new Brand();
             try
@@ -28,8 +40,8 @@ namespace Asset.Core.Repositories
                     brandObj.Code = model.Code;
                     brandObj.Name = model.Name;
                     brandObj.NameAr = model.NameAr;
-                    _context.Brands.Add(brandObj);
-                    _context.SaveChanges();
+                    await _context.Brands.AddAsync(brandObj);
+                    await _context.SaveChangesAsync();
                 }
             }
             catch (Exception ex)

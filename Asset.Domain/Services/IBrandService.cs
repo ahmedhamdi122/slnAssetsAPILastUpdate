@@ -10,6 +10,10 @@ namespace Asset.Domain.Services
 {
   public  interface IBrandService
     {
+        Task<Boolean> CheckNameArBrandExistsBeforeAsync(string NameAr);
+        Task<bool> CheckNameBrandExistsBeforeAsync(string Name);
+
+        Task<bool> CheckCodeBrandExistsBeforeAsync(string code);
         IEnumerable<IndexBrandVM.GetData> GetAll();
         IndexBrandVM GetTop10Brands(int hospitalId);
         EditBrandVM GetById(int id);
@@ -17,7 +21,7 @@ namespace Asset.Domain.Services
         IEnumerable<IndexBrandVM.GetData> GetBrandByName(string brandName);
         IEnumerable<IndexBrandVM.GetData> AutoCompleteBrandName(string brandName);
         IndexBrandVM ListBrands(SortAndFilterBrandVM data, int pageNumber, int pageSize);
-        int Add(CreateBrandVM brandObj);
+        Task<int> Add(CreateBrandVM brandObj);
         int Update(EditBrandVM brandObj);
         int Delete(int id);
         int CountBrands();
