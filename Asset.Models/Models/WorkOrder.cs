@@ -21,6 +21,7 @@ namespace Asset.Models
         public string CreatedById { get; set; }
         [ForeignKey("CreatedById")]
         public virtual ApplicationUser User { get; set; }
+        public virtual List<WorkOrderTracking> lstWorkOrderTracking { get; set; }
 
 
         public int? WorkOrderPeriorityId { get; set; }

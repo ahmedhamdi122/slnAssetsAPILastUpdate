@@ -719,10 +719,10 @@ namespace Asset.API.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("ListWorkOrders/{pageNumber}/{pageSize}")]
-        public IndexWorkOrderVM2 ListWorkOrders(SortAndFilterWorkOrderVM data, int pageNumber, int pageSize)
+        [Route("ListWorkOrders/{first}/{rows}")]
+        public async Task<IndexWorkOrderVM2> ListWorkOrders(SortAndFilterWorkOrderVM data, int first, int rows)
         {
-            return _workOrderService.ListWorkOrders(data, pageNumber, pageSize);
+            return await _workOrderService.ListWorkOrders(data, first, rows);
         }
         #region WorkOrder Attachments
 

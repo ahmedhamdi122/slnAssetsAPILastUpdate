@@ -2,6 +2,7 @@
 using Asset.Domain.Services;
 using Asset.Models;
 using Asset.ViewModels.WorkOrderVM;
+using Org.BouncyCastle.Crypto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -180,9 +181,9 @@ namespace Asset.Core.Services
             return _unitOfWork.WorkOrder.PrintListOfWorkOrders(printWorkOrderObj);
         }
 
-        public IndexWorkOrderVM2 ListWorkOrders(SortAndFilterWorkOrderVM data, int pageNumber, int pageSize)
+        public async Task<IndexWorkOrderVM2> ListWorkOrders(SortAndFilterWorkOrderVM data,int first, int rows)
         {
-            return _unitOfWork.WorkOrder.ListWorkOrders(data, pageNumber, pageSize);
+            return await _unitOfWork.WorkOrder.ListWorkOrders(data, first, rows);
         }
 
     }

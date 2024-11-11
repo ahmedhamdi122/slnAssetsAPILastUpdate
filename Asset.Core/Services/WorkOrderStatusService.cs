@@ -28,9 +28,9 @@ namespace Asset.Core.Services
             _unitOfWork.WorkOrderStatus.Delete(id);
         }
 
-        public IndexWorkOrderStatusVM GetAll(string userId)
+        public async Task<List<WorkOrderStatusVM>> GetWorkOrderStatusByUserId(string userId)
         {
-            return _unitOfWork.WorkOrderStatus.GetAll(userId);
+            return await _unitOfWork.WorkOrderStatus.GetWorkOrderStatusByUserId(userId);
         }
 
         public IEnumerable<IndexWorkOrderStatusVM> GetAllWorkOrderStatuses()

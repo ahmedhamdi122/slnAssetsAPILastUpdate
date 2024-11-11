@@ -58,10 +58,10 @@ namespace Asset.API.Controllers
         }
 
         [HttpGet]
-        [Route("GetAll/{userId}")]
-        public IndexWorkOrderStatusVM GetAll(string userId)
+        [Route("GetWorkOrderStatusByUserId/{userId}")]
+        public async Task<List<WorkOrderStatusVM>> GetWorkOrderStatusByUserId(string userId)
         {
-            return _workOrderStatusService.GetAll(userId);
+            return await _workOrderStatusService.GetWorkOrderStatusByUserId(userId);
         }
 
         [HttpPost]

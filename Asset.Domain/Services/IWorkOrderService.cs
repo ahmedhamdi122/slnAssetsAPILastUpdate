@@ -11,7 +11,7 @@ namespace Asset.Domain.Services
     public interface IWorkOrderService
     {
         IEnumerable<IndexWorkOrderVM> GetAllWorkOrders();
-        IndexWorkOrderVM2 ListWorkOrders(SortAndFilterWorkOrderVM data, int pageNumber, int pageSize);
+        Task<IndexWorkOrderVM2> ListWorkOrders(SortAndFilterWorkOrderVM data, int first, int rows);
         IEnumerable<IndexWorkOrderVM> GetAllWorkOrdersByHospitalId(int? hospitalId);
         List<IndexWorkOrderVM> GetAllWorkOrdersByHospitalIdAndPaging(int? hospitalId, string userId, int statusId, int pageNumber, int pageSize);
         IndexWorkOrderVM2 GetAllWorkOrdersByHospitalIdAndPaging2(int? hospitalId, string userId, int statusId, int pageNumber, int pageSize);

@@ -892,7 +892,6 @@ namespace Asset.Core.Repositories
             }
             if (UserObj.HospitalId > 0)
             {
-                
                     var isAssetOwner = await _context.AssetOwners.AnyAsync(a => a.EmployeeId == employee.Id);
                     if (isAssetOwner)
                     {
@@ -902,8 +901,6 @@ namespace Asset.Core.Repositories
                     {
                         query = query.Where(r => r.HospitalId == UserObj.HospitalId);
                     }
-                
-            
             }
             else
             {
