@@ -451,6 +451,7 @@ namespace Asset.Core.Repositories
                         {
                             lstMasters = lstMasters.OrderByDescending(x => x.Code);
                         }
+
                         break;
                     case "Model Number":
                     case "ModelNumber":

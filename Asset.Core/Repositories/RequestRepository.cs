@@ -7672,7 +7672,6 @@ namespace Asset.Core.Repositories
                          .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.Governorate)
                          .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.City)
                          .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.SubOrganization)
-                         .ToList()
                          .GroupBy(track => track.RequestId)
                          .Select(g => g.OrderByDescending(track => track.DescriptionDate).FirstOrDefault())
                          .OrderByDescending(a => a.DescriptionDate);
@@ -7906,28 +7905,7 @@ namespace Asset.Core.Repositories
                 {
                     query = query.Where(a => a.CreatedById == userObj.Id && a.HospitalId == userObj.HospitalId);
                 }
-                if (lstRoleNames.Contains("TLHospitalManager") && lstRoleNames.Contains("EngDepManager") && lstRoleNames.Contains("SRReviewer") && lstRoleNames.Contains("SRCreator") && lstRoleNames.Contains("AssetOwner") && lstRoleNames.Contains("SRCreator"))
-                {
-                    query = query.Where(a => a.HospitalId == userObj.HospitalId);
-                }
-                if (lstRoleNames.Contains("TLHospitalManager") && !lstRoleNames.Contains("EngDepManager") && !lstRoleNames.Contains("SRReviewer") && !lstRoleNames.Contains("SRCreator") && !lstRoleNames.Contains("AssetOwner") && !lstRoleNames.Contains("SRCreator"))
-                {
-                    query = query.Where(a => a.HospitalId == userObj.HospitalId);
-                }
-                if (lstRoleNames.Contains("TLHospitalManager") && lstRoleNames.Contains("EngDepManager") && !lstRoleNames.Contains("SRReviewer") && !lstRoleNames.Contains("SRCreator") && !lstRoleNames.Contains("AssetOwner") && !lstRoleNames.Contains("SRCreator"))
-                {
-                    query = query.Where(a => a.HospitalId == userObj.HospitalId);
-                }
-                if (lstRoleNames.Contains("TLHospitalManager") && lstRoleNames.Contains("EngDepManager") && lstRoleNames.Contains("SRReviewer") && !lstRoleNames.Contains("SRCreator") && !lstRoleNames.Contains("AssetOwner") && !lstRoleNames.Contains("SRCreator"))
-                {
-                    query = query.Where(a => a.HospitalId == userObj.HospitalId);
-                }
-                if (lstRoleNames.Contains("TLHospitalManager") && lstRoleNames.Contains("EngDepManager") && lstRoleNames.Contains("SRReviewer") && lstRoleNames.Contains("SRCreator") && !lstRoleNames.Contains("AssetOwner") && !lstRoleNames.Contains("SRCreator"))
-                {
-                    query = query.Where(a => a.HospitalId == userObj.HospitalId);
-                }
-                if (lstRoleNames.Contains("TLHospitalManager") && lstRoleNames.Contains("EngDepManager") && lstRoleNames.Contains("SRReviewer") && lstRoleNames.Contains("SRCreator") && lstRoleNames.Contains("AssetOwner") && !lstRoleNames.Contains("SRCreator"))
-                {
+                else{
                     query = query.Where(a => a.HospitalId == userObj.HospitalId);
                 }
             }

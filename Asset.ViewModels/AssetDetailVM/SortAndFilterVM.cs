@@ -8,8 +8,9 @@ namespace Asset.ViewModels.AssetDetailVM
 {
     public class SortAndFilterVM
     {
-        public Sort SortObj { get; set; }
+       public int sortOrder { get; set; }
+        public string sortFiled { get; set; }
         public SearchAssetDetailVM SearchObj { get; set; }
-        public bool IsSearchAndSort { get; set; }
+
     }
 }
