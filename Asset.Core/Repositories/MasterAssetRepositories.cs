@@ -561,7 +561,6 @@ namespace Asset.Core.Repositories
 
             #region Represent data by Paging and count
             mainClass.Count = await lstMasters.CountAsync();
-
             lstMasters = lstMasters.Skip(First).Take(Rows);
 
 

@@ -246,9 +246,9 @@ namespace Asset.Core.Services
             return _unitOfWork.Request.GetRequestsByStatusIdAndPagingV2(userId, statusId, pageNumber, pageSize);
         }
 
-        public IndexRequestVM ListRequests(SortAndFilterRequestVM data, int pageNumber, int pageSize)
+        public async Task<IndexRequestVM> ListRequests(SortAndFilterRequestVM data, int pageNumber, int pageSize)
         {
-            return _unitOfWork.Request.ListRequests(data, pageNumber, pageSize);
+            return await _unitOfWork.Request.ListRequests(data, pageNumber, pageSize);
         }
 
         public IEnumerable<IndexRequestVM.GetData> GetOldRequestsByHospitalAssetId(int hospitalAssetId)

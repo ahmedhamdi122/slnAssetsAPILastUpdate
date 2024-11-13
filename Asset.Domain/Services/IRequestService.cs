@@ -72,7 +72,7 @@ namespace Asset.Domain.Services
         IEnumerable<IndexRequestVM.GetData> ExportRequestsByStatusId(SortAndFilterRequestVM data);
         #endregion
         #region List Requests
-        IndexRequestVM ListRequests(SortAndFilterRequestVM data, int pageNumber, int pageSize);
+        Task<IndexRequestVM> ListRequests(SortAndFilterRequestVM data, int first, int rows);
         #endregion
 
         #region Dashboard Functions

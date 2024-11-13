@@ -5,9 +5,9 @@ using Asset.ViewModels.RequestVM;
 using Asset.ViewModels.WorkOrderTrackingVM;
 using Asset.ViewModels.WorkOrderVM;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Ocsp;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -6339,14 +6339,6 @@ namespace Asset.Core.Repositories
                     }
                     getDataObj.ListDescriptions = string.Join(Environment.NewLine, listRequestDesc);
 
-
-
-
-
-
-
-
-
                     if (getDataObj.StatusId == 2)
                     {
                         getDataObj.ClosedDate = req.FirstOrDefault().DescriptionDate.ToString();
@@ -6986,7 +6978,6 @@ namespace Asset.Core.Repositories
             List<OpenRequestVM.GetData> list = new List<OpenRequestVM.GetData>();
             ApplicationUser UserObj = new ApplicationUser();
             ApplicationRole roleObj = new ApplicationRole();
-
             List<string> userRoleNames = new List<string>();
             var obj = _context.ApplicationUser.Where(a => a.Id == searchOpenRequestObj.UserId).ToList();
             if (obj.Count > 0)
@@ -7862,46 +7853,47 @@ namespace Asset.Core.Repositories
             }
             return printSRObj;
         }
-        public IndexRequestVM ListRequests(SortAndFilterRequestVM data, int pageNumber, int pageSize)
+        public async Task<IndexRequestVM> ListRequests(SortAndFilterRequestVM data, int first, int rows)
         {
             #region Initial Variables
-            IQueryable<RequestTracking> query = GetAllRequests();
-
+            IQueryable<RequestTracking> query = _context.RequestTracking.Include(a => a.Request)
+                .Include(a => a.Request.RequestMode).Include(a => a.Request.RequestType).Include(a => a.RequestStatus)
+                         .Include(a => a.Request.AssetDetail).Include(a => a.User).Include(a => a.Request.AssetDetail.MasterAsset)
+                         .Include(a => a.Request.AssetDetail.MasterAsset.brand).Include(a => a.Request.AssetDetail.Supplier).Include(a => a.Request.AssetDetail.Department).Include(a => a.Request.AssetDetail.MasterAsset.Origin)
+                         .Include(a => a.Request.AssetDetail.Building).Include(a => a.Request.AssetDetail.Floor).Include(a => a.Request.AssetDetail.Room)
+                         .Include(a => a.Request.RequestPeriority).Include(a => a.Request.RequestMode)
+                         .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.Organization)
+                         .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.Governorate)
+                         .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.City)
+                         .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.SubOrganization).ToList()
+                         .GroupBy(track => track.RequestId)
+                         .Select(g => g.OrderByDescending(track => track.DescriptionDate).FirstOrDefault())
+                         .OrderByDescending(a => a.DescriptionDate).ToList().AsQueryable();
+                         
             IndexRequestVM mainClass = new IndexRequestVM();
             List<IndexRequestVM.GetData> list = new List<IndexRequestVM.GetData>();
             ApplicationUser userObj = new ApplicationUser();
-            List<string> lstRoleNames = new List<string>();
-            Employee empObj = new Employee();
+            Employee employee = new Employee();
             #endregion
 
             #region User Role
 
             if (data.SearchObj.UserId != null)
             {
-                var getUserById = _context.ApplicationUser.Where(a => a.Id == data.SearchObj.UserId).ToList();
-                userObj = getUserById[0];
+                userObj = await _context.ApplicationUser.FindAsync(data.SearchObj.UserId);
+                if(userObj != null)
+                {
+                     employee = await _context.Employees.FirstOrDefaultAsync(e => e.Email == userObj.Email);
+                }
 
-                var roles = (from userRole in _context.UserRoles
-                             join role in _context.ApplicationRole on userRole.RoleId equals role.Id
-                             where userRole.UserId == userObj.Id
-                             select role);
-                foreach (var role in roles)
-                {
-                    lstRoleNames.Add(role.Name);
-                }
-                var lstEmployees = _context.Employees.Where(a => a.Email == userObj.Email).ToList();
-                if (lstEmployees.Count > 0)
-                {
-                    empObj = lstEmployees[0];
-                }
             }
             #endregion
 
             #region Load Data Depend on User
             if (userObj.HospitalId > 0)
             {
-
-                if (lstRoleNames.Any() && ((lstRoleNames.Contains("AssetOwner") || lstRoleNames.Contains("SRCreator") || (lstRoleNames.Contains("AssetOwner") && lstRoleNames.Contains("SRCreator"))) && !lstRoleNames.Any(itm => itm == "TLHospitalManager" || itm == "EngDepManager" || itm == "SRReviewer")))
+                var isAssetOwner = await _context.AssetOwners.AnyAsync(a=>a.EmployeeId==employee.Id);
+                if (isAssetOwner)
                 {
                     query = query.Where(a => a.CreatedById == userObj.Id && a.HospitalId == userObj.HospitalId);
                 }
@@ -8055,397 +8047,171 @@ namespace Asset.Core.Repositories
 
             #region Sort Criteria
 
-            switch (data.SortObj.SortBy)
+            switch (data.sortFiled)
             {
                 case "Barcode":
                 case "الباركود":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Request.AssetDetail.Barcode);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Request.AssetDetail.Barcode);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.Barcode) : query.OrderByDescending(r => r.Request.AssetDetail.Barcode);
                     break;
                 case "Code":
                 case "الكود":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Request.RequestCode);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Request.RequestCode);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.RequestCode) : query.OrderByDescending(r => r.Request.RequestCode);
                     break;
 
                 case "Serial":
-                case "السيريال":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Request.AssetDetail.SerialNumber);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Request.AssetDetail.SerialNumber);
-                    }
+                case "السيريال": 
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.SerialNumber) : query.OrderByDescending(r => r.Request.AssetDetail.SerialNumber);
                     break;
                 case "Model":
                 case "الموديل":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Request.AssetDetail.MasterAsset.ModelNumber);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Request.AssetDetail.MasterAsset.ModelNumber);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.MasterAsset.ModelNumber) : query.OrderByDescending(r => r.Request.AssetDetail.MasterAsset.ModelNumber);
+
                     break;
                 case "Subject":
                 case "الموضوع":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Request.Subject);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Request.Subject);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.Subject) : query.OrderByDescending(r => r.Request.Subject);
                     break;
-
                 case "Date":
                 case "التاريخ":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Request.RequestDate);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Request.RequestDate);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.RequestDate) : query.OrderByDescending(r => r.Request.RequestDate);
                     break;
 
                 case "Request Code":
                 case "رقم الطلب":
                 case "رقم طلب بلاغ العطل":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Request.RequestCode);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Request.RequestCode);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.RequestCode) : query.OrderByDescending(r => r.Request.RequestCode);
                     break;
                 case "CreatedBy":
                 case "تم بواسطة":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.User.UserName);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.User.UserName);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.User.UserName) : query.OrderByDescending(r => r.User.UserName);
                     break;
                 case "Periority":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query.OrderBy(x => x.Request.RequestPeriority.Name);
-                    }
-                    else
-                    {
-                        query.OrderByDescending(x => x.Request.RequestPeriority.Name);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.RequestPeriority.Name) : query.OrderByDescending(r => r.Request.RequestPeriority.Name);
                     break;
 
                 case "الأولوية":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Request.RequestPeriority.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Request.RequestPeriority.NameAr);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.RequestPeriority.NameAr) : query.OrderByDescending(r => r.Request.RequestPeriority.NameAr);
                     break;
                 case "Mode":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query.OrderBy(x => x.Request.RequestMode.Name);
-                    }
-                    else
-                    {
-                        query.OrderByDescending(x => x.Request.RequestMode.Name);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.RequestMode.Name) : query.OrderByDescending(r => r.Request.RequestMode.Name);
                     break;
                 case "طريقة الإبلاغ":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Request.RequestMode.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Request.RequestMode.NameAr);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.RequestMode.NameAr) : query.OrderByDescending(r => r.Request.RequestMode.NameAr);
                     break;
                 case "Asset Name":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query.OrderBy(x => x.Request.AssetDetail.MasterAsset.Name);
-                    }
-                    else
-                    {
-                        query.OrderByDescending(x => x.Request.AssetDetail.MasterAsset.Name);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.MasterAsset.Name) : query.OrderByDescending(r => r.Request.AssetDetail.MasterAsset.Name);
                     break;
                 case "اسم الأصل":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Request.AssetDetail.MasterAsset.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Request.AssetDetail.MasterAsset.NameAr);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.MasterAsset.NameAr) : query.OrderByDescending(r => r.Request.AssetDetail.MasterAsset.NameAr);
                     break;
-
-
                 case "Hospital":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.Name);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.Name);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Hospital.Name) : query.OrderByDescending(r => r.Hospital.Name);
                     break;
                 case "المستشفى":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.NameAr);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Hospital.NameAr) : query.OrderByDescending(r => r.Hospital.NameAr);
                     break;
                 case "Brands":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Request.AssetDetail.MasterAsset.brand.Name);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Request.AssetDetail.MasterAsset.brand.Name);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.MasterAsset.brand.Name) : query.OrderByDescending(r => r.Request.AssetDetail.MasterAsset.brand.Name);
                     break;
                 case "الماركات":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Request.AssetDetail.MasterAsset.brand.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Request.AssetDetail.MasterAsset.brand.NameAr);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.MasterAsset.brand.NameAr) : query.OrderByDescending(r => r.Request.AssetDetail.MasterAsset.brand.NameAr);
                     break;
                 case "Department":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Request.AssetDetail.Department.Name);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Request.AssetDetail.Department.Name);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.Department.NameAr) : query.OrderByDescending(r => r.Request.AssetDetail.Department.NameAr);
                     break;
                 case "القسم":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Request.AssetDetail.Department.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Request.AssetDetail.Department.NameAr);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.Department.NameAr) : query.OrderByDescending(r => r.Request.AssetDetail.Department.NameAr);
                     break;
                 case "Governorate":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.Governorate.Name);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.Governorate.Name);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Hospital.Governorate.Name) : query.OrderByDescending(r => r.Hospital.Governorate.Name);
                     break;
                 case "المحافظة":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.Governorate.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.Governorate.NameAr);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Hospital.Governorate.NameAr) : query.OrderByDescending(r => r.Hospital.Governorate.NameAr);
                     break;
 
                 case "City":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.City.Name);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.City.Name);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Hospital.City.Name) : query.OrderByDescending(r => r.Hospital.City.Name);
                     break;
                 case "المدينة":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.City.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.City.NameAr);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Hospital.City.NameAr) : query.OrderByDescending(r => r.Hospital.City.NameAr);
                     break;
                 case "Organization":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.Organization.Name);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.Organization.Name);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Hospital.Organization.Name) : query.OrderByDescending(r => r.Hospital.Organization.Name);
                     break;
-
                 case "الهيئة":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.Organization.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.Organization.NameAr);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Hospital.Organization.NameAr) : query.OrderByDescending(r => r.Hospital.Organization.NameAr);
                     break;
                 case "SubOrganization":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.SubOrganization.Name);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.SubOrganization.Name);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Hospital.SubOrganization.Name) : query.OrderByDescending(r => r.Hospital.SubOrganization.Name);
                     break;
                 case "هيئة فرعية":
-                    if (data.SortObj.SortStatus == "ascending")
-                    {
-                        query = query.OrderBy(x => x.Hospital.SubOrganization.NameAr);
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(x => x.Hospital.SubOrganization.NameAr);
-                    }
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Hospital.SubOrganization.NameAr) : query.OrderByDescending(r => r.Hospital.SubOrganization.NameAr);
                     break;
             }
 
             #endregion
 
             #region Count data and fiter By Paging
-            IQueryable<RequestTracking> lstResults;
-            var countItems = query.ToList();
-            mainClass.Count = countItems.Count();
-            if (pageNumber == 0 && pageSize == 0)
-                lstResults = query;
-            else
-                lstResults = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            mainClass.Count = await query.CountAsync();
+          
+                mainClass.Results = await query.Skip(first).Take(rows).Select(req => new IndexRequestVM.GetData
+                {
+                    Id = req.Request.Id,
+                    RequestCode = req.Request.RequestCode,
+                    Barcode = req.Request.AssetDetail.Barcode,
+                    CreatedById = req.CreatedById,
+                    CreatedBy = req.User != null ? req.User.UserName : "",
+                    Subject = req.Request.Subject,
+                    RequestDate = req.Request.RequestDate,
+                    AssetDetailId = req.Request.AssetDetailId != null ? (int)req.Request.AssetDetailId : 0,
+                    HospitalId = req.Request.AssetDetail.HospitalId,
+                    SerialNumber = req.Request.AssetDetail.SerialNumber,
+                    ModelNumber = req.Request.AssetDetail.MasterAsset.ModelNumber,
+                    AssetName = req.Request.AssetDetail.MasterAsset.Name,
+                    AssetNameAr = req.Request.AssetDetail.MasterAsset.NameAr,
+                    ModeId = req.Request.RequestModeId != null ? (int)req.Request.RequestModeId : 0,
+                    ModeName = req.Request.RequestMode != null ? req.Request.RequestMode.Name : "",
+                    ModeNameAr = req.Request.RequestMode != null ? req.Request.RequestMode.NameAr : "",
+                    PeriorityId = req.Request.RequestPeriorityId != null ? (int)req.Request.RequestPeriorityId : 0,
+                    PeriorityName = req.Request.RequestPeriority != null ? req.Request.RequestPeriority.Name : "",
+                    PeriorityNameAr = req.Request.RequestPeriority != null ? req.Request.RequestPeriority.NameAr : "",
+                    PeriorityColor = req.Request.RequestPeriority != null ? req.Request.RequestPeriority.Color : "",
+                    PeriorityIcon = req.Request.RequestPeriority != null ? req.Request.RequestPeriority.Icon : "",
+                    GovernorateId = req.User != null ? req.User.GovernorateId : 0,
+                    CityId = req.User != null ? req.User.CityId : 0,
+                    OrganizationId = req.User != null ? req.User.OrganizationId : 0,
+                    SubOrganizationId = req.User != null ? req.User.SubOrganizationId : 0,
+
+                     LatestWorkOrderStatusId = _context.WorkOrderTrackings
+                    .Where(a => a.WorkOrder.RequestId == req.RequestId)
+                    .OrderByDescending(a => a.CreationDate)
+                    .Select(a => a.WorkOrderStatusId)
+                    .FirstOrDefault(),
+                     
+                    WOLastTrackDescription = _context.WorkOrderTrackings
+                    .Where(a => a.WorkOrder.RequestId == req.RequestId)
+                    .OrderByDescending(a => a.CreationDate)
+                    .Select(a => a.Notes)
+                    .FirstOrDefault(),
+                    
+                    // Request Status
+                    StatusId = (int)req.RequestStatus.Id,
+                    StatusName = req.RequestStatus.Name,
+                    StatusNameAr = req.RequestStatus.NameAr,
+                    StatusColor = req.RequestStatus.Color,
+                    StatusIcon = req.RequestStatus.Icon,
+                    Description = req.Description,
+                    ClosedDate = req.RequestStatus.Id == 2 ? req.DescriptionDate.ToString() : "",
+
+                    // Count Work Orders and Tracks
+                    CountWorkOrder = _context.WorkOrders.Count(a => a.RequestId == req.RequestId),
+                    CountListTracks = _context.RequestTracking.Count(a => a.RequestId == req.RequestId)
+
+                }).ToListAsync();
             #endregion
 
-            #region Loop to get Items after serach and sort
-
-            foreach (var req in lstResults.ToList())
-            {
-                IndexRequestVM.GetData getDataObj = new IndexRequestVM.GetData();
-                getDataObj.Id = req.Request.Id;
-                getDataObj.RequestCode = req.Request.RequestCode;
-                getDataObj.Barcode = req.Request.AssetDetail.Barcode;
-                getDataObj.CreatedById = req.CreatedById;
-                getDataObj.CreatedBy = req.User != null ? req.User.UserName : "";
-                getDataObj.Subject = req.Request.Subject;
-                getDataObj.RequestDate = req.Request.RequestDate;
-                getDataObj.AssetDetailId = req.Request.AssetDetailId != null ? (int)req.Request.AssetDetailId : 0;
-                getDataObj.HospitalId = req.Request.AssetDetail.HospitalId;
-                getDataObj.Barcode = req.Request.AssetDetail.Barcode;
-                getDataObj.SerialNumber = req.Request.AssetDetail.SerialNumber;
-                getDataObj.ModelNumber = req.Request.AssetDetail.MasterAsset.ModelNumber;
-                getDataObj.AssetName = req.Request.AssetDetail.MasterAsset.Name;
-                getDataObj.AssetNameAr = req.Request.AssetDetail.MasterAsset.NameAr;
-                getDataObj.ModeId = req.Request.RequestModeId != null ? (int)req.Request.RequestModeId : 0;
-                getDataObj.ModeName = req.Request.RequestMode != null ? req.Request.RequestMode.Name : "";
-                getDataObj.ModeNameAr = req.Request.RequestMode != null ? req.Request.RequestMode.NameAr : "";
-                getDataObj.PeriorityId = req.Request.RequestPeriorityId != null ? (int)req.Request.RequestPeriorityId : 0;
-                getDataObj.PeriorityName = req.Request.RequestPeriority != null ? req.Request.RequestPeriority.Name : "";
-                getDataObj.PeriorityNameAr = req.Request.RequestPeriority != null ? req.Request.RequestPeriority.NameAr : "";
-                getDataObj.PeriorityColor = req.Request.RequestPeriority != null ? req.Request.RequestPeriority.Color : "";
-                getDataObj.PeriorityIcon = req.Request.RequestPeriority != null ? req.Request.RequestPeriority.Icon : "";
-                getDataObj.GovernorateId = req.User != null ? req.User.GovernorateId : 0;
-                getDataObj.CityId = req.User != null ? req.User.CityId : 0;
-                getDataObj.OrganizationId = req.User != null ? req.User.OrganizationId : 0;
-                getDataObj.SubOrganizationId = req.User != null ? req.User.SubOrganizationId : 0;
-
-                if (req.Request.RequestModeId != null)
-                {
-                    getDataObj.ModeId = req.Request.RequestMode.Id;
-                    getDataObj.ModeName = req.Request.RequestMode.Name;
-                    getDataObj.ModeNameAr = req.Request.RequestMode.NameAr;
-                }
-                if (req.Request.RequestPeriorityId != null)
-                {
-                    getDataObj.PeriorityId = (int)req.Request.RequestPeriorityId;
-                    getDataObj.PeriorityName = req.Request.RequestPeriority.Name;
-                    getDataObj.PeriorityNameAr = req.Request.RequestPeriority.NameAr;
-                    getDataObj.PeriorityColor = req.Request.RequestPeriority.Color;
-                    getDataObj.PeriorityIcon = req.Request.RequestPeriority.Icon;
-                }
-                var lstWOStatusDB = _context.WorkOrderTrackings.Include(o => o.WorkOrder).Include(o => o.WorkOrderStatus)
-                    .Where(a => a.WorkOrder.RequestId == req.RequestId).OrderByDescending(a => a.CreationDate);
-                var lstWOStatus = lstWOStatusDB.ToList();
-                if (lstWOStatus.Count > 0)
-                {
-                    getDataObj.LatestWorkOrderStatusId = lstWOStatus[0].WorkOrderStatusId;
-                    getDataObj.WOLastTrackDescription = lstWOStatus[0].Notes;
-                }
-                getDataObj.StatusId = (int)req.RequestStatus.Id;
-                getDataObj.StatusName = req.RequestStatus.Name;
-                getDataObj.StatusNameAr = req.RequestStatus.NameAr;
-                getDataObj.StatusColor = req.RequestStatus.Color;
-                getDataObj.StatusIcon = req.RequestStatus.Icon;
-                getDataObj.Description = req.Description;
-                if (getDataObj.StatusId == 2)
-                {
-                    getDataObj.ClosedDate = req.DescriptionDate.ToString();
-                }
-                else
-                {
-                    getDataObj.ClosedDate = "";
-                }
-
-                getDataObj.CountWorkOrder = _context.WorkOrders.Where(a => a.RequestId == req.RequestId).ToList().Count > 0 ? _context.WorkOrders.Where(a => a.RequestId == req.RequestId).ToList().Count : 0;
-                getDataObj.CountListTracks = _context.RequestTracking.Where(a => a.RequestId == req.RequestId).ToList().Count;
-                list.Add(getDataObj);
-            }
-            #endregion
-
-            #region Represent data after Paging and count
-            mainClass.Results = list;
-            #endregion
+       
 
             return mainClass;
         }
