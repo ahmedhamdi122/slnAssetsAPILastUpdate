@@ -7865,10 +7865,8 @@ namespace Asset.Core.Repositories
                          .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.Organization)
                          .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.Governorate)
                          .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.City)
-                         .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.SubOrganization).ToList()
-                         .GroupBy(track => track.RequestId)
-                         .Select(g => g.OrderByDescending(track => track.DescriptionDate).FirstOrDefault())
-                         .OrderByDescending(a => a.DescriptionDate).ToList().AsQueryable();
+                         .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.SubOrganization);
+
                          
             IndexRequestVM mainClass = new IndexRequestVM();
             List<IndexRequestVM.GetData> list = new List<IndexRequestVM.GetData>();
@@ -7876,7 +7874,7 @@ namespace Asset.Core.Repositories
             Employee employee = new Employee();
             #endregion
 
-            #region User Role
+            #region User 
 
             if (data.SearchObj.UserId != null)
             {

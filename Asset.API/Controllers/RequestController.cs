@@ -3171,9 +3171,9 @@ namespace Asset.API.Controllers
 
         [HttpPost]
         [Route("ListRequests/{pageNumber}/{pageSize}")]
-        public async Task<IndexRequestVM> ListRequests(SortAndFilterRequestVM data, int pageNumber, int pageSize)
+        public async Task<IndexRequestVM> ListRequests(SortAndFilterRequestVM data, int first, int rows)
         {
-            return await _requestService.ListRequests(data, pageNumber, pageSize);
+            return await _requestService.ListRequests(data, first, rows);
         }
 
         [HttpGet("GetById/{id}")]
