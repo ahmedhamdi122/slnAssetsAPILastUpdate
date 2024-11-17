@@ -3170,7 +3170,7 @@ namespace Asset.API.Controllers
         }
 
         [HttpPost]
-        [Route("ListRequests/{pageNumber}/{pageSize}")]
+        [Route("ListRequests/{first}/{rows}")]
         public async Task<IndexRequestVM> ListRequests(SortAndFilterRequestVM data, int first, int rows)
         {
             return await _requestService.ListRequests(data, first, rows);

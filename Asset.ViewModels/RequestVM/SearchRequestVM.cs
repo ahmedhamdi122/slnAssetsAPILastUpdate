@@ -9,19 +9,19 @@ namespace Asset.ViewModels.RequestVM
 {
     public class SearchRequestVM
     {
-        public int? DepartmentId { get; set; }
-        public int? StatusId { get; set; }
-        public int? PeriorityId { get; set; }
-        public int? ModeId { get; set; }
-        public int? HospitalId { get; set; }
-        public int? GovernorateId { get; set; }
-        public int? CityId { get; set; }
-        public int? OrganizationId { get; set; }
-        public int? SubOrganizationId { get; set; }
-        public int? AssetDetailId { get; set; }
-        public int? MasterAssetId { get; set; }
+        public int DepartmentId { get; set; }
+        public int StatusId { get; set; }
+        public int PeriorityId { get; set; }
+        public int ModeId { get; set; }
+        public int HospitalId { get; set; }
+        public int GovernorateId { get; set; }
+        public int CityId { get; set; }
+        public int OrganizationId { get; set; }
+        public int SubOrganizationId { get; set; }
+        public int AssetDetailId { get; set; }
+        public int MasterAssetId { get; set; }
 
-        public int? AssetOwnerId { get; set; }
+        public int AssetOwnerId { get; set; }
         public string AssetOwnerCreatedById { get; set; }
         public List<IndexEmployeeVM> ListEmployees { get; set; }
         public string Subject { get; set; }

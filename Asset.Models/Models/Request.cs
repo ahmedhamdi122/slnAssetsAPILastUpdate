@@ -38,6 +38,7 @@ namespace Asset.Models
         [ForeignKey("RequestTypeId")]
         public virtual RequestType RequestType { get; set; }
 
+        public virtual ICollection<RequestTracking> RequestTracking { get; set; }
 
         public bool? IsOpened { get; set; }
 

@@ -7856,18 +7856,11 @@ namespace Asset.Core.Repositories
         public async Task<IndexRequestVM> ListRequests(SortAndFilterRequestVM data, int first, int rows)
         {
             #region Initial Variables
-            IQueryable<RequestTracking> query = _context.RequestTracking.Include(a => a.Request)
-                .Include(a => a.Request.RequestMode).Include(a => a.Request.RequestType).Include(a => a.RequestStatus)
-                         .Include(a => a.Request.AssetDetail).Include(a => a.User).Include(a => a.Request.AssetDetail.MasterAsset)
-                         .Include(a => a.Request.AssetDetail.MasterAsset.brand).Include(a => a.Request.AssetDetail.Supplier).Include(a => a.Request.AssetDetail.Department).Include(a => a.Request.AssetDetail.MasterAsset.Origin)
-                         .Include(a => a.Request.AssetDetail.Building).Include(a => a.Request.AssetDetail.Floor).Include(a => a.Request.AssetDetail.Room)
-                         .Include(a => a.Request.RequestPeriority).Include(a => a.Request.RequestMode)
-                         .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.Organization)
-                         .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.Governorate)
-                         .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.City)
-                         .Include(a => a.Request.AssetDetail.Hospital).ThenInclude(h => h.SubOrganization);
-
-                         
+            IQueryable<Request> query = _context.Request
+                .Include(r => r.RequestMode).Include(r => r.RequestType)
+                         .Include(r => r.AssetDetail).Include(a => a.User)
+                         .Include(r => r.RequestPeriority).Include(r => r.RequestMode)
+                         ;
             IndexRequestVM mainClass = new IndexRequestVM();
             List<IndexRequestVM.GetData> list = new List<IndexRequestVM.GetData>();
             ApplicationUser userObj = new ApplicationUser();
@@ -7923,68 +7916,68 @@ namespace Asset.Core.Repositories
             #region Search Criteria
             if (data.SearchObj.GovernorateId != 0)
             {
-                query = query.Where(x => x.Request.Hospital.GovernorateId == data.SearchObj.GovernorateId);
+                query = query.Where(x => x.Hospital.GovernorateId == data.SearchObj.GovernorateId);
             }
             if (data.SearchObj.CityId != 0)
             {
-                query = query.Where(x => x.Request.Hospital.CityId == data.SearchObj.CityId);
+                query = query.Where(x => x.Hospital.CityId == data.SearchObj.CityId);
             }
             if (data.SearchObj.OrganizationId != 0)
             {
-                query = query.Where(x => x.Request.Hospital.OrganizationId == data.SearchObj.OrganizationId);
+                query = query.Where(x => x.Hospital.OrganizationId == data.SearchObj.OrganizationId);
             }
             if (data.SearchObj.SubOrganizationId != 0)
             {
-                query = query.Where(x => x.Request.Hospital.SubOrganizationId == data.SearchObj.SubOrganizationId);
+                query = query.Where(x => x.Hospital.SubOrganizationId == data.SearchObj.SubOrganizationId);
             }
             if (data.SearchObj.HospitalId != 0)
             {
-                query = query.Where(x => x.Request.HospitalId == data.SearchObj.HospitalId);
+                query = query.Where(x => x.HospitalId == data.SearchObj.HospitalId);
             }
             if (data.SearchObj.MasterAssetId != 0)
             {
-                query = query.Where(x => x.Request.AssetDetail.MasterAssetId == data.SearchObj.MasterAssetId);
+                query = query.Where(x => x.AssetDetail.MasterAssetId == data.SearchObj.MasterAssetId);
             }
             if (!string.IsNullOrEmpty(data.SearchObj.Barcode))
             {
-                query = query.Where(x => x.Request.AssetDetail.Barcode.Contains(data.SearchObj.Barcode));
+                query = query.Where(x => x.AssetDetail.Barcode.Contains(data.SearchObj.Barcode));
             }
             if (!string.IsNullOrEmpty(data.SearchObj.SerialNumber))
             {
-                query = query.Where(x => x.Request.AssetDetail.SerialNumber.Contains(data.SearchObj.SerialNumber));
+                query = query.Where(x => x.AssetDetail.SerialNumber.Contains(data.SearchObj.SerialNumber));
             }
             if (data.SearchObj.ModelNumber != "")
             {
-                query = query.Where(x => x.Request.AssetDetail.MasterAsset.ModelNumber == data.SearchObj.ModelNumber);
+                query = query.Where(x => x.AssetDetail.MasterAsset.ModelNumber == data.SearchObj.ModelNumber);
             }
             if (data.SearchObj.DepartmentId != 0)
             {
-                query = query.Where(x => x.Request.AssetDetail.DepartmentId == data.SearchObj.DepartmentId);
+                query = query.Where(x => x.AssetDetail.DepartmentId == data.SearchObj.DepartmentId);
             }
             if (data.SearchObj.PeriorityId != 0)
             {
-                query = query.Where(x => x.Request.AssetDetail.MasterAsset.PeriorityId == data.SearchObj.PeriorityId);
+                query = query.Where(x => x.AssetDetail.MasterAsset.PeriorityId == data.SearchObj.PeriorityId);
             }
             if (data.SearchObj.ModeId != 0)
             {
-                query = query.Where(x => x.Request.RequestModeId == data.SearchObj.ModeId);
+                query = query.Where(x => x.RequestModeId == data.SearchObj.ModeId);
             }
             if (data.SearchObj.Code != "")
             {
-                query = query.Where(x => x.Request.RequestCode == data.SearchObj.Code);
+                query = query.Where(x => x.RequestCode == data.SearchObj.Code);
             }
             if (data.SearchObj.Subject != "")
             {
-                query = query.Where(x => x.Request.Subject == data.SearchObj.Subject);
+                query = query.Where(x => x.Subject == data.SearchObj.Subject);
             }
             if (data.SearchObj.StatusId != 0)
             {
-                query = query.Where(x => x.RequestStatusId == data.SearchObj.StatusId);
+                query = query.Where(r => r.RequestTracking.OrderByDescending(rt => rt.DescriptionDate).FirstOrDefault().RequestStatusId == data.SearchObj.StatusId);
             }
 
             if (data.SearchObj.AssetDetailId != 0)
             {
-                query = query.Where(x => x.Request.AssetDetailId == data.SearchObj.AssetDetailId);
+                query = query.Where(x => x.AssetDetailId == data.SearchObj.AssetDetailId);
             }
 
             string setstartday, setstartmonth, setendday, setendmonth = "";
@@ -8037,7 +8030,7 @@ namespace Asset.Core.Repositories
             }
             if (data.SearchObj.Start != "" && data.SearchObj.End != "")
             {
-                query = query.Where(a => a.Request.RequestDate.Date >= startingFrom.Date && a.Request.RequestDate.Date <= endingTo.Date);
+                query = query.Where(a => a.RequestDate.Date >= startingFrom.Date && a.RequestDate.Date <= endingTo.Date);
             }
 
 
@@ -8049,58 +8042,58 @@ namespace Asset.Core.Repositories
             {
                 case "Barcode":
                 case "الباركود":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.Barcode) : query.OrderByDescending(r => r.Request.AssetDetail.Barcode);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.AssetDetail.Barcode) : query.OrderByDescending(r => r.AssetDetail.Barcode);
                     break;
                 case "Code":
                 case "الكود":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.RequestCode) : query.OrderByDescending(r => r.Request.RequestCode);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.RequestCode) : query.OrderByDescending(r => r.RequestCode);
                     break;
 
                 case "Serial":
-                case "السيريال": 
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.SerialNumber) : query.OrderByDescending(r => r.Request.AssetDetail.SerialNumber);
+                case "السيريال":
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.AssetDetail.SerialNumber) : query.OrderByDescending(r => r.AssetDetail.SerialNumber);
                     break;
                 case "Model":
                 case "الموديل":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.MasterAsset.ModelNumber) : query.OrderByDescending(r => r.Request.AssetDetail.MasterAsset.ModelNumber);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.AssetDetail.MasterAsset.ModelNumber) : query.OrderByDescending(r => r.AssetDetail.MasterAsset.ModelNumber);
 
                     break;
                 case "Subject":
                 case "الموضوع":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.Subject) : query.OrderByDescending(r => r.Request.Subject);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Subject) : query.OrderByDescending(r => r.Subject);
                     break;
                 case "Date":
                 case "التاريخ":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.RequestDate) : query.OrderByDescending(r => r.Request.RequestDate);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.RequestDate) : query.OrderByDescending(r => r.RequestDate);
                     break;
 
                 case "Request Code":
                 case "رقم الطلب":
                 case "رقم طلب بلاغ العطل":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.RequestCode) : query.OrderByDescending(r => r.Request.RequestCode);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.RequestCode) : query.OrderByDescending(r => r.RequestCode);
                     break;
                 case "CreatedBy":
                 case "تم بواسطة":
                     query = data.sortOrder == 1 ? query.OrderBy(r => r.User.UserName) : query.OrderByDescending(r => r.User.UserName);
                     break;
                 case "Periority":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.RequestPeriority.Name) : query.OrderByDescending(r => r.Request.RequestPeriority.Name);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.RequestPeriority.Name) : query.OrderByDescending(r => r.RequestPeriority.Name);
                     break;
 
                 case "الأولوية":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.RequestPeriority.NameAr) : query.OrderByDescending(r => r.Request.RequestPeriority.NameAr);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.RequestPeriority.NameAr) : query.OrderByDescending(r => r.RequestPeriority.NameAr);
                     break;
                 case "Mode":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.RequestMode.Name) : query.OrderByDescending(r => r.Request.RequestMode.Name);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.RequestMode.Name) : query.OrderByDescending(r => r.RequestMode.Name);
                     break;
                 case "طريقة الإبلاغ":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.RequestMode.NameAr) : query.OrderByDescending(r => r.Request.RequestMode.NameAr);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.RequestMode.NameAr) : query.OrderByDescending(r => r.RequestMode.NameAr);
                     break;
                 case "Asset Name":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.MasterAsset.Name) : query.OrderByDescending(r => r.Request.AssetDetail.MasterAsset.Name);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.AssetDetail.MasterAsset.Name) : query.OrderByDescending(r => r.AssetDetail.MasterAsset.Name);
                     break;
                 case "اسم الأصل":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.MasterAsset.NameAr) : query.OrderByDescending(r => r.Request.AssetDetail.MasterAsset.NameAr);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.AssetDetail.MasterAsset.NameAr) : query.OrderByDescending(r => r.AssetDetail.MasterAsset.NameAr);
                     break;
                 case "Hospital":
                     query = data.sortOrder == 1 ? query.OrderBy(r => r.Hospital.Name) : query.OrderByDescending(r => r.Hospital.Name);
@@ -8109,16 +8102,16 @@ namespace Asset.Core.Repositories
                     query = data.sortOrder == 1 ? query.OrderBy(r => r.Hospital.NameAr) : query.OrderByDescending(r => r.Hospital.NameAr);
                     break;
                 case "Brands":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.MasterAsset.brand.Name) : query.OrderByDescending(r => r.Request.AssetDetail.MasterAsset.brand.Name);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.AssetDetail.MasterAsset.brand.Name) : query.OrderByDescending(r => r.AssetDetail.MasterAsset.brand.Name);
                     break;
                 case "الماركات":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.MasterAsset.brand.NameAr) : query.OrderByDescending(r => r.Request.AssetDetail.MasterAsset.brand.NameAr);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.AssetDetail.MasterAsset.brand.NameAr) : query.OrderByDescending(r => r.AssetDetail.MasterAsset.brand.NameAr);
                     break;
                 case "Department":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.Department.NameAr) : query.OrderByDescending(r => r.Request.AssetDetail.Department.NameAr);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.AssetDetail.Department.NameAr) : query.OrderByDescending(r => r.AssetDetail.Department.NameAr);
                     break;
                 case "القسم":
-                    query = data.sortOrder == 1 ? query.OrderBy(r => r.Request.AssetDetail.Department.NameAr) : query.OrderByDescending(r => r.Request.AssetDetail.Department.NameAr);
+                    query = data.sortOrder == 1 ? query.OrderBy(r => r.AssetDetail.Department.NameAr) : query.OrderByDescending(r => r.AssetDetail.Department.NameAr);
                     break;
                 case "Governorate":
                     query = data.sortOrder == 1 ? query.OrderBy(r => r.Hospital.Governorate.Name) : query.OrderByDescending(r => r.Hospital.Governorate.Name);
@@ -8152,65 +8145,85 @@ namespace Asset.Core.Repositories
             #region Count data and fiter By Paging
 
             mainClass.Count = await query.CountAsync();
-          
-                mainClass.Results = await query.Skip(first).Take(rows).Select(req => new IndexRequestVM.GetData
+
+              var requests = await query.Skip(first).Take(rows).ToListAsync();
+            
+            foreach (var req in requests)
+            {
+                IndexRequestVM.GetData RequestVM = new IndexRequestVM.GetData();
+                RequestVM.Id = req.Id;
+                RequestVM.RequestCode = req.RequestCode;
+                RequestVM.Barcode = req.AssetDetail?.Barcode;
+                RequestVM.CreatedById = req.CreatedById;
+                RequestVM.CreatedBy = req.User != null ? req.User.UserName : "";
+                RequestVM.Subject = req.Subject;
+                RequestVM.RequestDate = req.RequestDate;
+                RequestVM.AssetDetailId = req.AssetDetailId != null ? (int)req.AssetDetailId : 0;
+                RequestVM.HospitalId = req.AssetDetail?.HospitalId;
+                RequestVM.Barcode = req.AssetDetail?.Barcode;
+                RequestVM.SerialNumber = req.AssetDetail?.SerialNumber;
+                RequestVM.ModelNumber = req.AssetDetail?.MasterAsset?.ModelNumber;
+                RequestVM.AssetName = req.AssetDetail?.MasterAsset?.Name;
+                RequestVM.AssetNameAr = req.AssetDetail?.MasterAsset?.NameAr;
+                RequestVM.ModeId = req.RequestModeId != null ? (int)req.RequestModeId : 0;
+                RequestVM.ModeName = req.RequestMode != null ? req.RequestMode.Name : "";
+                RequestVM.ModeNameAr = req.RequestMode != null ? req.RequestMode.NameAr : "";
+                RequestVM.PeriorityId = req.RequestPeriorityId != null ? (int)req.RequestPeriorityId : 0;
+                RequestVM.PeriorityName = req.RequestPeriority != null ? req.RequestPeriority.Name : "";
+                RequestVM.PeriorityNameAr = req.RequestPeriority != null ? req.RequestPeriority.NameAr : "";
+                RequestVM.PeriorityColor = req.RequestPeriority != null ? req.RequestPeriority.Color : "";
+                RequestVM.PeriorityIcon = req.RequestPeriority != null ? req.RequestPeriority.Icon : "";
+                RequestVM.GovernorateId = req.User != null ? req.User.GovernorateId : 0;
+                RequestVM.CityId = req.User != null ? req.User.CityId : 0;
+                RequestVM.OrganizationId = req.User != null ? req.User.OrganizationId : 0;
+                RequestVM.SubOrganizationId = req.User != null ? req.User.SubOrganizationId : 0;
+
+                if (req.RequestModeId != null)
                 {
-                    Id = req.Request.Id,
-                    RequestCode = req.Request.RequestCode,
-                    Barcode = req.Request.AssetDetail.Barcode,
-                    CreatedById = req.CreatedById,
-                    CreatedBy = req.User != null ? req.User.UserName : "",
-                    Subject = req.Request.Subject,
-                    RequestDate = req.Request.RequestDate,
-                    AssetDetailId = req.Request.AssetDetailId != null ? (int)req.Request.AssetDetailId : 0,
-                    HospitalId = req.Request.AssetDetail.HospitalId,
-                    SerialNumber = req.Request.AssetDetail.SerialNumber,
-                    ModelNumber = req.Request.AssetDetail.MasterAsset.ModelNumber,
-                    AssetName = req.Request.AssetDetail.MasterAsset.Name,
-                    AssetNameAr = req.Request.AssetDetail.MasterAsset.NameAr,
-                    ModeId = req.Request.RequestModeId != null ? (int)req.Request.RequestModeId : 0,
-                    ModeName = req.Request.RequestMode != null ? req.Request.RequestMode.Name : "",
-                    ModeNameAr = req.Request.RequestMode != null ? req.Request.RequestMode.NameAr : "",
-                    PeriorityId = req.Request.RequestPeriorityId != null ? (int)req.Request.RequestPeriorityId : 0,
-                    PeriorityName = req.Request.RequestPeriority != null ? req.Request.RequestPeriority.Name : "",
-                    PeriorityNameAr = req.Request.RequestPeriority != null ? req.Request.RequestPeriority.NameAr : "",
-                    PeriorityColor = req.Request.RequestPeriority != null ? req.Request.RequestPeriority.Color : "",
-                    PeriorityIcon = req.Request.RequestPeriority != null ? req.Request.RequestPeriority.Icon : "",
-                    GovernorateId = req.User != null ? req.User.GovernorateId : 0,
-                    CityId = req.User != null ? req.User.CityId : 0,
-                    OrganizationId = req.User != null ? req.User.OrganizationId : 0,
-                    SubOrganizationId = req.User != null ? req.User.SubOrganizationId : 0,
+                    RequestVM.ModeId = req.RequestMode.Id;
+                    RequestVM.ModeName = req.RequestMode.Name;
+                    RequestVM.ModeNameAr = req.RequestMode.NameAr;
+                }
+                if (req.RequestPeriorityId != null)
+                {
+                    RequestVM.PeriorityId = (int)req.RequestPeriorityId;
+                    RequestVM.PeriorityName = req.RequestPeriority.Name;
+                    RequestVM.PeriorityNameAr = req.RequestPeriority.NameAr;
+                    RequestVM.PeriorityColor = req.RequestPeriority.Color;
+                    RequestVM.PeriorityIcon = req.RequestPeriority.Icon;
+                }
+                var LastWorkOrder = await _context.WorkOrderTrackings.Include(o => o.WorkOrder).Include(o => o.WorkOrderStatus)
+                    .Where(a => a.WorkOrder.RequestId == req.Id).OrderByDescending(a => a.CreationDate).FirstOrDefaultAsync();
+                if (LastWorkOrder!=null)
+                {
+                    RequestVM.LatestWorkOrderStatusId = LastWorkOrder.WorkOrderStatusId;
+                    RequestVM.WOLastTrackDescription = LastWorkOrder.Notes;
+                }
+                var requestTracking = await _context.RequestTracking.Include(r => r.RequestStatus).Where(r => r.RequestId == req.Id).OrderByDescending(r => r.DescriptionDate).FirstOrDefaultAsync();
+                
+                RequestVM.StatusId = (int)requestTracking.RequestStatus.Id;
+                RequestVM.StatusName = requestTracking.RequestStatus.Name;
+                RequestVM.StatusNameAr = requestTracking.RequestStatus.NameAr;
+                RequestVM.StatusColor = requestTracking.RequestStatus.Color;
+                RequestVM.StatusIcon = requestTracking.RequestStatus.Icon;
+                RequestVM.Description = req.Description;
+                if (requestTracking.RequestStatusId == 2)
+                {
+                    RequestVM.ClosedDate = requestTracking.DescriptionDate.ToString();
+                }
+                else
+                {
+                    RequestVM.ClosedDate = "";
+                }
 
-                     LatestWorkOrderStatusId = _context.WorkOrderTrackings
-                    .Where(a => a.WorkOrder.RequestId == req.RequestId)
-                    .OrderByDescending(a => a.CreationDate)
-                    .Select(a => a.WorkOrderStatusId)
-                    .FirstOrDefault(),
-                     
-                    WOLastTrackDescription = _context.WorkOrderTrackings
-                    .Where(a => a.WorkOrder.RequestId == req.RequestId)
-                    .OrderByDescending(a => a.CreationDate)
-                    .Select(a => a.Notes)
-                    .FirstOrDefault(),
-                    
-                    // Request Status
-                    StatusId = (int)req.RequestStatus.Id,
-                    StatusName = req.RequestStatus.Name,
-                    StatusNameAr = req.RequestStatus.NameAr,
-                    StatusColor = req.RequestStatus.Color,
-                    StatusIcon = req.RequestStatus.Icon,
-                    Description = req.Description,
-                    ClosedDate = req.RequestStatus.Id == 2 ? req.DescriptionDate.ToString() : "",
-
-                    // Count Work Orders and Tracks
-                    CountWorkOrder = _context.WorkOrders.Count(a => a.RequestId == req.RequestId),
-                    CountListTracks = _context.RequestTracking.Count(a => a.RequestId == req.RequestId)
-
-                }).ToListAsync();
+                RequestVM.CountWorkOrder = await _context.WorkOrders.Where(a => a.RequestId == req.Id).CountAsync();
+                RequestVM.CountListTracks = await _context.RequestTracking.Where(a => a.RequestId == req.Id).CountAsync();
+                list.Add(RequestVM);
+            }
             #endregion
 
-       
 
+            mainClass.Results = list;
             return mainClass;
         }
         public int Add(CreateRequestVM createRequestVM)
