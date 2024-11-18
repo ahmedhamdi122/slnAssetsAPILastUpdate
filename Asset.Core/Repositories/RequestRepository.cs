@@ -7857,10 +7857,17 @@ namespace Asset.Core.Repositories
         {
             #region Initial Variables
             IQueryable<Request> query = _context.Request
-                .Include(r => r.RequestMode).Include(r => r.RequestType)
-                         .Include(r => r.AssetDetail).Include(a => a.User)
+                        .Include(r => r.RequestMode).Include(r => r.RequestType)
+                         .Include(r => r.AssetDetail).Include(a => a.User).Include(r => r.AssetDetail.MasterAsset)
+                         .Include(r => r.AssetDetail.MasterAsset.brand).Include(r => r.AssetDetail.Supplier).Include(r => r.AssetDetail.Department).Include(r => r.AssetDetail.MasterAsset.Origin)
+                         .Include(r => r.AssetDetail.Building).Include(r => r.AssetDetail.Floor).Include(r => r.AssetDetail.Room)
                          .Include(r => r.RequestPeriority).Include(r => r.RequestMode)
-                         ;
+                         .Include(r => r.AssetDetail.Hospital).ThenInclude(h => h.Organization)
+                         .Include(r => r.AssetDetail.Hospital).ThenInclude(h => h.Governorate)
+                         .Include(r => r.AssetDetail.Hospital).ThenInclude(h => h.City)
+                         .Include(r => r.AssetDetail.Hospital).ThenInclude(h => h.SubOrganization);
+
+
             IndexRequestVM mainClass = new IndexRequestVM();
             List<IndexRequestVM.GetData> list = new List<IndexRequestVM.GetData>();
             ApplicationUser userObj = new ApplicationUser();

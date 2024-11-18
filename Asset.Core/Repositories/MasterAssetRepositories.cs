@@ -807,7 +807,7 @@ namespace Asset.Core.Repositories
 
         public IEnumerable<IndexMasterAssetVM.GetData> AutoCompleteMasterAssetName2(string name)
         {
-            var lst = _context.MasterAssets.Include(a => a.brand).Where(a => a.Name.Contains(name) || a.NameAr.Contains(name)).ToList()
+            var lst = _context.MasterAssets.Include(a => a.brand).Where(a => a.Name.Contains(name) || a.NameAr.Contains(name))
                 .Select(item => new IndexMasterAssetVM.GetData
                 {
                     Id = item.Id,
