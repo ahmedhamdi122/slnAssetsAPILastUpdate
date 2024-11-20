@@ -53,9 +53,9 @@ namespace Asset.API.Controllers
 
         [HttpGet]
         [Route("GetRequestStatusByUserId/{userId}")]
-        public IndexRequestStatusVM GetRequestStatusByUserId(string userId)
+        public async Task<IndexRequestStatusVM> GetRequestStatusByUserId(string userId)
         {
-            return _requestStatusService.GetRequestStatusByUserId(userId);
+            return await _requestStatusService.GetRequestStatusByUserId(userId);
         }
 
 

@@ -75,9 +75,9 @@ namespace Asset.Core.Services
             return _unitOfWork.RequestStatus.GetAllForReport(requestDateObj);
         }
 
-        public IndexRequestStatusVM GetRequestStatusByUserId(string userId)
+        public async Task<IndexRequestStatusVM> GetRequestStatusByUserId(string userId)
         {
-            return _unitOfWork.RequestStatus.GetRequestStatusByUserId(userId);
+            return await _unitOfWork.RequestStatus.GetRequestStatusByUserId(userId);
         }
     }
 }

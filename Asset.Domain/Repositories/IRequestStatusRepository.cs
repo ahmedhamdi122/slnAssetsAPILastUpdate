@@ -25,7 +25,7 @@ namespace Asset.Domain.Repositories
         int Delete(int id);
 
 
-        IndexRequestStatusVM GetRequestStatusByUserId(string userId);
+        Task<IndexRequestStatusVM> GetRequestStatusByUserId(string userId);
 
 
         IEnumerable<IndexRequestStatusVM.GetData> SortRequestStatuses(SortRequestStatusVM sortObj);

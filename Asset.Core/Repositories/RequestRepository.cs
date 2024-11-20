@@ -7867,7 +7867,6 @@ namespace Asset.Core.Repositories
                          .Include(r => r.AssetDetail.Hospital).ThenInclude(h => h.City)
                          .Include(r => r.AssetDetail.Hospital).ThenInclude(h => h.SubOrganization);
 
-
             IndexRequestVM mainClass = new IndexRequestVM();
             List<IndexRequestVM.GetData> list = new List<IndexRequestVM.GetData>();
             ApplicationUser userObj = new ApplicationUser();
