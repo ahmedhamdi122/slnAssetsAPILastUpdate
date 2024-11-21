@@ -868,7 +868,7 @@ namespace Asset.Core.Repositories
             return 0;
         }
 
-        public async Task<IndexRequestStatusVM> GetRequestStatusByUserId(string userId)
+        public async Task<List<RequestStatusVM>> GetRequestStatusByUserId(string userId)
         {
             IndexRequestStatusVM mainClass = new IndexRequestStatusVM();
             List<IndexRequestStatusVM.GetData> list = new List<IndexRequestStatusVM.GetData>();
@@ -922,37 +922,11 @@ namespace Asset.Core.Repositories
                 }
             }
             #endregion
-            var listStatusVM = await _context.RequestStatus.Select( s=>  new { id=s.Id,name = s.Name, nameAr = s.NameAr,color=s.Color,icon=s.Icon, count = query.Where(r => r.RequestTracking.OrderByDescending(rt => rt.DescriptionDate).FirstOrDefault().RequestStatusId == s.Id).Count() }).ToListAsync();
-            //listStatusVM.Add(new { id = "", name="All", nameAr ="الكل",  color = "", icon = "", count = listStatusVM.Sum(s=>s.count)});
-            //if (requests.ToList().Count > 0)
-            //{
-            //    foreach (var req in requests)
-            //    {
-            //        switch (req.FirstOrDefault().RequestStatusId)
-            //        {
-            //            case 1:
-            //                lstOpenTracks.Add(req.FirstOrDefault());
-            //                break;
-            //            case 2:
-            //                lstCloseTracks.Add(req.FirstOrDefault());
-            //                break;
-            //            case 3:
-            //                lstInProgressTracks.Add(req.FirstOrDefault());
-            //                break;
-            //            case 4:
-            //                lstSolvedTracks.Add(req.FirstOrDefault());
-            //                break;
-            //            case 5:
-            //                lstApprovedTracks.Add(req.FirstOrDefault());
-            //                break;
-            //        }
+            
+            var listStatus = await _context.RequestStatus.Select( s=>  new RequestStatusVM { id=s.Id,name = s.Name, nameAr = s.NameAr,color=s.Color,icon=s.Icon, count = query.Where(r => r.RequestTracking.OrderByDescending(rt => rt.DescriptionDate).FirstOrDefault().RequestStatusId == s.Id).Count() }).ToListAsync();
+            listStatus.Add(new RequestStatusVM { id = 0, name="All", nameAr ="الكل",  color = "", icon = "", count = listStatus.Sum(s=>s.count)});
 
-            //    }
-            //}
-
-           
-
-            return mainClass;
+            return listStatus;
         }
     }
 }

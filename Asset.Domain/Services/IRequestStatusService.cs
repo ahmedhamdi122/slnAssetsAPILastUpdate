@@ -21,7 +21,7 @@ namespace Asset.Domain.Services
         int Update(RequestStatus editRequestVM);
         int Delete(int id);
 
-        Task<IndexRequestStatusVM> GetRequestStatusByUserId(string userId);
+        Task<List<RequestStatusVM>> GetRequestStatusByUserId(string userId);
 
 
         IEnumerable<IndexRequestStatusVM.GetData> SortRequestStatuses(SortRequestStatusVM sortObj);
