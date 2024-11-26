@@ -8242,7 +8242,7 @@ namespace Asset.Core.Repositories
                     request.Subject = createRequestVM.Subject;
                     request.RequestCode = createRequestVM.RequestCode;
                     request.Description = createRequestVM.Description;
-                    request.RequestDate = DateTime.Parse(createRequestVM.StrRequestDate);// DateTime.Now; 
+                    request.RequestDate = DateTime.UtcNow.ToLocalTime();
                     request.RequestModeId = createRequestVM.RequestModeId;
                     request.RequestPeriorityId = createRequestVM.RequestPeriorityId;
                     request.AssetDetailId = createRequestVM.AssetDetailId;

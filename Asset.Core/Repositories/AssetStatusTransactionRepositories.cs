@@ -32,10 +32,8 @@ namespace Asset.Core.Repositories
                     AssetStatusTransactionsTransactionObj.AssetDetailId = model.AssetDetailId;
                     AssetStatusTransactionsTransactionObj.AssetStatusId = model.AssetStatusId;
                     AssetStatusTransactionsTransactionObj.HospitalId = model.HospitalId;
-                    if (model.StatusDate != null)
-                        AssetStatusTransactionsTransactionObj.StatusDate = DateTime.Parse(model.StatusDate);
-                    else
-                        AssetStatusTransactionsTransactionObj.StatusDate = DateTime.Now;
+                    AssetStatusTransactionsTransactionObj.StatusDate = DateTime.Now;
+         
 
                     _context.AssetStatusTransactions.Add(AssetStatusTransactionsTransactionObj);
                     _context.SaveChanges();

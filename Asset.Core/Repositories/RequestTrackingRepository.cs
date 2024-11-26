@@ -27,7 +27,7 @@ namespace Asset.Core.Repositories
                 {
                     RequestTracking requestTracking = new RequestTracking();
                     requestTracking.Description = createRequestTracking.Description;
-                    requestTracking.DescriptionDate = DateTime.Parse(createRequestTracking.StrDescriptionDate); //requestDescriptionDTO.DescriptionDate;
+                    requestTracking.DescriptionDate = DateTime.Now;
                     requestTracking.RequestId = createRequestTracking.RequestId;
                     requestTracking.RequestStatusId = createRequestTracking.RequestStatusId;
                     requestTracking.CreatedById = createRequestTracking.CreatedById;
@@ -222,7 +222,6 @@ namespace Asset.Core.Repositories
                 .Where(r => r.RequestId == RequestId).Select(req => new RequestTrackingView
                 {
                     Id = req.Id,
-
                     Barcode = req.Request.AssetDetail.Barcode,
                     Description = req.Description,
                     DescriptionDate = req.DescriptionDate,
