@@ -8348,10 +8348,10 @@ namespace Asset.Core.Repositories
                 requestDTO.HospitalId = int.Parse(req.HospitalId.ToString());
                 requestDTO.Subject = req.Subject;
                 requestDTO.RequestCode = req.RequestCode;
-                requestDTO.AssetCode = req.AssetDetail.Code;
+                requestDTO.AssetCode = req.AssetDetail?.Code;
                 requestDTO.AssetDetailId = int.Parse(req.AssetDetailId.ToString());
-                requestDTO.Barcode = req.AssetDetail.Barcode;
-                requestDTO.ModelNumber = req.AssetDetail.MasterAsset.ModelNumber;
+                requestDTO.Barcode = req.AssetDetail?.Barcode;
+                requestDTO.ModelNumber = req.AssetDetail?.MasterAsset.ModelNumber;
                 requestDTO.Description = req.Description;
                 requestDTO.RequestDate = req.RequestDate;
                 requestDTO.RequestModeId = req.RequestModeId != null ? (int)req.RequestModeId : 0;
@@ -8360,11 +8360,11 @@ namespace Asset.Core.Repositories
                 requestDTO.RequestPeriorityId = req.RequestPeriorityId != null ? (int)req.RequestPeriorityId : 0;
                 requestDTO.PeriorityName = req.RequestPeriority.Name;
                 requestDTO.PeriorityNameAr = req.RequestPeriority.NameAr;
-                requestDTO.MasterAssetId = (int)req.AssetDetail.MasterAssetId;
-                requestDTO.AssetName = req.AssetDetail.MasterAsset.Name;
-                requestDTO.AssetNameAr = req.AssetDetail.MasterAsset.NameAr;
+                requestDTO.MasterAssetId = req.AssetDetail!=null? (int)req.AssetDetail.MasterAssetId:0;
+                requestDTO.AssetName = req.AssetDetail?.MasterAsset.Name;
+                requestDTO.AssetNameAr = req.AssetDetail?.MasterAsset.NameAr;
                 requestDTO.AssetDetailId = req.AssetDetailId != null ? (int)req.AssetDetailId : 0;
-                requestDTO.SerialNumber = req.AssetDetail.SerialNumber;
+                requestDTO.SerialNumber = req.AssetDetail?.SerialNumber;
                 requestDTO.CreatedById = req.CreatedById;
                 requestDTO.CreatedBy = req.User.UserName;
                 requestDTO.ProblemId = req.SubProblem != null ? (int)req.SubProblem.ProblemId : 0;
@@ -8375,54 +8375,54 @@ namespace Asset.Core.Repositories
                 requestDTO.RequestTypeName = req.RequestType.Name;
                 requestDTO.RequestTypeNameAr = req.RequestType.NameAr;
 
-                if (req.AssetDetail.Supplier != null)
+                if (req.AssetDetail!=null&& req.AssetDetail.Supplier != null)
                 {
                     requestDTO.SupplierName = req.AssetDetail.Supplier.Name;
                     requestDTO.SupplierNameAr = req.AssetDetail.Supplier.NameAr;
                 }
-                if (req.AssetDetail.MasterAsset.brand != null)
+                if (req.AssetDetail != null && req.AssetDetail.MasterAsset.brand != null)
                 {
                     requestDTO.BrandName = req.AssetDetail.MasterAsset.brand.Name;
                     requestDTO.BrandNameAr = req.AssetDetail.MasterAsset.brand.NameAr;
                 }
 
-                requestDTO.DepartmentName = req.AssetDetail.Department != null ? req.AssetDetail.Department.Name : "";
-                requestDTO.DepartmentNameAr = req.AssetDetail.Department != null ? req.AssetDetail.Department.NameAr : "";
+                requestDTO.DepartmentName = req.AssetDetail?.Department != null ? req.AssetDetail.Department.Name : "";
+                requestDTO.DepartmentNameAr = req.AssetDetail?.Department != null ? req.AssetDetail.Department.NameAr : "";
                 requestDTO.RequestTrackingId = _context.RequestTracking.Where(t => t.RequestId == id).FirstOrDefault().Id;
                 requestDTO.RequestStatusId = _context.RequestTracking.Where(t => t.RequestId == id).FirstOrDefault().RequestStatusId != null ? (int)_context.RequestTracking.Where(t => t.RequestId == id).FirstOrDefault().RequestStatusId : 0;
 
-                requestDTO.PurchaseDate = req.AssetDetail.PurchaseDate != null ? req.AssetDetail.PurchaseDate.Value.ToShortDateString() : "";
-                requestDTO.InstallationDate = req.AssetDetail.InstallationDate != null ? req.AssetDetail.InstallationDate.Value.ToShortDateString() : "";
-                requestDTO.OperationDate = req.AssetDetail.OperationDate != null ? req.AssetDetail.OperationDate.Value.ToShortDateString() : "";
-                requestDTO.ReceivingDate = req.AssetDetail.ReceivingDate != null ? req.AssetDetail.ReceivingDate.Value.ToShortDateString() : "";
-                requestDTO.PONumber = req.AssetDetail.PONumber;
-                requestDTO.WarrantyExpires = req.AssetDetail.WarrantyExpires;
-                requestDTO.Remarks = req.AssetDetail.Remarks;
-                requestDTO.WarrantyStart = req.AssetDetail.WarrantyStart != null ? req.AssetDetail.WarrantyStart.Value.ToShortDateString() : "";
-                requestDTO.WarrantyEnd = req.AssetDetail.WarrantyEnd != null ? req.AssetDetail.WarrantyEnd.Value.ToShortDateString() : "";
-                requestDTO.CostCenter = req.AssetDetail.CostCenter;
-                requestDTO.DepreciationRate = req.AssetDetail.DepreciationRate;
-                if (req.AssetDetail.BuildingId != null)
+                requestDTO.PurchaseDate = req.AssetDetail?.PurchaseDate != null ? req.AssetDetail.PurchaseDate.Value.ToShortDateString() : "";
+                requestDTO.InstallationDate = req.AssetDetail?.InstallationDate != null ? req.AssetDetail.InstallationDate.Value.ToShortDateString() : "";
+                requestDTO.OperationDate = req.AssetDetail?.OperationDate != null ? req.AssetDetail.OperationDate.Value.ToShortDateString() : "";
+                requestDTO.ReceivingDate = req.AssetDetail?.ReceivingDate != null ? req.AssetDetail.ReceivingDate.Value.ToShortDateString() : "";
+                requestDTO.PONumber = req.AssetDetail?.PONumber;
+                requestDTO.WarrantyExpires = req.AssetDetail?.WarrantyExpires;
+                requestDTO.Remarks = req.AssetDetail?.Remarks;
+                requestDTO.WarrantyStart = req.AssetDetail?.WarrantyStart != null ? req.AssetDetail.WarrantyStart.Value.ToShortDateString() : "";
+                requestDTO.WarrantyEnd = req.AssetDetail?.WarrantyEnd != null ? req.AssetDetail.WarrantyEnd.Value.ToShortDateString() : "";
+                requestDTO.CostCenter = req.AssetDetail?.CostCenter;
+                requestDTO.DepreciationRate = req.AssetDetail?.DepreciationRate;
+                if (req.AssetDetail != null && req.AssetDetail?.BuildingId != null)
                 {
                     requestDTO.BuildingId = req.AssetDetail.BuildingId != 0 ? req.AssetDetail.BuildingId : 0;
                     requestDTO.BuildName = req.AssetDetail.Building != null ? req.AssetDetail.Building.Name : "";
                     requestDTO.BuildNameAr = req.AssetDetail.Building != null ? req.AssetDetail.Building.NameAr : "";
                 }
 
-                if (req.AssetDetail.RoomId != null)
+                if (req.AssetDetail != null && req.AssetDetail.RoomId != null)
                 {
                     requestDTO.RoomId = req.AssetDetail.RoomId;
                     requestDTO.RoomName = req.AssetDetail.Room.Name;
                     requestDTO.RoomNameAr = req.AssetDetail.Room.NameAr;
                 }
 
-                if (req.AssetDetail.FloorId != null)
+                if (req.AssetDetail != null && req.AssetDetail.FloorId != null)
                 {
                     requestDTO.FloorId = req.AssetDetail.FloorId;
                     requestDTO.FloorName = req.AssetDetail.Floor.Name;
                     requestDTO.FloorNameAr = req.AssetDetail.Floor.NameAr;
                 }
-
+                
                 var lstStatus = _context.RequestTracking
                                .Include(t => t.Request).Include(t => t.RequestStatus)
                                .Where(a => a.RequestId == req.Id).ToList().OrderByDescending(a => DateTime.Parse(a.DescriptionDate.ToString())).ToList();
