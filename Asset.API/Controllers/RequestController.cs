@@ -37,7 +37,6 @@ namespace Asset.API.Controllers
         IWebHostEnvironment _webHostingEnvironment;
         public int page_count_for_all = 0;
 
-
         string strInsitute, strInsituteAr, strLogo = "";
         bool isAgency, isScrap, isVisit, isExternalFix, isOpenRequest, canAdd;
         private readonly ISettingService _settingService;
