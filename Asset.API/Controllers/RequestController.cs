@@ -3222,11 +3222,14 @@ namespace Asset.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "assetId", Message = "This is not valid Asset", MessageAr = "تأكد من الباركود الخاص بالجهاز" });
             }
-            else
+            var validDate = _requestService.ValidateDate(createRequestVM.AssetDetailId);
+            if(!validDate)
             {
-                var requestId = _requestService.AddRequest(createRequestVM);
-                return Ok(requestId);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "invalidDate", Message = "Request date should be greater than installation date.", MessageAr = "تاريخ الطلب يجب أن يكون بعد تاريخ التثبيت." });
             }
+            var requestId = _requestService.AddRequest(createRequestVM);
+                return Ok(requestId);
+            
         }
 
 

@@ -30,7 +30,7 @@ namespace Asset.Domain.Services
         void UpdateRequest(EditRequestVM editRequestVM);
         void DeleteRequest(int id);
         IndexRequestsVM GetByRequestCode(string code);
-
+        bool ValidateDate(int AssetDetailId);
 
 
 

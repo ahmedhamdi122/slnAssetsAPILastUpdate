@@ -11,6 +11,7 @@ namespace Asset.Domain.Repositories
 {
     public interface IRequestRepository
     {
+        bool ValidateDate(int AssetDetailId);
         IEnumerable<IndexRequestVM.GetData> GetAllRequestsWithTrackingByUserId(string userId);
         IEnumerable<IndexRequestVM.GetData> GetAllRequestsByStatusId(string userId, int statusId);
         IEnumerable<IndexRequestVM.GetData> GetAllRequestsByStatusId(string userId, int statusId, int page, int pageSize);

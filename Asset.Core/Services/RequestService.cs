@@ -18,6 +18,10 @@ namespace Asset.Core.Services
         {
             _unitOfWork = unitOfWork;
         }
+        public bool ValidateDate(int AssetDetailId)
+        {
+            return _unitOfWork.Request.ValidateDate(AssetDetailId);
+        }
         public int AddRequest(CreateRequestVM createRequestVM)
         {
             _unitOfWork.Request.Add(createRequestVM);

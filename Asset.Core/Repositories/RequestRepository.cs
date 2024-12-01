@@ -21,7 +21,16 @@ namespace Asset.Core.Repositories
         {
             _context = context;
         }
-
+        public bool ValidateDate(int AssetDetailId)
+        {
+            var AssetDetailInstlationDate = _context.AssetDetails.FirstOrDefault(a=>a.Id==AssetDetailId).InstallationDate;
+            if (AssetDetailInstlationDate < DateTime.Now)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
         public IEnumerable<IndexRequestsVM> GetAll()
         {
             List<IndexRequestsVM> list = new List<IndexRequestsVM>();
