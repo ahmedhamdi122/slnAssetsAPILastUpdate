@@ -8223,16 +8223,18 @@ namespace Asset.Core.Repositories
         /// <param name="barcode"></param>
         /// <param name="hospitalId"></param>
         /// <returns>List Of IndexAssetDetailVM.GetData</returns>
-        public IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetBarCode(string barcode, int hospitalId)
+        public IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetBarCode(string barcode, int hospitalId,string UserId)
         {
             List<IndexAssetDetailVM.GetData> list = new List<IndexAssetDetailVM.GetData>();
             var lstAssetByBarcode = _context.AssetDetails.Include(a => a.MasterAsset).Include(a => a.Department).Include(a => a.MasterAsset.brand)
-               .Include(a => a.Hospital).Where(a => a.Barcode.Contains(barcode)).OrderBy(a => a.Barcode);
-
+               .Include(a => a.Hospital).Include(a=>a.Hospital.City).Include(a => a.Hospital.Governorate).Include(a => a.Hospital.Organization).Include(a => a.Hospital.SubOrganization).Where(a => a.Barcode.Contains(barcode)).OrderBy(a => a.Barcode);
+            var locationIds = _context.Users.Select(u=>new {UserId=u.Id, hospitalId=u.HospitalId, CityId=u.CityId, GovernorateId=u.GovernorateId, OrganizationId=u.OrganizationId, SubOrganizationiD=u.SubOrganizationId }).FirstOrDefault(u => u.UserId == UserId);
             var lst = lstAssetByBarcode.ToList();
             if (hospitalId == 0)
             {
+                
                 lst = lst.ToList();
+
             }
             else
             {

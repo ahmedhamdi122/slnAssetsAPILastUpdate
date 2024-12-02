@@ -5,6 +5,7 @@ using Asset.ViewModels.HospitalVM;
 using Asset.ViewModels.RoleCategoryVM;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace Asset.Core.Services
@@ -19,7 +20,10 @@ namespace Asset.Core.Services
             _unitOfWork = unitOfWork;
         }
 
-
+        public async Task<IEnumerable<IndexHospitalVM.GetData>> ListHospitals(string UserId)
+        {
+            return await _unitOfWork.HospitalRepository.ListHospitals( UserId);
+        }
         public int Add(CreateHospitalVM HospitalVM)
         {
             _unitOfWork.HospitalRepository.Add(HospitalVM);

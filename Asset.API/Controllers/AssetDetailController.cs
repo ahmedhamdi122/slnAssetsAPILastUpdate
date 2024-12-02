@@ -406,9 +406,9 @@ namespace Asset.API.Controllers
         /// <returns>List of Assets that contains barcode</returns>
         [HttpGet]
         [Route("AutoCompleteAssetBarCode/{barcode}/{hospitalId}")]
-        public IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetBarCode(string barcode, int hospitalId)
+        public IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetBarCode(string barcode, int hospitalId,string UserId)
         {
-            return _AssetDetailService.AutoCompleteAssetBarCode(barcode, hospitalId);
+            return _AssetDetailService.AutoCompleteAssetBarCode(barcode, hospitalId, UserId);
         }
 
 

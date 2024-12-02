@@ -9,7 +9,8 @@ namespace Asset.Domain.Services
   public  interface IHospitalService
     {
         IEnumerable<Hospital> GetAllHospitals();
-        IEnumerable<IndexHospitalVM.GetData> GetAll(); 
+        IEnumerable<IndexHospitalVM.GetData> GetAll();
+        Task<IEnumerable<IndexHospitalVM.GetData>> ListHospitals(string UserId);
         IndexHospitalVM GetTop10Hospitals(int hospitalId);
         EditHospitalVM GetById(int id);
         DetailHospitalVM GetHospitalDetailById(int id);

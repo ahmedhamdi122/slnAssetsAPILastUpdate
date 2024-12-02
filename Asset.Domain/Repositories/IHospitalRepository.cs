@@ -10,6 +10,7 @@ namespace Asset.Domain.Repositories
     {
         IEnumerable<Hospital> GetAllHospitals();
         IEnumerable<IndexHospitalVM.GetData> GetAll();
+        Task<IEnumerable<IndexHospitalVM.GetData>> ListHospitals(string UserId);
         IndexHospitalVM GetTop10Hospitals(int hospitalId);
 
 

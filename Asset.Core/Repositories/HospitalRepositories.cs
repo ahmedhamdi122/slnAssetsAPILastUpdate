@@ -22,7 +22,49 @@ namespace Asset.Core.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<IndexHospitalVM.GetData>> ListHospitals(string UserId)
+        {
+            var locationIds = _context.Users.Select(u => new { UserId = u.Id, hospitalId = u.HospitalId, CityId = u.CityId, GovernorateId = u.GovernorateId, OrganizationId = u.OrganizationId, SubOrganizationId = u.SubOrganizationId }).FirstOrDefault(u => u.UserId == UserId);
+            List<IndexHospitalVM.GetData> ListHospitals=new List<IndexHospitalVM.GetData>();
+            IQueryable<Hospital> query = _context.Hospitals.Include(h => h.City).Include(h=>h.Governorate).Include(h=>h.SubOrganization).Include(h=>h.Organization);
+            //
+            if (  locationIds.hospitalId == 0 && locationIds.CityId == 0 && locationIds.GovernorateId > 0 && locationIds.OrganizationId == 0 && locationIds.SubOrganizationId == 0)
+            {
+                query = query.Where(h => h.GovernorateId == locationIds.GovernorateId);
+            }
+            else if (locationIds.hospitalId == 0 && locationIds.CityId > 0 && locationIds.GovernorateId > 0 && locationIds.OrganizationId == 0 && locationIds.SubOrganizationId == 0)
+            {
+                query = query.Where(h => h.CityId == locationIds.CityId && h.OrganizationId == locationIds.OrganizationId);
 
+            }
+            else if (locationIds.hospitalId == 0 && locationIds.CityId == 0 && locationIds.GovernorateId == 0 && locationIds.OrganizationId > 0 && locationIds.SubOrganizationId == 0)
+            {
+                query = query.Where(h => h.OrganizationId == locationIds.OrganizationId);
+            }
+            else if (locationIds.hospitalId == 0 && locationIds.CityId == 0 && locationIds.GovernorateId > 0 && locationIds.OrganizationId > 0 && locationIds.SubOrganizationId > 0)
+            {
+                query = query.Where(h => h.OrganizationId==locationIds.OrganizationId && h.SubOrganizationId == locationIds.SubOrganizationId);
+            }
+            
+            return ListHospitals =await query.Select(h => new IndexHospitalVM.GetData
+            {
+                Id = h.Id,
+                Code = h.Code,
+                Name = h.Name,
+                NameAr = h.NameAr,
+                CityName = (h.City != null) ? h.City.Name : "",
+                CityNameAr = (h.City != null) ? h.City.NameAr : "",
+                GovernorateName = (h.Governorate != null) ? h.Governorate.Name : "",
+                GovernorateNameAr = (h.Governorate != null) ? h.Governorate.NameAr : "",
+                OrgName = (h.Organization != null) ? h.Organization.Name : "",
+                OrgNameAr = (h.Organization != null) ? h.Organization.NameAr : "",
+                SubOrgName = (h.SubOrganization != null) ? h.SubOrganization.Name : "",
+                SubOrgNameAr = (h.SubOrganization != null) ? h.SubOrganization.NameAr : "",
+                ContractName = h.ContractName,
+                StrContractStart = h.ContractStart.ToString(),
+                StrContractEnd = h.ContractEnd.ToString(),
+            }).ToListAsync();
+        }
         public EditHospitalVM GetById(int id)
         {
             var lstHospitals = _context.Hospitals.Where(a => a.Id == id).ToList();

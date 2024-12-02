@@ -98,7 +98,7 @@ namespace Asset.Domain.Services
 
         List<HospitalAssetAge> GetAssetsByAgeGroup(int hospitalId);
         List<HospitalAssetAge> GetGeneralAssetsByAgeGroup(FilterHospitalAssetAge model);
-        IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetBarCode(string barcode, int hospitalId);
+        IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetBarCode(string barcode, int hospitalId,string UserId);
         IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetSerial(string serial, int hospitalId);
         IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetBarCodeByDepartmentId(string barcode, int hospitalId,int departmentId);
         AssetDetailAttachment GetLastDocumentForAssetDetailId(int assetDetailId);
