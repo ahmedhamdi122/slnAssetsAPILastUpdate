@@ -34,10 +34,10 @@ namespace Asset.API.Controllers.MobileController
 
 
         [HttpPost]
-        [Route("AutoCompleteAssetBarCode/{barcode}/{hospitalId}")]
-        public ActionResult<IEnumerable<IndexAssetDetailVM.GetData>> AutoCompleteAssetBarCode(string barcode, int hospitalId, string UserId)
+        [Route("AutoCompleteAssetBarCode/{barcode}/{hospitalId}/UserId")]
+        public async Task<ActionResult<IEnumerable<IndexAssetDetailVM.GetData>>> AutoCompleteAssetBarCode(string barcode, int hospitalId, string UserId)
         {
-            var lstAutoCompleteAssetBarCode = _assetDetailService.AutoCompleteAssetBarCode(barcode, hospitalId,UserId);
+            var lstAutoCompleteAssetBarCode =await _assetDetailService.AutoCompleteAssetBarCode(barcode, hospitalId,UserId);
             if (lstAutoCompleteAssetBarCode.Count() == 0)
             {
                 return Ok(new { data = "", msg = "No Data Fount", status = '0' });

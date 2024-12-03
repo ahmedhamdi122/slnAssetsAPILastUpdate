@@ -8223,26 +8223,33 @@ namespace Asset.Core.Repositories
         /// <param name="barcode"></param>
         /// <param name="hospitalId"></param>
         /// <returns>List Of IndexAssetDetailVM.GetData</returns>
-        public IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetBarCode(string barcode, int hospitalId,string UserId)
+        public async Task<IEnumerable<IndexAssetDetailVM.GetData>> AutoCompleteAssetBarCode(string barcode, int hospitalId,string UserId)
         {
             List<IndexAssetDetailVM.GetData> list = new List<IndexAssetDetailVM.GetData>();
-            var lstAssetByBarcode = _context.AssetDetails.Include(a => a.MasterAsset).Include(a => a.Department).Include(a => a.MasterAsset.brand)
+            List <AssetDetail>lstAsset= new List<AssetDetail>();
+            IQueryable<AssetDetail> query = _context.AssetDetails.Include(a => a.MasterAsset).Include(a => a.Department).Include(a => a.MasterAsset.brand)
                .Include(a => a.Hospital).Include(a=>a.Hospital.City).Include(a => a.Hospital.Governorate).Include(a => a.Hospital.Organization).Include(a => a.Hospital.SubOrganization).Where(a => a.Barcode.Contains(barcode)).OrderBy(a => a.Barcode);
-            var locationIds = _context.Users.Select(u=>new {UserId=u.Id, hospitalId=u.HospitalId, CityId=u.CityId, GovernorateId=u.GovernorateId, OrganizationId=u.OrganizationId, SubOrganizationiD=u.SubOrganizationId }).FirstOrDefault(u => u.UserId == UserId);
-            var lst = lstAssetByBarcode.ToList();
-            if (hospitalId == 0)
-            {
-                
-                lst = lst.ToList();
+            var locationIds =await _context.Users.Select(u=>new {UserId=u.Id, hospitalId=u.HospitalId, CityId=u.CityId, GovernorateId=u.GovernorateId, OrganizationId=u.OrganizationId, SubOrganizationId = u.SubOrganizationId }).FirstOrDefaultAsync(u => u.UserId == UserId);
 
-            }
-            else
+            if (locationIds.hospitalId == 0 && locationIds.CityId == 0 && locationIds.GovernorateId > 0 && locationIds.OrganizationId == 0 && locationIds.SubOrganizationId == 0)
             {
-                lst = lst.Where(a => a.HospitalId == hospitalId).ToList();
+                query = query.Where(a => a.Hospital.GovernorateId == locationIds.GovernorateId);
             }
-            if (lst.Count > 0)
+            else if (locationIds.hospitalId == 0 && locationIds.CityId > 0 && locationIds.GovernorateId > 0 && locationIds.OrganizationId == 0 && locationIds.SubOrganizationId == 0)
             {
-                foreach (var item in lst)
+                query = query.Where(a => a.Hospital.CityId == locationIds.CityId && a.Hospital.OrganizationId == locationIds.OrganizationId);
+            }
+            else if (locationIds.hospitalId == 0 && locationIds.CityId == 0 && locationIds.GovernorateId == 0 && locationIds.OrganizationId > 0 && locationIds.SubOrganizationId == 0)
+            {
+                query = query.Where( a => a.Hospital.OrganizationId == locationIds.OrganizationId);
+            }
+            else if (locationIds.hospitalId == 0 && locationIds.CityId == 0 && locationIds.GovernorateId > 0 && locationIds.OrganizationId > 0 && locationIds.SubOrganizationId > 0)
+            {
+                query = query.Where(a => a.Hospital.OrganizationId == locationIds.OrganizationId && a.Hospital.SubOrganizationId == locationIds.SubOrganizationId);
+            }
+
+            lstAsset = await query.ToListAsync();
+                foreach (var item in lstAsset)
                 {
                     IndexAssetDetailVM.GetData getDataObj = new IndexAssetDetailVM.GetData();
                     getDataObj.Id = item.Id;
@@ -8276,7 +8283,7 @@ namespace Asset.Core.Repositories
                     }
                     list.Add(getDataObj);
                 }
-            }
+            
             return list;
         }
 

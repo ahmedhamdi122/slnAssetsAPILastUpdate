@@ -174,9 +174,9 @@ namespace Asset.Core.Services
             return _unitOfWork.AssetDetailRepository.GetGeneralAssetsByAgeGroup(model);
         }
 
-        public IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetBarCode(string barcode, int hospitalId,string UserId)
+        public async Task<IEnumerable<IndexAssetDetailVM.GetData>> AutoCompleteAssetBarCode(string barcode, int hospitalId,string UserId)
         {
-            return _unitOfWork.AssetDetailRepository.AutoCompleteAssetBarCode(barcode, hospitalId,UserId);
+            return await _unitOfWork.AssetDetailRepository.AutoCompleteAssetBarCode(barcode, hospitalId,UserId);
         }
 
 

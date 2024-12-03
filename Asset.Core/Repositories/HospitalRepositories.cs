@@ -24,7 +24,7 @@ namespace Asset.Core.Repositories
 
         public async Task<IEnumerable<IndexHospitalVM.GetData>> ListHospitals(string UserId)
         {
-            var locationIds = _context.Users.Select(u => new { UserId = u.Id, hospitalId = u.HospitalId, CityId = u.CityId, GovernorateId = u.GovernorateId, OrganizationId = u.OrganizationId, SubOrganizationId = u.SubOrganizationId }).FirstOrDefault(u => u.UserId == UserId);
+            var locationIds =await _context.Users.Select(u => new { UserId = u.Id, hospitalId = u.HospitalId, CityId = u.CityId, GovernorateId = u.GovernorateId, OrganizationId = u.OrganizationId, SubOrganizationId = u.SubOrganizationId }).FirstOrDefaultAsync(u => u.UserId == UserId);
             List<IndexHospitalVM.GetData> ListHospitals=new List<IndexHospitalVM.GetData>();
             IQueryable<Hospital> query = _context.Hospitals.Include(h => h.City).Include(h=>h.Governorate).Include(h=>h.SubOrganization).Include(h=>h.Organization);
             //

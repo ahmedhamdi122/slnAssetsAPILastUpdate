@@ -43,13 +43,13 @@ namespace Asset.API.Controllers
             return _HospitalService.GetAll().ToList();
         }
 
-        [HttpPost]
-        [Route("ListHospitals")]
+        [HttpGet]
+        [Route("ListHospitals/{userId}")]
         public async Task<IEnumerable<IndexHospitalVM.GetData>> ListHospitals(string UserId)
         {
             return await _HospitalService.ListHospitals(UserId);
         }
-
+        
         [HttpGet]
         [Route("GetTop10Hospitals/{hospitalId}")]
         public IndexHospitalVM GetTop10Hospitals(int hospitalId)
