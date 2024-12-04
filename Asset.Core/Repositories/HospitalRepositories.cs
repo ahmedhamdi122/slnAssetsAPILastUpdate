@@ -34,8 +34,8 @@ namespace Asset.Core.Repositories
             }
             else if (locationIds.hospitalId == 0 && locationIds.CityId > 0 && locationIds.GovernorateId > 0 && locationIds.OrganizationId == 0 && locationIds.SubOrganizationId == 0)
             {
-                query = query.Where(h => h.CityId == locationIds.CityId && h.OrganizationId == locationIds.OrganizationId);
-
+                query = query.Where(h => h.CityId == locationIds.CityId && h.GovernorateId == locationIds.GovernorateId);
+                
             }
             else if (locationIds.hospitalId == 0 && locationIds.CityId == 0 && locationIds.GovernorateId == 0 && locationIds.OrganizationId > 0 && locationIds.SubOrganizationId == 0)
             {

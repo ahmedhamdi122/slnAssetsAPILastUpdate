@@ -33,7 +33,7 @@ namespace Asset.API.Controllers.MobileController
         }
 
 
-        [HttpPost]
+        [HttpGet]
         [Route("AutoCompleteAssetBarCode/{barcode}/{hospitalId}/UserId")]
         public async Task<ActionResult<IEnumerable<IndexAssetDetailVM.GetData>>> AutoCompleteAssetBarCode(string barcode, int hospitalId, string UserId)
         {

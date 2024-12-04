@@ -405,7 +405,7 @@ namespace Asset.API.Controllers
         /// <param name="hospitalId"></param>
         /// <returns>List of Assets that contains barcode</returns>
         [HttpGet]
-        [Route("AutoCompleteAssetBarCode/{barcode}/{hospitalId}")]
+        [Route("AutoCompleteAssetBarCode/{barcode}/{hospitalId}/{UserId}")]
         public async Task<IEnumerable<IndexAssetDetailVM.GetData>> AutoCompleteAssetBarCode(string barcode, int hospitalId,string UserId)
         {
             return await _AssetDetailService.AutoCompleteAssetBarCode(barcode, hospitalId, UserId);

@@ -7894,7 +7894,7 @@ namespace Asset.Core.Repositories
 
             }
             #endregion
-
+            
             #region Load Data Depend on User
             if (userObj.HospitalId > 0)
             {
