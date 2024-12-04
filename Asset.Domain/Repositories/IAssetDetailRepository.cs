@@ -111,7 +111,7 @@ namespace Asset.Domain.Repositories
         List<HospitalAssetAge> GetAssetsByAgeGroup(int hospitalId);
         List<HospitalAssetAge> GetGeneralAssetsByAgeGroup(FilterHospitalAssetAge model);
         Task<IEnumerable<IndexAssetDetailVM.GetData>> AutoCompleteAssetBarCode(string barcode, int hospitalId, string UserId);
-        IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetSerial(string serial, int hospitalId);
+        Task<IEnumerable<IndexAssetDetailVM.GetData>> AutoCompleteAssetSerial(string serial, int hospitalId, string UserId);
         IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetBarCodeByDepartmentId(string barcode, int hospitalId, int departmentId);
         AssetDetailAttachment GetLastDocumentForAssetDetailId(int assetDetailId);
         GeneratedAssetDetailBCVM GenerateAssetDetailBarcode();

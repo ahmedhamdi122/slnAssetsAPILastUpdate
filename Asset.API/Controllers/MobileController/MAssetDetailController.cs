@@ -48,9 +48,9 @@ namespace Asset.API.Controllers.MobileController
 
         [HttpGet]
         [Route("AutoCompleteAssetSerial/{serial}/{hospitalId}")]
-        public ActionResult<IEnumerable<IndexAssetDetailVM.GetData>> AutoCompleteAssetSerial(string serial, int hospitalId)
+        public async Task<ActionResult<IEnumerable<IndexAssetDetailVM.GetData>>> AutoCompleteAssetSerial(string serial, int hospitalId,string UserId)
         {
-            var lstAutoCompleteAssetSerial = _assetDetailService.AutoCompleteAssetSerial(serial, hospitalId);
+            var lstAutoCompleteAssetSerial =await _assetDetailService.AutoCompleteAssetSerial(serial, hospitalId,UserId);
             if (lstAutoCompleteAssetSerial.Count() == 0)
             {
                 return Ok(new { data = lstAutoCompleteAssetSerial, msg = "No Data Found", status = '0' });

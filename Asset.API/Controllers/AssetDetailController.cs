@@ -419,10 +419,10 @@ namespace Asset.API.Controllers
         /// <param name="hospitalId"></param>
         /// <returns>List of Assets that contains SerialNumber</returns>
         [HttpGet]
-        [Route("AutoCompleteAssetSerial/{serial}/{hospitalId}")]
-        public IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetSerial(string serial, int hospitalId)
+        [Route("AutoCompleteAssetSerial/{serial}/{hospitalId}/{UserId}")]
+        public async Task<IEnumerable<IndexAssetDetailVM.GetData>> AutoCompleteAssetSerial(string serial, int hospitalId,string UserId)
         {
-            return _AssetDetailService.AutoCompleteAssetSerial(serial, hospitalId);
+            return await _AssetDetailService.AutoCompleteAssetSerial(serial, hospitalId, UserId);
         }
 
 

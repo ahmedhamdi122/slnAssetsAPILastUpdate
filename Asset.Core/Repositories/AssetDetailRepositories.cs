@@ -8247,7 +8247,10 @@ namespace Asset.Core.Repositories
             {
                 query = query.Where(a => a.Hospital.OrganizationId == locationIds.OrganizationId && a.Hospital.SubOrganizationId == locationIds.SubOrganizationId);
             }
-
+            if(hospitalId!=0)
+            {
+                query = query.Where(a => a.Hospital.Id == hospitalId);
+            }
             lstAsset = await query.ToListAsync();
                 foreach (var item in lstAsset)
                 {
@@ -8274,12 +8277,12 @@ namespace Asset.Core.Repositories
                     getDataObj.HospitalNameAr = item.Hospital.NameAr;
                     getDataObj.AssetName = item.MasterAsset.Name;
                     getDataObj.AssetNameAr = item.MasterAsset.NameAr;
-                    var lstAssetTransactions = _context.AssetStatusTransactions.Include(a => a.AssetStatus).Where(a => a.AssetDetailId == item.Id).ToList().OrderByDescending(a => a.StatusDate).ToList();
-                    if (lstAssetTransactions.Count > 0)
+                    var lastAssetTransaction = _context.AssetStatusTransactions.Include(a => a.AssetStatus).Where(a => a.AssetDetailId == item.Id).OrderByDescending(a => a.StatusDate).FirstOrDefault();
+                    if (lastAssetTransaction!=null)
                     {
-                        getDataObj.AssetStatusId = lstAssetTransactions[0].AssetStatus.Id;
-                        getDataObj.AssetStatus = lstAssetTransactions[0].AssetStatus.Name;
-                        getDataObj.AssetStatusAr = lstAssetTransactions[0].AssetStatus.NameAr;
+                        getDataObj.AssetStatusId = lastAssetTransaction.AssetStatus.Id;
+                        getDataObj.AssetStatus = lastAssetTransaction.AssetStatus.Name;
+                        getDataObj.AssetStatusAr = lastAssetTransaction.AssetStatus.NameAr;
                     }
                     list.Add(getDataObj);
                 }
@@ -8293,22 +8296,40 @@ namespace Asset.Core.Repositories
         /// <param name="serial"></param>
         /// <param name="hospitalId"></param>
         /// <returns></returns>
-        public IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetSerial(string serial, int hospitalId)
+        public async Task<IEnumerable<IndexAssetDetailVM.GetData>> AutoCompleteAssetSerial(string serial, int hospitalId,string UserId)
         {
+         
+
             List<IndexAssetDetailVM.GetData> list = new List<IndexAssetDetailVM.GetData>();
-            var lst = _context.AssetDetails.Include(a => a.MasterAsset).Include(a => a.MasterAsset.brand)
-                .Include(a => a.Hospital).Where(a => a.SerialNumber.Contains(serial)).OrderBy(a => a.SerialNumber).ToList();
-            if (hospitalId == 0)
+            List<AssetDetail> lstAsset = new List<AssetDetail>();
+            IQueryable<AssetDetail> query = _context.AssetDetails.Include(a => a.MasterAsset).Include(a => a.Department).Include(a => a.MasterAsset.brand)
+               .Include(a => a.Hospital).Include(a => a.Hospital.City).Include(a => a.Hospital.Governorate).Include(a => a.Hospital.Organization).Include(a => a.Hospital.SubOrganization).Where(a => a.SerialNumber.Contains(serial)).OrderBy(a => a.SerialNumber);
+            var locationIds = await _context.Users.Select(u => new { UserId = u.Id, hospitalId = u.HospitalId, CityId = u.CityId, GovernorateId = u.GovernorateId, OrganizationId = u.OrganizationId, SubOrganizationId = u.SubOrganizationId }).FirstOrDefaultAsync(u => u.UserId == UserId);
+
+            if (locationIds.hospitalId == 0 && locationIds.CityId == 0 && locationIds.GovernorateId > 0 && locationIds.OrganizationId == 0 && locationIds.SubOrganizationId == 0)
             {
-                lst = lst.ToList();
+                query = query.Where(a => a.Hospital.GovernorateId == locationIds.GovernorateId);
             }
-            else
+            else if (locationIds.hospitalId == 0 && locationIds.CityId > 0 && locationIds.GovernorateId > 0 && locationIds.OrganizationId == 0 && locationIds.SubOrganizationId == 0)
             {
-                lst = lst.Where(a => a.HospitalId == hospitalId).ToList();
+                query = query.Where(a => a.Hospital.CityId == locationIds.CityId && a.Hospital.OrganizationId == locationIds.OrganizationId);
             }
-            if (lst.Count > 0)
+            else if (locationIds.hospitalId == 0 && locationIds.CityId == 0 && locationIds.GovernorateId == 0 && locationIds.OrganizationId > 0 && locationIds.SubOrganizationId == 0)
             {
-                foreach (var item in lst)
+                query = query.Where(a => a.Hospital.OrganizationId == locationIds.OrganizationId);
+            }
+            else if (locationIds.hospitalId == 0 && locationIds.CityId == 0 && locationIds.GovernorateId > 0 && locationIds.OrganizationId > 0 && locationIds.SubOrganizationId > 0)
+            {
+                query = query.Where(a => a.Hospital.OrganizationId == locationIds.OrganizationId && a.Hospital.SubOrganizationId == locationIds.SubOrganizationId);
+            }
+            if (hospitalId != 0)
+            {
+                query = query.Where(a => a.Hospital.Id == hospitalId);
+            }
+            lstAsset = await query.ToListAsync();
+            if (lstAsset.Count > 0)
+            {
+                foreach (var item in lstAsset)
                 {
                     IndexAssetDetailVM.GetData getDataObj = new IndexAssetDetailVM.GetData();
                     getDataObj.Id = item.Id;
@@ -8331,12 +8352,12 @@ namespace Asset.Core.Repositories
                     getDataObj.HospitalNameAr = item.Hospital.NameAr;
                     getDataObj.AssetName = item.MasterAsset.Name;
                     getDataObj.AssetNameAr = item.MasterAsset.NameAr;
-                    var lstAssetTransactions = _context.AssetStatusTransactions.Include(a => a.AssetStatus).Where(a => a.AssetDetailId == item.Id).ToList().OrderByDescending(a => a.StatusDate).ToList();
-                    if (lstAssetTransactions.Count > 0)
+                    var lastAssetTransaction = _context.AssetStatusTransactions.Include(a => a.AssetStatus).Where(a => a.AssetDetailId == item.Id).OrderByDescending(a => a.StatusDate).FirstOrDefault();
+                    if (lastAssetTransaction !=null)
                     {
-                        getDataObj.AssetStatusId = lstAssetTransactions[0].AssetStatus.Id;
-                        getDataObj.AssetStatus = lstAssetTransactions[0].AssetStatus.Name;
-                        getDataObj.AssetStatusAr = lstAssetTransactions[0].AssetStatus.NameAr;
+                        getDataObj.AssetStatusId = lastAssetTransaction.AssetStatus.Id;
+                        getDataObj.AssetStatus = lastAssetTransaction.AssetStatus.Name;
+                        getDataObj.AssetStatusAr = lastAssetTransaction.AssetStatus.NameAr;
                     }
                     list.Add(getDataObj);
                 }

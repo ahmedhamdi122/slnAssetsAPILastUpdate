@@ -181,9 +181,9 @@ namespace Asset.Core.Services
 
 
 
-        public IEnumerable<IndexAssetDetailVM.GetData> AutoCompleteAssetSerial(string serial, int hospitalId)
+        public async Task<IEnumerable<IndexAssetDetailVM.GetData>> AutoCompleteAssetSerial(string serial, int hospitalId,string UserId)
         {
-            return _unitOfWork.AssetDetailRepository.AutoCompleteAssetSerial(serial, hospitalId);
+            return await _unitOfWork.AssetDetailRepository.AutoCompleteAssetSerial(serial, hospitalId,UserId);
         }
 
         public IEnumerable<ViewAssetDetailVM> GetListOfAssetDetailsByHospitalNotInContract(int hospitalId)
