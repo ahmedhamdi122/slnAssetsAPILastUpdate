@@ -1,6 +1,7 @@
 ﻿using Asset.API.Helpers;
 using Asset.Domain.Services;
 using Asset.Models;
+using Asset.ViewModels.AssetDetailVM;
 using Asset.ViewModels.MasterAssetAttachmentVM;
 using Asset.ViewModels.MasterAssetComponentVM;
 using Asset.ViewModels.MasterAssetVM;
@@ -103,10 +104,10 @@ namespace Asset.API.Controllers
             return _MasterAssetService.AutoCompleteMasterAssetName2(name);
         }
         [HttpGet]
-        [Route("AutoCompleteMasterAssetName3/{name}/{hospitalId}")]
-        public IEnumerable<IndexMasterAssetVM.GetData> AutoCompleteMasterAssetName3(string name, int hospitalId)
+        [Route("AutoCompleteMasterAssetName/{name}/{hospitalId}/{UserId}")]
+        public async Task<IEnumerable<AssetDetailsWithMasterAssetVM>> AutoCompleteMasterAssetName(string name, int hospitalId, string UserId)
         {
-            return _MasterAssetService.AutoCompleteMasterAssetName3(name, hospitalId);
+            return await _MasterAssetService.AutoCompleteMasterAssetName(name, hospitalId, UserId);
         }
 
 

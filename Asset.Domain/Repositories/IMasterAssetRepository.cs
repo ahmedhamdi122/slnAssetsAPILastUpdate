@@ -1,4 +1,5 @@
 ﻿using Asset.Models;
+using Asset.ViewModels.AssetDetailVM;
 using Asset.ViewModels.MasterAssetAttachmentVM;
 using Asset.ViewModels.MasterAssetVM;
 using System;
@@ -34,7 +35,7 @@ namespace Asset.Domain.Repositories
         IEnumerable<Brand> GetDistintMasterAssetBrands(string name);
         IEnumerable<MasterAsset> AutoCompleteMasterAssetName(string name);
         IEnumerable<IndexMasterAssetVM.GetData> AutoCompleteMasterAssetName2(string name);
-        IEnumerable<IndexMasterAssetVM.GetData> AutoCompleteMasterAssetName3(string name, int hospitalId);
+        Task<IEnumerable<AssetDetailsWithMasterAssetVM>> AutoCompleteMasterAssetName(string name, int hospitalId, string UserId);
         #endregion
 
 

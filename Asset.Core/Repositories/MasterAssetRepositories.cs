@@ -1,5 +1,6 @@
 ﻿using Asset.Domain.Repositories;
 using Asset.Models;
+using Asset.ViewModels.AssetDetailVM;
 using Asset.ViewModels.MasterAssetAttachmentVM;
 using Asset.ViewModels.MasterAssetVM;
 using Microsoft.EntityFrameworkCore;
@@ -822,25 +823,50 @@ namespace Asset.Core.Repositories
             return lst;
         }
 
-        public IEnumerable<IndexMasterAssetVM.GetData> AutoCompleteMasterAssetName3(string name, int hospitalId)
+        public async Task<IEnumerable<AssetDetailsWithMasterAssetVM>> AutoCompleteMasterAssetName(string name, int hospitalId, string UserId)
         {
 
-            var lst = _context.AssetDetails.Include(a => a.MasterAsset).Include(a => a.MasterAsset.brand)
-                .Where(a => a.MasterAsset.Name.Contains(name) || a.MasterAsset.NameAr.Contains(name) && a.HospitalId == hospitalId).ToList()
-                .Select(item => new IndexMasterAssetVM.GetData
-                {
-                    Id = item.Id,
-                    Code = item.MasterAsset.Code,
-                    Name = item.MasterAsset != null ? item.MasterAsset.Name : "",
-                    NameAr = item.MasterAsset != null ? item.MasterAsset.NameAr : "",
-                    Model = item.MasterAsset != null ? item.MasterAsset.ModelNumber : "",
-                    ModelNumber = item.MasterAsset != null ? item.MasterAsset.ModelNumber : "",
-                    BrandName = item.MasterAsset.brand != null ? item.MasterAsset.brand.Name : "",
-                    BrandNameAr = item.MasterAsset.brand != null ? item.MasterAsset.brand.NameAr : "",
-                    SerialNumber = item.SerialNumber != null ? item.SerialNumber : "",
-                    BarCode = item.Barcode != null ? item.Barcode : "",
-                }).ToList();
-            return lst;
+            IQueryable<AssetDetail> query = _context.AssetDetails.Include(a => a.MasterAsset).Include(a => a.MasterAsset.brand);
+            List<AssetDetailsWithMasterAssetVM> lstAsset = new List<AssetDetailsWithMasterAssetVM>();
+
+
+            var locationIds = await _context.Users.Select(u => new { UserId = u.Id, hospitalId = u.HospitalId, CityId = u.CityId, GovernorateId = u.GovernorateId, OrganizationId = u.OrganizationId, SubOrganizationId = u.SubOrganizationId }).FirstOrDefaultAsync(u => u.UserId == UserId);
+
+            if (locationIds.hospitalId == 0 && locationIds.CityId == 0 && locationIds.GovernorateId > 0 && locationIds.OrganizationId == 0 && locationIds.SubOrganizationId == 0)
+            {
+                query = query.Where(a => a.Hospital.GovernorateId == locationIds.GovernorateId);
+            }
+            else if (locationIds.hospitalId == 0 && locationIds.CityId > 0 && locationIds.GovernorateId > 0 && locationIds.OrganizationId == 0 && locationIds.SubOrganizationId == 0)
+            {
+                query = query.Where(a => a.Hospital.CityId == locationIds.CityId && a.Hospital.OrganizationId == locationIds.OrganizationId);
+            }
+            else if (locationIds.hospitalId == 0 && locationIds.CityId == 0 && locationIds.GovernorateId == 0 && locationIds.OrganizationId > 0 && locationIds.SubOrganizationId == 0)
+            {
+                query = query.Where(a => a.Hospital.OrganizationId == locationIds.OrganizationId);
+            }
+            else if (locationIds.hospitalId == 0 && locationIds.CityId == 0 && locationIds.GovernorateId > 0 && locationIds.OrganizationId > 0 && locationIds.SubOrganizationId > 0)
+            {
+                query = query.Where(a => a.Hospital.OrganizationId == locationIds.OrganizationId && a.Hospital.SubOrganizationId == locationIds.SubOrganizationId);
+            }
+            if (hospitalId != 0)
+            {
+                query = query.Where(a => a.Hospital.Id == hospitalId);
+            }
+            
+           lstAsset=await query.Where(a => a.MasterAsset.Name.Contains(name) || a.MasterAsset.NameAr.Contains(name) && a.HospitalId == hospitalId).Select(item => new AssetDetailsWithMasterAssetVM
+           {
+               Id = item.Id,
+               MasterAssetCode = item.MasterAsset.Code,
+               MasterAsseName = item.MasterAsset != null ? item.MasterAsset.Name : "",
+               MasterAsseNameAr = item.MasterAsset != null ? item.MasterAsset.NameAr : "",
+               MasterAsseModelNumbe = item.MasterAsset != null ? item.MasterAsset.ModelNumber : "",
+               MasterAsseBrandName = item.MasterAsset.brand != null ? item.MasterAsset.brand.Name : "",
+               MasterAsseBrandNameAr = item.MasterAsset.brand != null ? item.MasterAsset.brand.NameAr : "",
+               SerialNumber = item.SerialNumber != null ? item.SerialNumber : "",
+               Barcode = item.Barcode != null ? item.Barcode : "",
+           }).ToListAsync();
+            
+            return lstAsset;
         }
 
         #endregion

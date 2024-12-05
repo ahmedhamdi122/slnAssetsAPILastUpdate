@@ -1,6 +1,7 @@
 ﻿using Asset.Domain;
 using Asset.Domain.Services;
 using Asset.Models;
+using Asset.ViewModels.AssetDetailVM;
 using Asset.ViewModels.MasterAssetAttachmentVM;
 using Asset.ViewModels.MasterAssetVM;
 using System;
@@ -94,9 +95,9 @@ namespace Asset.Core.Services
             return _unitOfWork.MasterAssetRepository.AutoCompleteMasterAssetName2(name);
         }
 
-        public IEnumerable<IndexMasterAssetVM.GetData> AutoCompleteMasterAssetName3(string name, int hospitalId)
+        public async Task<IEnumerable<AssetDetailsWithMasterAssetVM>> AutoCompleteMasterAssetName(string name, int hospitalId,string UserId)
         {
-            return _unitOfWork.MasterAssetRepository.AutoCompleteMasterAssetName3(name, hospitalId);
+            return await _unitOfWork.MasterAssetRepository.AutoCompleteMasterAssetName(name, hospitalId,UserId);
         }
 
         #endregion
