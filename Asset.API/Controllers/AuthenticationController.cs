@@ -140,6 +140,8 @@ namespace Asset.API.Controllers
 
             var hospitalNameAr = user.HospitalId > 0 ? _context.Hospitals.Where(a => a.Id == user.HospitalId).FirstOrDefault()?.NameAr : "";
             var hospitalCode = user.HospitalId > 0 ? _context.Hospitals.Where(a => a.Id == user.HospitalId).FirstOrDefault()?.Code : "";
+            userName = user.UserName;
+
             ////var roleNames = (from userRole in _context.UserRoles
             ////                 join role in _roleManager.Roles on userRole.RoleId equals role.Id
             ////                 where user.Id == userRole.UserId

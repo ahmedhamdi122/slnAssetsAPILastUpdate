@@ -9,7 +9,7 @@ using System.Reflection.Emit;
 
 namespace Asset.Models
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser,ApplicationRole,string>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -55,7 +55,6 @@ namespace Asset.Models
 
 
         }
-        public DbSet<IdentityUserRole<string>> UserRoles { get;set; }
         public DbSet<RoleModulePermission> roleModulePermission { get; set; }   
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Module> Modules { get; set; }
