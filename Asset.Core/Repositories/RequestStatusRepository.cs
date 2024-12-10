@@ -892,15 +892,18 @@ namespace Asset.Core.Repositories
             }
             if (UserObj.HospitalId > 0)
             {
-                var isAssetOwner = await _context.AssetOwners.AnyAsync(a => a.EmployeeId == employee.Id);
-                if (isAssetOwner)
-                {
-                    query = query.Where(r => r.CreatedById == UserObj.Id && r.HospitalId == UserObj.HospitalId);
-                }
-                else
-                {
-                    query = query.Where(r => r.HospitalId == UserObj.HospitalId);
-                }
+                
+                    var isAssetOwner = await _context.AssetOwners.AnyAsync(a => a.EmployeeId == employee.Id);
+                    if (isAssetOwner)
+                    {
+                        query = query.Where(r => r.CreatedById == UserObj.Id && r.HospitalId == UserObj.HospitalId);
+                    }
+                    else
+                    {
+                        query = query.Where(r => r.HospitalId == UserObj.HospitalId);
+                    }
+                
+            
             }
             else
             {

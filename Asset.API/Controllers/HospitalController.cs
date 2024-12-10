@@ -195,9 +195,9 @@ namespace Asset.API.Controllers
 
         [HttpGet]
         [Route("GetHospitalsByCityId/{cityId}")]
-        public IEnumerable<Hospital> GetHospitalsByCityId(int cityId)
+        public async  Task<IEnumerable<Hospital>> GetHospitalsByCityId(int cityId)
         {
-            return _HospitalService.GetHospitalsByCityId(cityId);
+            return await _HospitalService.GetHospitalsByCityId(cityId);
         }
 
 

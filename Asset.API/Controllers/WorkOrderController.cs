@@ -724,9 +724,6 @@ namespace Asset.API.Controllers
         {
             return _workOrderService.ListWorkOrders(data, pageNumber, pageSize);
         }
-
-
-
         #region WorkOrder Attachments
 
 

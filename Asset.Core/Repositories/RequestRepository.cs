@@ -7891,7 +7891,6 @@ namespace Asset.Core.Repositories
                 {
                      employee = await _context.Employees.FirstOrDefaultAsync(e => e.Email == userObj.Email);
                 }
-
             }
             #endregion
             

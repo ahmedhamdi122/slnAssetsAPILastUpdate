@@ -20,7 +20,7 @@ namespace Asset.Domain.Repositories
         IEnumerable<IndexHospitalVM.GetData> GetHospitalsByUserId(string userId);
 
         IEnumerable<IndexHospitalVM.GetData> SearchHospitals(SearchHospitalVM searchObj);
-        IEnumerable<Hospital> GetHospitalsByCityId(int cityId);
+        Task<IEnumerable<Hospital>> GetHospitalsByCityId(int cityId);
         IEnumerable<Hospital> GetHospitalsBySubOrganizationId(int subOrgId);
 
         IEnumerable<IndexHospitalVM.GetData> GetHospitalsByGovCityOrgSubOrgId(int govId, int cityId, int orgId,int subOrgId);

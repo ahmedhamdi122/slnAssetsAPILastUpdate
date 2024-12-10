@@ -4313,15 +4313,6 @@ namespace Asset.Core.Repositories
             {
                 var getUserById = _context.ApplicationUser.Where(a => a.Id == data.SearchObj.UserId).ToList();
                 userObj = getUserById[0];
-
-                var roles = (from userRole in _context.UserRoles
-                             join role in _context.ApplicationRole on userRole.RoleId equals role.Id
-                             where userRole.UserId == userObj.Id
-                             select role);
-                foreach (var role in roles)
-                {
-                    lstRoleNames.Add(role.Name);
-                }
                 var lstEmployees = _context.Employees.Where(a => a.Email == userObj.Email).ToList();
                 if (lstEmployees.Count > 0)
                 {

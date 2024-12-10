@@ -39,9 +39,9 @@ namespace Asset.API.Controllers.MobileController
 
         [Route("GetHospitalsByCityId/{cityId}")]
 
-        public ActionResult GetHospitalsByCityId(int cityId)
+        public async Task<ActionResult> GetHospitalsByCityId(int cityId)
         {
-            var lstHospitals = _HospitalService.GetHospitalsByCityId(cityId);
+            var lstHospitals = await _HospitalService.GetHospitalsByCityId(cityId);
             if (lstHospitals.Count() == 0)
             {
                 return Ok(new { data = lstHospitals, msg = "No Data Found", status = '0' });

@@ -360,9 +360,9 @@ namespace Asset.Core.Repositories
             return lstHospitals;
         }
 
-        public IEnumerable<Hospital> GetHospitalsByCityId(int cityId)
+        public async Task<IEnumerable<Hospital>> GetHospitalsByCityId(int cityId)
         {
-            var lstHospitals = _context.Hospitals.ToList().Where(a => a.CityId == cityId).OrderBy(a => a.Id).ToList();
+            var lstHospitals =await  _context.Hospitals.Where(a => a.CityId == cityId).OrderBy(a => a.Id).ToListAsync();
             return lstHospitals;
 
         }

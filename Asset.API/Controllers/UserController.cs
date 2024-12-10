@@ -277,10 +277,12 @@ namespace Asset.API.Controllers
         [Route("AddUser")]
         public async Task<IActionResult> Create(CreateUserVM newUser)
         {
-            var userExists = await _applicationUser.FindByNameAsync(newUser.UserName);
-            if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "UserExists", Message = "User already exists!", MessageAr="اسم المستخدم موجود بالفعل" });
-
+            var UserNameExists = await _applicationUser.FindByNameAsync(newUser.UserName);
+            if (UserNameExists != null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "UserNameExists", Message = "UserName already exists!", MessageAr="اسم المستخدم موجود بالفعل" });
+            var emailExists = await _applicationUser.FindByEmailAsync(newUser.Email);
+            if (emailExists != null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "emailExists", Message = "Email already exists!", MessageAr = "البريد الإلكتروني موجود بالفعل" });
 
             ApplicationUser user = new ApplicationUser();
             user.UserName = newUser.UserName;

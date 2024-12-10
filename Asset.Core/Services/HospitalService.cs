@@ -81,9 +81,9 @@ namespace Asset.Core.Services
             return _unitOfWork.HospitalRepository.GetHospitalDetailById(id);
         }
 
-        public IEnumerable<Hospital> GetHospitalsByCityId(int cityId)
+        public async Task<IEnumerable<Hospital>> GetHospitalsByCityId(int cityId)
         {
-            return _unitOfWork.HospitalRepository.GetHospitalsByCityId(cityId);
+            return await _unitOfWork.HospitalRepository.GetHospitalsByCityId(cityId);
         }
 
         public IEnumerable<Hospital> GetHospitalsBySubOrganizationId(int subOrgId)
