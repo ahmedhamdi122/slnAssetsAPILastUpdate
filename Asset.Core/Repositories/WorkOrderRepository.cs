@@ -6,6 +6,7 @@ using Asset.ViewModels.WorkOrderVM;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -4374,121 +4375,118 @@ namespace Asset.Core.Repositories
             #region Search Criteria
             if (data.SearchObj.GovernorateId != 0)
             {
-                query = query.Where(x => x.WorkOrder.Hospital.GovernorateId == data.SearchObj.GovernorateId);
+                query = query.Where(w => w.Hospital.GovernorateId == data.SearchObj.GovernorateId);
             }
             if (data.SearchObj.CityId != 0)
             {
-                query = query.Where(x => x.WorkOrder.Hospital.CityId == data.SearchObj.CityId);
+                query = query.Where(w => w.Hospital.CityId == data.SearchObj.CityId);
             }
             if (data.SearchObj.OrganizationId != 0)
             {
-                query = query.Where(x => x.WorkOrder.Hospital.OrganizationId == data.SearchObj.OrganizationId);
+                query = query.Where(w => w.Hospital.OrganizationId == data.SearchObj.OrganizationId);
             }
             if (data.SearchObj.SubOrganizationId != 0)
             {
-                query = query.Where(x => x.WorkOrder.Hospital.SubOrganizationId == data.SearchObj.SubOrganizationId);
+                query = query.Where(w => w.Hospital.SubOrganizationId == data.SearchObj.SubOrganizationId);
             }
             if (data.SearchObj.HospitalId != 0)
             {
-                query = query.Where(x => x.WorkOrder.HospitalId == data.SearchObj.HospitalId);
+                query = query.Where(w => w.HospitalId == data.SearchObj.HospitalId);
             }
             if (data.SearchObj.MasterAssetId != 0)
             {
-                query = query.Where(x => x.WorkOrder.Request.AssetDetail.MasterAssetId == data.SearchObj.MasterAssetId);
+                query = query.Where(w => w.Request.AssetDetail.MasterAssetId == data.SearchObj.MasterAssetId);
             }
             if (!string.IsNullOrEmpty(data.SearchObj.BarCode))
             {
-                query = query.Where(x => x.WorkOrder.Request.AssetDetail.Barcode.Contains(data.SearchObj.BarCode));
+                query = query.Where(w => w.Request.AssetDetail.Barcode.Contains(data.SearchObj.BarCode));
             }
             if (!string.IsNullOrEmpty(data.SearchObj.SerialNumber))
             {
-                query = query.Where(x => x.WorkOrder.Request.AssetDetail.SerialNumber.Contains(data.SearchObj.SerialNumber));
+                query = query.Where(w => w.Request.AssetDetail.SerialNumber.Contains(data.SearchObj.SerialNumber));
             }
             if (data.SearchObj.ModelNumber != "")
             {
-                query = query.Where(x => x.WorkOrder.Request.AssetDetail.MasterAsset.ModelNumber == data.SearchObj.ModelNumber);
+                query = query.Where(w => w.Request.AssetDetail.MasterAsset.ModelNumber == data.SearchObj.ModelNumber);
             }
             if (data.SearchObj.DepartmentId != 0)
             {
-                query = query.Where(x => x.WorkOrder.Request.AssetDetail.DepartmentId == data.SearchObj.DepartmentId);
+                query = query.Where(w => w.Request.AssetDetail.DepartmentId == data.SearchObj.DepartmentId);
             }
             if (data.SearchObj.PeriorityId != null)
             {
-                query = query.Where(x => x.WorkOrder.Request.AssetDetail.MasterAsset.PeriorityId == data.SearchObj.PeriorityId);
+                query = query.Where(w => w.Request.AssetDetail.MasterAsset.PeriorityId == data.SearchObj.PeriorityId);
             }
             if (data.SearchObj.WONumber != "")
             {
-                query = query.Where(x => x.WorkOrder.WorkOrderNumber == data.SearchObj.WONumber);
+                query = query.Where(w => w.WorkOrderNumber == data.SearchObj.WONumber);
             }
             if (data.SearchObj.Subject != "")
             {
-                query = query.Where(x => x.WorkOrder.Subject == data.SearchObj.Subject);
+                query = query.Where(w => w.Subject == data.SearchObj.Subject);
             }
             if (data.SearchObj.RequestSubject != "")
             {
-                query = query.Where(x => x.WorkOrder.Request.Subject == data.SearchObj.RequestSubject);
+                query = query.Where(w => w.Request.Subject == data.SearchObj.RequestSubject);
             }
             if (data.SearchObj.StatusId != 0)
             {
-                query = query.Where(x => x.WorkOrderStatusId == data.SearchObj.StatusId);
+                query = query.Where(w=>w.lstWorkOrderTracking.OrderByDescending(woT=>woT.CreationDate).FirstOrDefault().WorkOrderStatusId == data.SearchObj.StatusId);
             }
-            else
-            {
-                query = query;
-            }
+         
 
-            string setstartday, setstartmonth, setendday, setendmonth = "";
-            DateTime startingFrom = new DateTime();
-            DateTime endingTo = new DateTime();
-            if (data.SearchObj.Start == "")
-            {
-                startingFrom = DateTime.Parse("1900-01-01").Date;
-            }
-            else
-            {
-                data.SearchObj.StartDate = DateTime.Parse(data.SearchObj.Start.ToString());
-                var startyear = data.SearchObj.StartDate.Value.Year;
-                var startmonth = data.SearchObj.StartDate.Value.Month;
-                var startday = data.SearchObj.StartDate.Value.Day;
-                if (startday < 10)
-                    setstartday = data.SearchObj.StartDate.Value.Day.ToString().PadLeft(2, '0');
-                else
-                    setstartday = data.SearchObj.StartDate.Value.Day.ToString();
+            //string setstartday, setstartmonth, setendday, setendmonth = "";
+            //DateTime startingFrom = new DateTime();
+            //DateTime endingTo = new DateTime();
+            //if (data.SearchObj.Start == "")
+            //{
+            //    startingFrom = DateTime.Parse("1900-01-01").Date;
+            //}
+            //else
+            //{
+            //    data.SearchObj.StartDate = DateTime.Parse(data.SearchObj.Start.ToString());
+            //    var startyear = data.SearchObj.StartDate.Value.Year;
+            //    var startmonth = data.SearchObj.StartDate.Value.Month;
+            //    var startday = data.SearchObj.StartDate.Value.Day;
+            //    if (startday < 10)
+            //        setstartday = data.SearchObj.StartDate.Value.Day.ToString().PadLeft(2, '0');
+            //    else
+            //        setstartday = data.SearchObj.StartDate.Value.Day.ToString();
 
-                if (startmonth < 10)
-                    setstartmonth = data.SearchObj.StartDate.Value.Month.ToString().PadLeft(2, '0');
-                else
-                    setstartmonth = data.SearchObj.StartDate.Value.Month.ToString();
+            //    if (startmonth < 10)
+            //        setstartmonth = data.SearchObj.StartDate.Value.Month.ToString().PadLeft(2, '0');
+            //    else
+            //        setstartmonth = data.SearchObj.StartDate.Value.Month.ToString();
 
-                var sDate = startyear + "/" + setstartmonth + "/" + setstartday;
-                startingFrom = DateTime.Parse(sDate);
-            }
+            //    var sDate = startyear + "/" + setstartmonth + "/" + setstartday;
+            //    startingFrom = DateTime.Parse(sDate);
+            //}
 
-            if (data.SearchObj.End == "")
-            {
-                endingTo = DateTime.Today.Date;
-            }
-            else
-            {
-                data.SearchObj.EndDate = DateTime.Parse(data.SearchObj.End.ToString());
-                var endyear = data.SearchObj.EndDate.Value.Year;
-                var endmonth = data.SearchObj.EndDate.Value.Month;
-                var endday = data.SearchObj.EndDate.Value.Day;
-                if (endday < 10)
-                    setendday = data.SearchObj.EndDate.Value.Day.ToString().PadLeft(2, '0');
-                else
-                    setendday = data.SearchObj.EndDate.Value.Day.ToString();
-                if (endmonth < 10)
-                    setendmonth = data.SearchObj.EndDate.Value.Month.ToString().PadLeft(2, '0');
-                else
-                    setendmonth = data.SearchObj.EndDate.Value.Month.ToString();
-                var eDate = endyear + "/" + setendmonth + "/" + setendday;
-                endingTo = DateTime.Parse(eDate);
-            }
-            if (data.SearchObj.Start != "" && data.SearchObj.End != "")
-            {
-                query = query.Where(a => a.WorkOrder.CreationDate.Value.Date >= startingFrom.Date && a.WorkOrder.CreationDate.Value.Date <= endingTo.Date);
-            }
+            //if (data.SearchObj.End == "")
+            //{
+            //    endingTo = DateTime.Today.Date;
+            //}
+            //else
+            //{
+            //    data.SearchObj.EndDate = DateTime.Parse(data.SearchObj.End.ToString());
+            //    var endyear = data.SearchObj.EndDate.Value.Year;
+            //    var endmonth = data.SearchObj.EndDate.Value.Month;
+            //    var endday = data.SearchObj.EndDate.Value.Day;
+            //    if (endday < 10)
+            //        setendday = data.SearchObj.EndDate.Value.Day.ToString().PadLeft(2, '0');
+            //    else
+            //        setendday = data.SearchObj.EndDate.Value.Day.ToString();
+            //    if (endmonth < 10)
+            //        setendmonth = data.SearchObj.EndDate.Value.Month.ToString().PadLeft(2, '0');
+            //    else
+            //        setendmonth = data.SearchObj.EndDate.Value.Month.ToString();
+            //    var eDate = endyear + "/" + setendmonth + "/" + setendday;
+            //    endingTo = DateTime.Parse(eDate);
+            //}
+            //if (data.SearchObj.Start != "" && data.SearchObj.End != "")
+            //{
+            //    query = query.Where(w => w.CreationDate.Value.Date >= startingFrom.Date && w.CreationDate.Value.Date <= endingTo.Date);
+            //}
 
 
             #endregion
@@ -4501,44 +4499,44 @@ namespace Asset.Core.Repositories
                 case "الباركود":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query = query.OrderBy(x => x.WorkOrder.Request.AssetDetail.Barcode);
+                        query = query.OrderBy(w => w.Request.AssetDetail.Barcode);
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.WorkOrder.Request.AssetDetail.Barcode);
+                        query = query.OrderByDescending(w => w.Request.AssetDetail.Barcode);
                     }
                     break;
                 case "Serial":
                 case "السيريال":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query = query.OrderBy(x => x.WorkOrder.Request.AssetDetail.SerialNumber);
+                        query = query.OrderBy(w => w.Request.AssetDetail.SerialNumber);
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.WorkOrder.Request.AssetDetail.SerialNumber);
+                        query = query.OrderByDescending(w => w.Request.AssetDetail.SerialNumber);
                     }
                     break;
                 case "Model":
                 case "الموديل":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query = query.OrderBy(x => x.WorkOrder.Request.AssetDetail.MasterAsset.ModelNumber);
+                        query = query.OrderBy(w => w.Request.AssetDetail.MasterAsset.ModelNumber);
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.WorkOrder.Request.AssetDetail.MasterAsset.ModelNumber);
+                        query = query.OrderByDescending(w => w.Request.AssetDetail.MasterAsset.ModelNumber);
                     }
                     break;
                 case "Subject":
                 case "الموضوع":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query = query.OrderBy(x => x.WorkOrder.Request.Subject);
+                        query = query.OrderBy(w => w.Request.Subject);
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.WorkOrder.Request.Subject);
+                        query = query.OrderByDescending(w => w.Request.Subject);
                     }
                     break;
 
@@ -4546,11 +4544,11 @@ namespace Asset.Core.Repositories
                 case "التاريخ":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query = query.OrderBy(x => x.WorkOrder.Request.RequestDate);
+                        query = query.OrderBy(w => w.Request.RequestDate);
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.WorkOrder.Request.RequestDate);
+                        query = query.OrderByDescending(w => w.Request.RequestDate);
                     }
                     break;
 
@@ -4558,11 +4556,11 @@ namespace Asset.Core.Repositories
                 case "رقم الطلب":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query = query.OrderBy(x => x.WorkOrder.Request.RequestCode);
+                        query = query.OrderBy(w => w.Request.RequestCode);
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.WorkOrder.Request.RequestCode);
+                        query = query.OrderByDescending(w => w.Request.RequestCode);
                     }
                     break;
                 case "CreatedBy":
@@ -4579,103 +4577,103 @@ namespace Asset.Core.Repositories
                 case "Periority":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query.OrderBy(x => x.WorkOrder.Request.RequestPeriority.Name);
+                        query.OrderBy(w => w.Request.RequestPeriority.Name);
                     }
                     else
                     {
-                        query.OrderByDescending(x => x.WorkOrder.Request.RequestPeriority.Name);
+                        query.OrderByDescending(w => w.Request.RequestPeriority.Name);
                     }
                     break;
 
                 case "الأولوية":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query = query.OrderBy(x => x.WorkOrder.Request.RequestPeriority.NameAr);
+                        query = query.OrderBy(w => w.Request.RequestPeriority.NameAr);
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.WorkOrder.Request.RequestPeriority.NameAr);
+                        query = query.OrderByDescending(w => w.Request.RequestPeriority.NameAr);
                     }
                     break;
                 case "Status":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query.OrderBy(x => x.WorkOrderStatus.Name);
+                        query.OrderBy(w=>w.lstWorkOrderTracking.OrderByDescending(wot=>wot.CreationDate).FirstOrDefault().WorkOrderStatus.Name);
                     }
                     else
                     {
-                        query.OrderByDescending(x => x.WorkOrderStatus.Name);
+                        query.OrderByDescending(w => w.lstWorkOrderTracking.OrderByDescending(wot => wot.CreationDate).FirstOrDefault().WorkOrderStatus.Name);
                     }
                     break;
                 case "الحالة":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query.OrderBy(x => x.WorkOrderStatus.NameAr);
+                        query.OrderBy(w => w.lstWorkOrderTracking.OrderByDescending(wot => wot.CreationDate).FirstOrDefault().WorkOrderStatus.NameAr);
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.WorkOrderStatus.NameAr);
+                        query = query.OrderByDescending(w => w.lstWorkOrderTracking.OrderByDescending(wot => wot.CreationDate).FirstOrDefault().WorkOrderStatus.NameAr);
                     }
                     break;
                 case "Asset Name":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query.OrderBy(x => x.WorkOrder.Request.AssetDetail.MasterAsset.Name);
+                        query.OrderBy(w=>w.Request.AssetDetail.MasterAsset.Name);
                     }
                     else
                     {
-                        query.OrderByDescending(x => x.WorkOrder.Request.AssetDetail.MasterAsset.Name);
+                        query.OrderByDescending(w=>w.Request.AssetDetail.MasterAsset.Name);
                     }
                     break;
                 case "اسم الأصل":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query = query.OrderBy(x => x.WorkOrder.Request.AssetDetail.MasterAsset.NameAr);
+                        query = query.OrderBy(w=>w.Request.AssetDetail.MasterAsset.NameAr);
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.WorkOrder.Request.AssetDetail.MasterAsset.NameAr);
+                        query = query.OrderByDescending(w=>w.Request.AssetDetail.MasterAsset.NameAr);
                     }
                     break;
 
                 case "Brands":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query = query.OrderBy(x => x.WorkOrder.Request.AssetDetail.MasterAsset.brand.Name);
+                        query = query.OrderBy(w=>w.Request.AssetDetail.MasterAsset.brand.Name);
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.WorkOrder.Request.AssetDetail.MasterAsset.brand.Name);
+                        query = query.OrderByDescending(w => w.Request.AssetDetail.MasterAsset.brand.Name);
                     }
                     break;
                 case "الماركات":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query = query.OrderBy(x => x.WorkOrder.Request.AssetDetail.MasterAsset.brand.NameAr);
+                        query = query.OrderBy(w => w.Request.AssetDetail.MasterAsset.brand.NameAr);
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.WorkOrder.Request.AssetDetail.MasterAsset.brand.NameAr);
+                        query = query.OrderByDescending(w => w.Request.AssetDetail.MasterAsset.brand.NameAr);
                     }
                     break;
                 case "Department":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query = query.OrderBy(x => x.WorkOrder.Request.AssetDetail.Department.Name);
+                        query = query.OrderBy(w => w.Request.AssetDetail.Department.Name);
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.WorkOrder.Request.AssetDetail.Department.Name);
+                        query = query.OrderByDescending(w => w.Request.AssetDetail.Department.Name);
                     }
                     break;
                 case "القسم":
                     if (data.SortObj.SortStatus == "ascending")
                     {
-                        query = query.OrderBy(x => x.WorkOrder.Request.AssetDetail.Department.NameAr);
+                        query = query.OrderBy(w => w.Request.AssetDetail.Department.NameAr);
                     }
                     else
                     {
-                        query = query.OrderByDescending(x => x.WorkOrder.Request.AssetDetail.Department.NameAr);
+                        query = query.OrderByDescending(w => w.Request.AssetDetail.Department.NameAr);
                     }
                     break;
 
@@ -4685,7 +4683,7 @@ namespace Asset.Core.Repositories
 
             #region Count data and fiter By Paging
             IEnumerable<WorkOrder> lstWorkOrder;
-            mainClass.Count = query.Count();
+            mainClass.Count = await query.CountAsync();
             if (first == 0 && rows == 0)
                 lstWorkOrder = await query.ToListAsync();
             else
@@ -4694,86 +4692,88 @@ namespace Asset.Core.Repositories
 
             #region Loop to get Items after serach and sort
 
-            //foreach (var WorkOrder in lstWorkOrder)
-            //{
-            //    IndexWorkOrderVM2.GetData getDataObj = new IndexWorkOrderVM2.GetData();
-            //    getDataObj.Id = WorkOrder.Id;
-            //    getDataObj.Subject = WorkOrder.Subject;
-            //    getDataObj.BarCode = WorkOrder.Request.AssetDetail.Barcode;
-            //    getDataObj.ModelNumber = WorkOrder.Request.AssetDetail.MasterAsset.ModelNumber;
-            //    getDataObj.AssetName = WorkOrder.Request.AssetDetail.MasterAsset.Name;
-            //    getDataObj.AssetNameAr = WorkOrder.Request.AssetDetail.MasterAsset.NameAr;
-            //    getDataObj.SerialNumber = WorkOrder.Request.AssetDetail.SerialNumber;
-            //    getDataObj.WorkOrderNumber = WorkOrder.WorkOrderNumber;
-            //    if (WorkOrder.WorkOrderType != null)
-            //        getDataObj.WorkOrderTypeName = WorkOrder.WorkOrderType.Name;
-            //    getDataObj.RequestSubject =     WorkOrder.Request.Subject;
-            //    getDataObj.AssetId =    WorkOrder.Request.AssetDetailId;
-            //    getDataObj.CreatedBy = WorkOrder.User.UserName;
-            //    getDataObj.ActualStartDate = WorkOrder.ActualStartDate;
-            //    getDataObj.ActualEndDate = WorkOrder.ActualEndDate;
-            //    getDataObj.HospitalId = WorkOrder.Request.AssetDetail.HospitalId;
-            //    getDataObj.GovernorateId = WorkOrder.Request.AssetDetail.Hospital.GovernorateId;
-            //    getDataObj.CityId = WorkOrder.AssetDetail.Hospital.CityId;
-            //    getDataObj.OrganizationId = WorkOrder.Request.AssetDetail.Hospital.OrganizationId;
-            //    getDataObj.SubOrganizationId = WorkOrder.Request.AssetDetail.Hospital.SubOrganizationId;
-            //    getDataObj.CreatedById = WorkOrder.CreatedById;
-            //    getDataObj.CreationDate = WorkOrder.CreationDate;
-            //    getDataObj.AssetName = WorkOrder.Request.AssetDetail.MasterAsset.Name + " - " + WorkOrder.Request.AssetDetail.SerialNumber;
-            //    getDataObj.AssetNameAr = WorkOrder.Request.AssetDetail.MasterAsset.NameAr + " - " + WorkOrder.Request.AssetDetail.SerialNumber;
-            //    getDataObj.MasterAssetId = WorkOrder.Request.AssetDetail.MasterAssetId;
-            //    var lastWorkOrderTracking= WorkOrder.lstWorkOrderTracking.
-                
-            //    getDataObj.WorkOrderStatusId = ;
-            //    getDataObj.StatusName = woItem.WorkOrderStatus.Name;
-            //    getDataObj.StatusNameAr = woItem.WorkOrderStatus.NameAr;
-            //    getDataObj.statusColor = woItem.WorkOrderStatus.Color;
-            //    getDataObj.statusIcon = woItem.WorkOrderStatus.Icon;
-            //    getDataObj.Note = woItem.Notes;
+            foreach (var WorkOrder in lstWorkOrder)
+            {
+                IndexWorkOrderVM2.GetData getDataObj = new IndexWorkOrderVM2.GetData();
+                getDataObj.Id = WorkOrder.Id;
+                getDataObj.Subject = WorkOrder.Subject;
+                getDataObj.BarCode = WorkOrder.Request.AssetDetail.Barcode;
+                getDataObj.ModelNumber = WorkOrder.Request.AssetDetail.MasterAsset.ModelNumber;
+                getDataObj.AssetName = WorkOrder.Request.AssetDetail.MasterAsset.Name;
+                getDataObj.AssetNameAr = WorkOrder.Request.AssetDetail.MasterAsset.NameAr;
+                getDataObj.SerialNumber = WorkOrder.Request.AssetDetail.SerialNumber;
+                getDataObj.WorkOrderNumber = WorkOrder.WorkOrderNumber;
+                if (WorkOrder.WorkOrderType != null)
+                    getDataObj.WorkOrderTypeName = WorkOrder.WorkOrderType.Name;
+                getDataObj.RequestSubject = WorkOrder.Request.Subject;
+                getDataObj.AssetId = WorkOrder.Request.AssetDetailId;
+                getDataObj.CreatedBy = WorkOrder.User.UserName;
+                getDataObj.ActualStartDate = WorkOrder.ActualStartDate;
+                getDataObj.ActualEndDate = WorkOrder.ActualEndDate;
+                getDataObj.HospitalId = WorkOrder.Request.AssetDetail.HospitalId;
+                getDataObj.GovernorateId = WorkOrder.Request.AssetDetail.Hospital.GovernorateId;
+                getDataObj.CityId = WorkOrder.Hospital.CityId;
+                getDataObj.OrganizationId = WorkOrder.Request.AssetDetail.Hospital.OrganizationId;
+                getDataObj.SubOrganizationId = WorkOrder.Request.AssetDetail.Hospital.SubOrganizationId;
+                getDataObj.CreatedById = WorkOrder.CreatedById;
+                getDataObj.CreationDate = WorkOrder.CreationDate;
+                getDataObj.AssetName = WorkOrder.Request?.AssetDetail?.MasterAsset?.Name + " - " + WorkOrder.Request.AssetDetail.SerialNumber;
+                getDataObj.AssetNameAr = WorkOrder.Request?.AssetDetail?.MasterAsset?.NameAr + " - " + WorkOrder.Request.AssetDetail.SerialNumber;
+                getDataObj.MasterAssetId = WorkOrder.Request?.AssetDetail?.MasterAssetId;
+                var lastWorkOrderTracking = WorkOrder?.lstWorkOrderTracking?.OrderByDescending(wot => wot.CreationDate).FirstOrDefault();
+                if(lastWorkOrderTracking!=null)
+                {
+                    getDataObj.WorkOrderStatusId = lastWorkOrderTracking.WorkOrderStatusId;
+                    getDataObj.StatusName = lastWorkOrderTracking.WorkOrderStatus.Name;
+                    getDataObj.StatusNameAr = lastWorkOrderTracking.WorkOrderStatus.NameAr;
+                    getDataObj.statusColor = lastWorkOrderTracking.WorkOrderStatus.Color;
+                    getDataObj.statusIcon = lastWorkOrderTracking.WorkOrderStatus.Icon;
+                    getDataObj.Note = lastWorkOrderTracking.Notes;
+                }
+        
 
 
-            //    var firstTrack = _context.WorkOrderTrackings.Where(a => a.WorkOrderId == woItem.WorkOrder.Id && a.HospitalId == data.SearchObj.HospitalId).OrderBy(a => a.CreationDate.Value.Date).ToList();
-            //    if (firstTrack.Count > 0 && getDataObj.WorkOrderStatusId < 12)
-            //        getDataObj.FirstTrackDate = firstTrack[0].WorkOrderDate;
-            //    else if (firstTrack.Count > 0 && getDataObj.WorkOrderStatusId == 12)
-            //        getDataObj.FirstTrackDate = firstTrack.LastOrDefault().CreationDate;
+                var firstTrack = WorkOrder?.lstWorkOrderTracking?.OrderBy(wot => wot.CreationDate).FirstOrDefault();
+                if (firstTrack!=null && getDataObj.WorkOrderStatusId < 12)
+                    getDataObj.FirstTrackDate = firstTrack.WorkOrderDate;
+                else if (firstTrack!=null && getDataObj.WorkOrderStatusId == 12)
+                    getDataObj.FirstTrackDate = WorkOrder.lstWorkOrderTracking.OrderByDescending(wot => wot.CreationDate).FirstOrDefault().CreationDate; ;
 
 
-            //    if (getDataObj.WorkOrderStatusId == 12)
-            //        getDataObj.ClosedDate = woItem.CreationDate;
+                if (getDataObj.WorkOrderStatusId == 12)
+                    getDataObj.ClosedDate = WorkOrder.CreationDate;
 
 
 
 
-            //    if (woItem.WorkOrder.Request.AssetDetailId != null)
-            //    {
-            //        getDataObj.AssetName = woItem.WorkOrder.Request.AssetDetail.MasterAsset.Name;
-            //        getDataObj.AssetNameAr = woItem.WorkOrder.Request.AssetDetail.MasterAsset.NameAr;
-            //    }
+                if (WorkOrder.Request.AssetDetailId != null)
+                {
+                    getDataObj.AssetName = WorkOrder.Request.AssetDetail.MasterAsset.Name;
+                    getDataObj.AssetNameAr = WorkOrder.Request.AssetDetail.MasterAsset.NameAr;
+                }
 
 
-            //    if (woItem.WorkOrder.WorkOrderPeriority != null)
-            //    {
-            //        getDataObj.WorkOrderPeriorityId = (int)woItem.WorkOrder.WorkOrderPeriorityId;
-            //        getDataObj.PeriorityName = woItem.WorkOrder.WorkOrderPeriority.Name;
-            //        getDataObj.PeriorityNameAr = woItem.WorkOrder.WorkOrderPeriority.NameAr;
+                if (WorkOrder.WorkOrderPeriority != null)
+                {
+                    getDataObj.WorkOrderPeriorityId = (int)WorkOrder.WorkOrderPeriorityId;
+                    getDataObj.PeriorityName = WorkOrder.WorkOrderPeriority.Name;
+                    getDataObj.PeriorityNameAr = WorkOrder.WorkOrderPeriority.NameAr;
 
-            //    }
-            //    if (woItem.WorkOrder.Request.AssetDetail.Department != null)
-            //    {
-            //        getDataObj.DepartmentId = (int)woItem.WorkOrder.Request.AssetDetail.DepartmentId;
-            //        getDataObj.DepartmentName = woItem.WorkOrder.Request.AssetDetail.Department.Name;
-            //        getDataObj.DepartmentNameAr = woItem.WorkOrder.Request.AssetDetail.Department.NameAr;
-
-            //    }
-            //    list.Add(getDataObj);
-            //}
-            //#endregion
-
-            //#region Represent data after Paging and count
-            //mainClass.Results = list;
+                }
+                if (WorkOrder.Request.AssetDetail.Department != null)
+                {
+                    getDataObj.DepartmentId = (int)WorkOrder.Request.AssetDetail.DepartmentId;
+                    getDataObj.DepartmentName = WorkOrder.Request.AssetDetail.Department.Name;
+                    getDataObj.DepartmentNameAr = WorkOrder.Request.AssetDetail.Department.NameAr;
+                }
+                list.Add(getDataObj);
+            }
             #endregion
-            //return mainClass;
+
+            #region Represent data after Paging and count
+            mainClass.Results = list;
+            #endregion
+            return mainClass;
 
         }
 
