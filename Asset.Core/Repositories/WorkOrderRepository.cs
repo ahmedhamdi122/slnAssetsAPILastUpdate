@@ -3969,7 +3969,8 @@ namespace Asset.Core.Repositories
                 work.RequestId = woObj[0].RequestId != null ? (int)woObj[0].RequestId : 0;
                 work.RequestSubject = woObj[0].Request.Subject;
                 work.HospitalId = woObj[0].Request.AssetDetail.HospitalId;
-                work.WorkOrderTrackingId = _context.WorkOrderTrackings.Where(t => t.WorkOrderId == id).FirstOrDefault().Id;
+                var workorderTracking = _context.WorkOrderTrackings.Where(t => t.WorkOrderId == id).FirstOrDefault();
+                work.WorkOrderTrackingId = workorderTracking != null ? workorderTracking.WorkOrderId : 0;
                 // work.WorkOrderStatusId = _context.WorkOrderTrackings.Where(t => t.WorkOrderId == id).FirstOrDefault().WorkOrderStatusId;
 
                 work.WarrantyStart = woObj[0].Request.AssetDetail.WarrantyStart.ToString();
@@ -4341,8 +4342,8 @@ namespace Asset.Core.Repositories
             #region Load Data Depend on User
             if (userObj.HospitalId > 0)
             {
-                var isAssetOwner =  _context.AssetOwners.AnyAsync(a => a.EmployeeId == employee.Id);
-                if (isAssetOwner!=null)
+                var isAssetOwner = await _context.AssetOwners.AnyAsync(a => a.EmployeeId == employee.Id);
+                if (isAssetOwner)
                 {
                     query = query.Where(a => a.CreatedById == userObj.Id && a.HospitalId == userObj.HospitalId);
                 }
@@ -4685,7 +4686,9 @@ namespace Asset.Core.Repositories
             IEnumerable<WorkOrder> lstWorkOrder;
             mainClass.Count = await query.CountAsync();
             if (first == 0 && rows == 0)
+            {
                 lstWorkOrder = await query.ToListAsync();
+            }
             else
                 lstWorkOrder = await query.Skip(first).Take(rows).ToListAsync();
             #endregion

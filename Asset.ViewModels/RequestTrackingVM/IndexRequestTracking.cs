@@ -67,7 +67,7 @@ namespace Asset.ViewModels.RequestTrackingVM
             public int Id { get; set; }
             public string Description { get; set; }
             public DateTime? Date { get; set; }
-            public int StatusId { get; set; }
+            public int? StatusId { get; set; }
             public string StatusName { get; set; }
             public string StatusNameAr { get; set; }
             public string StatusColor{ get; set; }

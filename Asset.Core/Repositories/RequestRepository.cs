@@ -1481,6 +1481,8 @@ namespace Asset.Core.Repositories
 
             var lstRequests = _context.WorkOrders
                                     .Include(a => a.Request)
+                                    .Include(w=>w.Request.RequestTracking)
+                                    .Include(w => w.Request.RequestTracking).ThenInclude(w=>w.User)
                                     .Include(a => a.Request.RequestType)
                                      .Include(a => a.Request.SubProblem)
                                      .Include(a => a.Request.SubProblem.Problem)
@@ -1519,23 +1521,20 @@ namespace Asset.Core.Repositories
                 reqObj.PeriorityNameAr = item.Request.RequestPeriority != null ? item.Request.RequestPeriority.NameAr : "";
 
 
-                reqObj.ListTracks = _context.RequestTracking.Include(a => a.User).Where(a => a.RequestId == item.RequestId).OrderByDescending(a => a.DescriptionDate)
-                                      .ToList().Select(item => new IndexRequestTrackingVM.GetData
+                reqObj.ListTracks = item.Request.RequestTracking.OrderByDescending(a => a.DescriptionDate)
+                                      .ToList().Select(requestTracking => new IndexRequestTrackingVM.GetData
                                       {
                                           Id = item.Id,
-                                          StatusName = _context.RequestStatus.Where(a => a.Id == item.RequestStatusId).First().Name,
-                                          StatusNameAr = _context.RequestStatus.Where(a => a.Id == item.RequestStatusId).First().NameAr,
-                                          StatusColor = _context.RequestStatus.Where(a => a.Id == item.RequestStatusId).First().Color,
-                                          StatusIcon = _context.RequestStatus.Where(a => a.Id == item.RequestStatusId).First().Icon,
-                                          Description = item.Description,
-                                          Date = item.DescriptionDate,
-                                          StatusId = item.RequestStatus.Id,
-                                          UserName = item.User.UserName,
+                                          StatusName = requestTracking?.RequestStatus?.Name,
+                                          StatusNameAr = requestTracking?.RequestStatus?.NameAr,
+                                          StatusColor = requestTracking?.RequestStatus?.Color,
+                                          StatusIcon = requestTracking?.RequestStatus?.Icon,
+                                          Description = requestTracking.Description,
+                                          Date = requestTracking.DescriptionDate,
+                                          StatusId = requestTracking?.RequestStatus!=null?requestTracking?.RequestStatus.Id:null,
+                                          UserName = requestTracking.User.UserName,
                                           ListDocuments = _context.RequestDocument.Where(a => a.RequestTrackingId == item.Id).ToList(),
                                       }).ToList();
-
-
-
                 reqObj.AssetName = item.Request.AssetDetail.MasterAsset != null ? item.Request.AssetDetail.MasterAsset.Name : "";
                 reqObj.AssetNameAr = item.Request.AssetDetail.MasterAsset != null ? item.Request.AssetDetail.MasterAsset.NameAr : "";
                 reqObj.GovernorateId = (int)item.User.GovernorateId;
