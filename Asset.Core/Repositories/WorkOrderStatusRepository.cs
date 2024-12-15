@@ -135,8 +135,7 @@ namespace Asset.Core.Repositories
                 }
             }
             #endregion
-            var statusIds = new List<int>(new int[] { 6, 7, 8, 10 });
-            var listStatus = await _context.WorkOrderStatuses.Where(w=>!statusIds.Contains(w.Id)).Select(s => new WorkOrderStatusVM { id = s.Id, name = s.Name, nameAr = s.NameAr, color = s.Color, icon = s.Icon, count = query.Where(r => r.lstWorkOrderTracking.OrderByDescending(rt => rt.CreationDate).FirstOrDefault().WorkOrderStatusId == s.Id).Count() }).ToListAsync();
+            var listStatus = await _context.WorkOrderStatuses.Select(s => new WorkOrderStatusVM { id = s.Id, name = s.Name, nameAr = s.NameAr, color = s.Color, icon = s.Icon, count = query.Where(r => r.lstWorkOrderTracking.OrderByDescending(rt => rt.CreationDate).FirstOrDefault().WorkOrderStatusId == s.Id).Count() }).ToListAsync();
             listStatus.Add(new WorkOrderStatusVM { id = 0, name = "All", nameAr = "الكل", color = "", icon = "", count = listStatus.Sum(s => s.count) });
 
             return listStatus;
