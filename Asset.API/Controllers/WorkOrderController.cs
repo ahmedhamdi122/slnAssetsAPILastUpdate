@@ -666,7 +666,7 @@ namespace Asset.API.Controllers
             if (lstRequests.Count > 0)
             {
                 var lastDate = lstRequests[0].DescriptionDate;
-                if (createWorkOrderVM.CreationDate < lastDate)
+                if (DateTime.Now < lastDate)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "sr", Message = "Work Order Date should be greater than the last one", MessageAr = "تاريخ أمر الشغل لابد أن يكون متسلسل" });
                 }

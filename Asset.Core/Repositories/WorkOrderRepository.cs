@@ -4230,10 +4230,10 @@ namespace Asset.Core.Repositories
                     workOrder.Subject = createWorkOrderVM.Subject;
                     workOrder.WorkOrderNumber = createWorkOrderVM.WorkOrderNumber;
                     workOrder.CreationDate = DateTime.Now;
-                    workOrder.PlannedStartDate = DateTime.Parse(createWorkOrderVM.PlannedStartDate);
-                    workOrder.PlannedEndDate = DateTime.Parse(createWorkOrderVM.PlannedEndDate);
-                    workOrder.ActualStartDate = DateTime.Parse(createWorkOrderVM.ActualStartDate);
-                    workOrder.ActualEndDate = DateTime.Parse(createWorkOrderVM.ActualEndDate);
+                    workOrder.PlannedStartDate = DateTime.Now;
+                    workOrder.PlannedEndDate = DateTime.Now;
+                    workOrder.ActualStartDate = DateTime.Now;
+                    workOrder.ActualEndDate = DateTime.Now;
                     workOrder.Note = createWorkOrderVM.Note;
                     workOrder.CreatedById = createWorkOrderVM.CreatedById;
                     workOrder.WorkOrderPeriorityId = createWorkOrderVM.WorkOrderPeriorityId;

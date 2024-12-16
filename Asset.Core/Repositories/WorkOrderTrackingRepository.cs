@@ -44,8 +44,8 @@ namespace Asset.Core.Repositories
                         }
                     }
                     WorkOrderTracking workOrderTracking = new WorkOrderTracking();
-                    workOrderTracking.WorkOrderDate = DateTime.Parse(createWorkOrderTrackingVM.StrWorkOrderDate.ToString()); //createWorkOrderTrackingVM.WorkOrderDate;
-                    workOrderTracking.CreationDate = createWorkOrderTrackingVM.CreationDate;
+                    workOrderTracking.WorkOrderDate = DateTime.Now;
+                    workOrderTracking.CreationDate = DateTime.Now;
                     workOrderTracking.Notes = createWorkOrderTrackingVM.Notes;
                     workOrderTracking.WorkOrderStatusId = createWorkOrderTrackingVM.WorkOrderStatusId;
                     workOrderTracking.CreatedById = createWorkOrderTrackingVM.CreatedById;

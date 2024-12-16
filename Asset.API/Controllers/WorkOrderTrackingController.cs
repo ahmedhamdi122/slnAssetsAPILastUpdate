@@ -114,24 +114,9 @@ namespace Asset.API.Controllers
         public IActionResult Post(CreateWorkOrderTrackingVM createWorkOrderObj)
         {
 
-            var lstWOTrackings = _workOrderTrackingService.GetAll().Where(a => a.WorkOrderId == createWorkOrderObj.WorkOrderId).OrderByDescending(a => a.CreationDate).ToList();
-            if (lstWOTrackings.Count > 0)
-            {
-                var lastDate = lstWOTrackings[0].CreationDate;
-                if (createWorkOrderObj.CreationDate < lastDate)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "sr", Message = "Work Order Date should be greater than the last one", MessageAr = "تاريخ أمر الشغل لابد أن يكون متسلسل" });
-                }
-                else
-                {
-                    return Ok(_workOrderTrackingService.AddWorkOrderTracking(createWorkOrderObj));
-                }
-            }
-            else
-            {
+          
                 return Ok(_workOrderTrackingService.AddWorkOrderTracking(createWorkOrderObj));
-            }
-            //   return Ok();
+            
 
         }
 
