@@ -3177,9 +3177,9 @@ namespace Asset.API.Controllers
         }
 
         [HttpGet("GetById/{id}")]
-        public ActionResult<IndexRequestsVM> GetById(int id)
+        public async Task<ActionResult<IndexRequestsVM>> GetById(int id)
         {
-            var requestDTO = _requestService.GetRequestById(id);
+            var requestDTO =await _requestService.GetRequestById(id);
             return requestDTO;
         }
 

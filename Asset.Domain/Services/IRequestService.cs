@@ -1,6 +1,7 @@
 ﻿using Asset.Models;
 using Asset.ViewModels.RequestTrackingVM;
 using Asset.ViewModels.RequestVM;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Asset.Domain.Services
         int UpdateOpenedRequestTrack(int trackId);
         IndexRequestsVM GetRequestByWorkOrderId(int workOrderId);
         int GetTotalRequestForAssetInHospital(int assetDetailId);
-        IndexRequestsVM GetRequestById(int id);
+        Task<ActionResult<IndexRequestsVM>> GetRequestById(int id);
         int AddRequest(CreateRequestVM createRequestVM);
         void UpdateRequest(EditRequestVM editRequestVM);
         void DeleteRequest(int id);

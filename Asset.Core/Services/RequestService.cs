@@ -3,6 +3,7 @@ using Asset.Domain.Services;
 using Asset.Models;
 using Asset.ViewModels.RequestTrackingVM;
 using Asset.ViewModels.RequestVM;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,9 +39,9 @@ namespace Asset.Core.Services
             return _unitOfWork.Request.GetAll();
         }
 
-        public IndexRequestsVM GetRequestById(int id)
+        public async Task<ActionResult<IndexRequestsVM>> GetRequestById(int id)
         {
-            return _unitOfWork.Request.GetById(id);
+            return await _unitOfWork.Request.GetById(id);
         }
         public void UpdateRequest(EditRequestVM editRequestVM)
         {

@@ -4,6 +4,7 @@ using Asset.ViewModels.RequestTrackingVM;
 using Asset.ViewModels.RequestVM;
 using Asset.ViewModels.WorkOrderTrackingVM;
 using Asset.ViewModels.WorkOrderVM;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Ocsp;
 using System;
@@ -8327,10 +8328,10 @@ namespace Asset.Core.Repositories
                 string msg = ex.Message;
             }
         }
-        public IndexRequestsVM GetById(int id)
+        public async Task<ActionResult<IndexRequestsVM>> GetById(int id)
         {
             IndexRequestsVM requestDTO = new IndexRequestsVM();
-            var lstRequests = _context.Request
+            var req = await _context.Request
                .Include(p => p.RequestMode).Include(r => r.User)
                .Include(r => r.SubProblem)
                .Include(r => r.SubProblem.Problem)
@@ -8344,12 +8345,11 @@ namespace Asset.Core.Repositories
                    .Include(r => r.AssetDetail.Building)
                    .Include(r => r.AssetDetail.Floor)
                    .Include(r => r.AssetDetail.Room)
-           .Where(e => e.Id == id).ToList();
+           .FirstOrDefaultAsync(r=>r.Id==id);
 
 
-            if (lstRequests.Count > 0)
+            if (req != null)
             {
-                Request req = lstRequests[0];
 
                 requestDTO.Id = req.Id;
                 requestDTO.HospitalId = int.Parse(req.HospitalId.ToString());
@@ -8367,6 +8367,7 @@ namespace Asset.Core.Repositories
                 requestDTO.RequestPeriorityId = req.RequestPeriorityId != null ? (int)req.RequestPeriorityId : 0;
                 requestDTO.PeriorityName = req.RequestPeriority.Name;
                 requestDTO.PeriorityNameAr = req.RequestPeriority.NameAr;
+                requestDTO.PeriorityID = req.RequestPeriority?.Id;
                 requestDTO.MasterAssetId = req.AssetDetail!=null? (int)req.AssetDetail.MasterAssetId:0;
                 requestDTO.AssetName = req.AssetDetail?.MasterAsset.Name;
                 requestDTO.AssetNameAr = req.AssetDetail?.MasterAsset.NameAr;
@@ -8430,21 +8431,21 @@ namespace Asset.Core.Repositories
                     requestDTO.FloorNameAr = req.AssetDetail.Floor.NameAr;
                 }
                 
-                var lstStatus = _context.RequestTracking
+                var lastRequestTracking =  _context.RequestTracking
                                .Include(t => t.Request).Include(t => t.RequestStatus)
-                               .Where(a => a.RequestId == req.Id).ToList().OrderByDescending(a => DateTime.Parse(a.DescriptionDate.ToString())).ToList();
-                if (lstStatus.Count > 0)
+                               .Where(a => a.RequestId == req.Id).OrderByDescending(a => a.DescriptionDate).FirstOrDefault();
+                if (lastRequestTracking != null)
                 {
-                    requestDTO.RequestTrackDescription = lstStatus[0].Description;
+                    requestDTO.RequestTrackDescription = lastRequestTracking.Description;
 
-                    requestDTO.StatusId = lstStatus[0].RequestStatus.Id;
-                    requestDTO.StatusName = lstStatus[0].RequestStatus.Name;
-                    requestDTO.StatusNameAr = lstStatus[0].RequestStatus.NameAr;
-                    requestDTO.StatusColor = lstStatus[0].RequestStatus.Color;
-                    requestDTO.StatusIcon = lstStatus[0].RequestStatus.Icon;
+                    requestDTO.StatusId = lastRequestTracking.RequestStatus.Id;
+                    requestDTO.StatusName = lastRequestTracking.RequestStatus.Name;
+                    requestDTO.StatusNameAr = lastRequestTracking.RequestStatus.NameAr;
+                    requestDTO.StatusColor = lastRequestTracking.RequestStatus.Color;
+                    requestDTO.StatusIcon = lastRequestTracking.RequestStatus.Icon;
                     if (requestDTO.StatusId == 2)
                     {
-                        requestDTO.ClosedDate = lstStatus[0].DescriptionDate.ToString();
+                        requestDTO.ClosedDate = lastRequestTracking.DescriptionDate.ToString();
                     }
                     else
                     {

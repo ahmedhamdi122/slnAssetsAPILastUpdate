@@ -1,6 +1,7 @@
 ﻿using Asset.Models;
 using Asset.ViewModels.RequestTrackingVM;
 using Asset.ViewModels.RequestVM;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +57,7 @@ namespace Asset.Domain.Repositories
 
         #region Main Functions
         IEnumerable<IndexRequestsVM> GetAll();
-        IndexRequestsVM GetById(int id);
+        Task<ActionResult<IndexRequestsVM>> GetById(int id);
         int Add(CreateRequestVM createRequestVM);
         void Update(EditRequestVM editRequestVM);
         void Delete(int id);

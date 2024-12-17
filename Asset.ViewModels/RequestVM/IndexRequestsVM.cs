@@ -32,6 +32,8 @@ namespace Asset.ViewModels.RequestVM
         public string Barcode { get; set; }
         public int RequestPeriorityId { get; set; }
         public string PeriorityNameAr { get; set; }
+        public int? PeriorityID { get; set; }
+
         public string PeriorityName { get; set; }
         public string PeriorityColor { get; set; }
         public string PeriorityIcon { get; set; }
