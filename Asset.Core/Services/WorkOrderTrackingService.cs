@@ -20,6 +20,7 @@ namespace Asset.Core.Services
         }
         public int AddWorkOrderTracking(CreateWorkOrderTrackingVM createWorkOrderTrackingVM)
         {
+            createWorkOrderTrackingVM.CreationDate = DateTime.Now.ToString();
             _unitOfWork.WorkOrderTracking.Add(createWorkOrderTrackingVM);
             return createWorkOrderTrackingVM.Id;
         }

@@ -4301,7 +4301,7 @@ namespace Asset.Core.Repositories
         {
             #region Initial Variables
             IQueryable<WorkOrder> query = _context.WorkOrders
-                         .Include(w => w.WorkOrderPeriority).Include(w => w.WorkOrderType)
+                         .Include(w => w.WorkOrderPeriority).Include(w => w.WorkOrderType).Include(w=>w.lstWorkOrderTracking).ThenInclude(wot=>wot.WorkOrderStatus)
                          .Include(a => a.User)
                          .Include(w => w.Request)
                          .Include(w => w.Request.AssetDetail)

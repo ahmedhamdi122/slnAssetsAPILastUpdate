@@ -22,7 +22,7 @@ namespace Asset.Core.Services
         public int Add(CreateAssetStatusTransactionVM AssetStatusTransactionVM)
         {
           return  _unitOfWork.AssetStatusTransactionRepository.Add(AssetStatusTransactionVM);
-            // _unitOfWork.CommitAsync();
+            
         }
 
         public int Delete(int id)

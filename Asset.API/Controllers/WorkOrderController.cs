@@ -734,6 +734,7 @@ namespace Asset.API.Controllers
             return _workOrderService.CreateWorkOrderAttachments(attachObj);
         }
 
+
         [HttpPost]
         [Route("UploadWorkOrderFiles")]
         public ActionResult UploadWorkOrerFiles(IFormFile file)
@@ -744,7 +745,7 @@ namespace Asset.API.Controllers
                 System.IO.Directory.CreateDirectory(folderPath);
 
             string filePath = folderPath + "/" + file.FileName;
-            if (System.IO.File.Exists(filePath))
+            if (System.IO.File.Exists(filePath)) 
             {
 
             }
