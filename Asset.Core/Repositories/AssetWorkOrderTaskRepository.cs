@@ -70,7 +70,7 @@ namespace Asset.Core.Repositories
         }
         public IEnumerable<IndexAssetWorkOrderTaskVM> GetAllAssetWorkOrderTasksByMasterAssetId(int MasterAssetId)
         {
-            return _context.AssetWorkOrderTasks.Where(a=>a.MasterAssetId== MasterAssetId).Select(prob => new IndexAssetWorkOrderTaskVM
+            return _context.AssetWorkOrderTasks.Where(a => a.MasterAssetId == MasterAssetId).Select(prob => new IndexAssetWorkOrderTaskVM
             {
                 Id = prob.Id,
                 Name = prob.Name,

@@ -4318,7 +4318,6 @@ namespace Asset.Core.Repositories
                          .Include(w => w.Request.AssetDetail.Hospital).ThenInclude(h => h.City)
                          .Include(w => w.Request.AssetDetail.Hospital).ThenInclude(h => h.SubOrganization);
                         
-
             IndexWorkOrderVM2 mainClass = new IndexWorkOrderVM2();
             List<IndexWorkOrderVM2.GetData> list = new List<IndexWorkOrderVM2.GetData>();
             ApplicationUser userObj = new ApplicationUser();
@@ -4733,9 +4732,6 @@ namespace Asset.Core.Repositories
                     getDataObj.statusIcon = lastWorkOrderTracking.WorkOrderStatus.Icon;
                     getDataObj.Note = lastWorkOrderTracking.Notes;
                 }
-        
-
-
                 var firstTrack = WorkOrder?.lstWorkOrderTracking?.OrderBy(wot => wot.CreationDate).FirstOrDefault();
                 if (firstTrack!=null && getDataObj.WorkOrderStatusId < 12)
                     getDataObj.FirstTrackDate = firstTrack.WorkOrderDate;

@@ -15,7 +15,7 @@ namespace Asset.Domain.Services
         RequestTracking GetFirstTrackForRequestByRequestId(int requestId);
         RequestTracking GetLastTrackForRequestByRequestId(int requestId);
         IndexRequestTracking GetRequestTrackingById(int id);
-        RequestDetails GetAllTrackingsByRequestId(int RequestId);
+        Task<RequestDetails> GetAllTrackingsByRequestId(int RequestId);
         List<RequestTrackingView> GetRequestTracksByRequestId(int requestId);
         int CountRequestTracksByRequestId(int requestId);
         int AddRequestTracking(CreateRequestTracking createRequestTracking);

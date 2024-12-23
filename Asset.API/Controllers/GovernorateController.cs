@@ -31,9 +31,9 @@ namespace Asset.API.Controllers
 
         [HttpGet]
         [Route("ListGovernorates")]
-        public IEnumerable<IndexGovernorateVM.GetData> GetAll()
+        public async Task<IEnumerable<IndexGovernorateVM.GetData>> GetAll()
        {
-            return _governorateService.GetAll();
+            return await _governorateService.GetAll();
         }
 
 

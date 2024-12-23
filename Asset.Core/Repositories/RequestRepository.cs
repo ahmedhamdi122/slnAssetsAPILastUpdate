@@ -25,7 +25,7 @@ namespace Asset.Core.Repositories
         public bool ValidateDate(int AssetDetailId)
         {
             var AssetDetailInstlationDate = _context.AssetDetails.FirstOrDefault(a=>a.Id==AssetDetailId).InstallationDate;
-            if (AssetDetailInstlationDate < DateTime.Now)
+            if (AssetDetailInstlationDate==null || AssetDetailInstlationDate < DateTime.Now)
             {
                 return true;
             }
@@ -1483,14 +1483,15 @@ namespace Asset.Core.Repositories
             var lstRequests = _context.WorkOrders
                                     .Include(a => a.Request)
                                     .Include(w=>w.Request.RequestTracking)
-                                    .Include(w => w.Request.RequestTracking).ThenInclude(w=>w.User)
+                                    .ThenInclude(w=>w.User)
+                                       .Include(w => w.Request.RequestTracking).ThenInclude(rt=>rt.RequestStatus)
                                     .Include(a => a.Request.RequestType)
                                      .Include(a => a.Request.SubProblem)
                                      .Include(a => a.Request.SubProblem.Problem)
                                     .Include(t => t.Request.AssetDetail)
                                      .Include(t => t.Request.AssetDetail.MasterAsset)
                                     .Include(t => t.User)
-                                      .Include(t => t.Request.User)
+                                    .Include(t => t.Request.User)
                                     .Include(t => t.Request.RequestMode)
                                     .Include(t => t.Request.RequestPeriority).Where(a => a.Id == workOrderId).ToList();
             if (lstRequests.Count > 0)
@@ -1536,6 +1537,8 @@ namespace Asset.Core.Repositories
                                           UserName = requestTracking.User.UserName,
                                           ListDocuments = _context.RequestDocument.Where(a => a.RequestTrackingId == item.Id).ToList(),
                                       }).ToList();
+
+
                 reqObj.AssetName = item.Request.AssetDetail.MasterAsset != null ? item.Request.AssetDetail.MasterAsset.Name : "";
                 reqObj.AssetNameAr = item.Request.AssetDetail.MasterAsset != null ? item.Request.AssetDetail.MasterAsset.NameAr : "";
                 reqObj.GovernorateId = (int)item.User.GovernorateId;
@@ -8214,22 +8217,23 @@ namespace Asset.Core.Repositories
                     RequestVM.WOLastTrackDescription = LastWorkOrder.Notes;
                 }
                 var requestTracking = await _context.RequestTracking.Include(r => r.RequestStatus).Where(r => r.RequestId == req.Id).OrderByDescending(r => r.DescriptionDate).FirstOrDefaultAsync();
-                
-                RequestVM.StatusId = (int)requestTracking.RequestStatus.Id;
-                RequestVM.StatusName = requestTracking.RequestStatus.Name;
-                RequestVM.StatusNameAr = requestTracking.RequestStatus.NameAr;
-                RequestVM.StatusColor = requestTracking.RequestStatus.Color;
-                RequestVM.StatusIcon = requestTracking.RequestStatus.Icon;
-                RequestVM.Description = req.Description;
-                if (requestTracking.RequestStatusId == 2)
+                if (requestTracking != null)
                 {
-                    RequestVM.ClosedDate = requestTracking.DescriptionDate.ToString();
+                    RequestVM.StatusId = (int)requestTracking?.RequestStatus?.Id;
+                    RequestVM.StatusName = requestTracking?.RequestStatus?.Name;
+                    RequestVM.StatusNameAr = requestTracking?.RequestStatus?.NameAr;
+                    RequestVM.StatusColor = requestTracking?.RequestStatus?.Color;
+                    RequestVM.StatusIcon = requestTracking?.RequestStatus?.Icon;
+                    RequestVM.Description = req.Description;
+                    if (requestTracking.RequestStatusId == 2)
+                    {
+                        RequestVM.ClosedDate = requestTracking?.DescriptionDate.ToString();
+                    }
+                    else
+                    {
+                        RequestVM.ClosedDate = "";
+                    }
                 }
-                else
-                {
-                    RequestVM.ClosedDate = "";
-                }
-
                 RequestVM.CountWorkOrder = await _context.WorkOrders.Where(a => a.RequestId == req.Id).CountAsync();
                 RequestVM.CountListTracks = await _context.RequestTracking.Where(a => a.RequestId == req.Id).CountAsync();
                 list.Add(RequestVM);

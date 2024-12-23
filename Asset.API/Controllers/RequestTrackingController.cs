@@ -36,9 +36,9 @@ namespace Asset.API.Controllers
         }
         [HttpGet]
         [Route("GetAllTrackingsByRequestId/{requestId}")]
-        public RequestDetails GetAllTrackingsByRequestId(int requestId)
+        public async Task<RequestDetails> GetAllTrackingsByRequestId(int requestId)
         {
-            return _requestTrackingService.GetAllTrackingsByRequestId(requestId);
+            return await _requestTrackingService.GetAllTrackingsByRequestId(requestId);
         }
 
 

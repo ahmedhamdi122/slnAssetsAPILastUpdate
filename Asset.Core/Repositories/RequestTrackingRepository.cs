@@ -215,10 +215,10 @@ namespace Asset.Core.Repositories
 
             return trackings;
         }
-        public RequestDetails GetAllTrackingsByRequestId(int RequestId)
+        public async Task<RequestDetails> GetAllTrackingsByRequestId(int RequestId)
         {
             string wonotes = "";
-            var trackings = _context.RequestTracking.Include(a => a.Request).Include(a => a.Request.AssetDetail).Include(a => a.RequestStatus)
+            var trackings =await _context.RequestTracking.Include(a => a.Request).Include(a => a.Request.AssetDetail).Include(a => a.RequestStatus)
                 .Where(r => r.RequestId == RequestId).Select(req => new RequestTrackingView
                 {
                     Id = req.Id,
@@ -233,10 +233,10 @@ namespace Asset.Core.Repositories
                     StatusNameAr = req.RequestStatusId != null ? req.RequestStatus.NameAr : "",
                     StatusColor = req.RequestStatusId != null ? req.RequestStatus.Color : "",
                     StatusIcon = req.RequestStatusId != null ? req.RequestStatus.Icon : "",
-                }).OrderByDescending(t => t.DescriptionDate).ThenBy(a => a.DescriptionDate.Value.TimeOfDay).ToList();
+                }).OrderByDescending(t => t.DescriptionDate).ThenBy(a => a.DescriptionDate.Value.TimeOfDay).ToListAsync();
 
-            var lstWONotes = _context.WorkOrderTrackings.Include(a => a.WorkOrder).Include(a => a.WorkOrder.Request).Where(a => a.WorkOrder.RequestId == RequestId)
-                .OrderByDescending(a => a.CreationDate).ThenBy(a => a.CreationDate.Value.TimeOfDay).ToList();
+            var lstWONotes =await _context.WorkOrderTrackings.Include(a => a.WorkOrder).Include(a => a.WorkOrder.Request).Where(a => a.WorkOrder.RequestId == RequestId)
+                .OrderByDescending(a => a.CreationDate).ThenBy(a => a.CreationDate.Value.TimeOfDay).ToListAsync();
 
 
             if (lstWONotes.Count > 0)
@@ -244,7 +244,7 @@ namespace Asset.Core.Repositories
                 wonotes = lstWONotes[0].Notes;
             }
 
-            var lstRequestTracking = _context.RequestTracking.Include(t => t.Request.AssetDetail).Include(a => a.Request.AssetDetail.Department).Include(t => t.Request.AssetDetail.MasterAsset)
+            var lstRequestTracking =await _context.RequestTracking.Include(t => t.Request.AssetDetail).Include(a => a.Request.AssetDetail.Department).Include(t => t.Request.AssetDetail.MasterAsset)
             .Include(t => t.Request.RequestMode).Include(t => t.Request.RequestPeriority)
             .Include(t => t.Request.SubProblem).Include(t => t.Request.SubProblem.Problem).Include(t => t.Request.RequestType).Include(r => r.RequestStatus)
             .Where(r => r.RequestId == RequestId).Select(req => new RequestDetails
@@ -296,7 +296,7 @@ namespace Asset.Core.Repositories
                 AssetNameAr = req.Request.AssetDetail.MasterAsset.NameAr,
                 WONotes = wonotes,
                 lstTracking = trackings
-            }).FirstOrDefault();
+            }).FirstOrDefaultAsync();
 
 
 

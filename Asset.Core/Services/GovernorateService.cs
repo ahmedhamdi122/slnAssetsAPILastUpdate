@@ -4,6 +4,7 @@ using Asset.Models;
 using Asset.ViewModels.GovernorateVM;
 using Asset.ViewModels.RoleCategoryVM;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 
 namespace Asset.Core.Services
@@ -34,9 +35,9 @@ namespace Asset.Core.Services
             return GovernorateObj.Id;
         }
 
-        public IEnumerable<IndexGovernorateVM.GetData> GetAll()
+        public async Task<IEnumerable<IndexGovernorateVM.GetData>> GetAll()
         {
-            return _unitOfWork.GovernorateRepository.GetAll();
+            return await _unitOfWork.GovernorateRepository.GetAll();
         }
 
         public IEnumerable<Governorate> GetAllGovernorates()

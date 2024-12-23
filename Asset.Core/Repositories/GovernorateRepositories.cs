@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Asset.Core.Repositories
 {
@@ -38,9 +39,9 @@ namespace Asset.Core.Repositories
 
 
 
-        public IEnumerable<IndexGovernorateVM.GetData> GetAll()
+        public async Task<IEnumerable<IndexGovernorateVM.GetData>> GetAll()
         {
-            return _context.Governorates.ToList().Select(item => new IndexGovernorateVM.GetData
+            return await _context.Governorates.Select(item => new IndexGovernorateVM.GetData
             {
                 Id = item.Id,
                 Name = item.Name,
@@ -52,7 +53,7 @@ namespace Asset.Core.Repositories
                 Longtitude = item.Longtitude,
                 Logo = item.Logo,
                 CountAssets = _context.AssetDetails.Include(a => a.Hospital).Include(h => h.Hospital.Governorate).Where(a=>a.Hospital.GovernorateId == item.Id).Count()
-            });
+            }).ToListAsync();
         }
 
         public int Add(CreateGovernorateVM GovernorateVM)

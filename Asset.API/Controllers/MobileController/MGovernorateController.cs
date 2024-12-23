@@ -28,11 +28,11 @@ namespace Asset.API.Controllers.MobileController
 
         [HttpGet]
         [Route("ListGovernorates")]
-        public ActionResult GetAll()
+        public async Task<ActionResult> GetAll()
         {
             IEnumerable<IndexGovernorateVM.GetData> list = new List<IndexGovernorateVM.GetData>();
 
-            list = _governorateService.GetAll();
+            list = await _governorateService.GetAll();
             if (list.Count() == 0)
             {
                 return Ok(new { data = list, msg = "No Data", status = '0' });

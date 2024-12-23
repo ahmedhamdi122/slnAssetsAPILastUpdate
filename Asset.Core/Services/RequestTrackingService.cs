@@ -43,9 +43,9 @@ namespace Asset.Core.Services
         //    return _unitOfWork.RequestTracking.GetAll(UserId,assetDetailId);
         //}
 
-        public RequestDetails GetAllTrackingsByRequestId(int RequestId)
+        public async Task<RequestDetails> GetAllTrackingsByRequestId(int RequestId)
         {
-            return _unitOfWork.RequestTracking.GetAllTrackingsByRequestId(RequestId);
+            return await _unitOfWork.RequestTracking.GetAllTrackingsByRequestId(RequestId);
         }
 
         public RequestTracking GetFirstTrackForRequestByRequestId(int requestId)
