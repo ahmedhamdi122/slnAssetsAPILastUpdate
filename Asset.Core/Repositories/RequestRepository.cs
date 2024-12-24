@@ -8498,24 +8498,24 @@ namespace Asset.Core.Repositories
                 IndexRequestVM.GetData getDataObj = new IndexRequestVM.GetData();
                 getDataObj.RequestId = req.Id;
                 getDataObj.Id = req.Id;
-                getDataObj.RequestCode = req.RequestCode;
-                getDataObj.Barcode = req.AssetDetail.Barcode;
+                getDataObj.RequestCode = req?.RequestCode;
+                getDataObj.Barcode = req?.AssetDetail?.Barcode;
                 getDataObj.AssetHospitalId = req.HospitalId;
                 getDataObj.CreatedById = req.CreatedById;
-                getDataObj.UserName = req.User.UserName;
+                getDataObj.UserName = req.User?.UserName;
                 getDataObj.Subject = req.Subject;
                 getDataObj.RequestDate = req.RequestDate;
                 getDataObj.AssetDetailId = req.AssetDetailId != null ? (int)req.AssetDetailId : 0;
-                getDataObj.HospitalId = req.AssetDetail.HospitalId;
-                getDataObj.SerialNumber = req.AssetDetail.SerialNumber;
+                getDataObj.HospitalId = req.AssetDetail?.HospitalId;
+                getDataObj.SerialNumber = req.AssetDetail?.SerialNumber;
                 getDataObj.ModeId = req.RequestModeId != null ? (int)req.RequestModeId : 0;
-                getDataObj.ModeName = req.RequestMode.Name;
-                getDataObj.ModeNameAr = req.RequestMode.NameAr;
+                getDataObj.ModeName = req.RequestMode?.Name;
+                getDataObj.ModeNameAr = req.RequestMode?.NameAr;
                 getDataObj.PeriorityId = req.RequestPeriorityId != null ? (int)req.RequestPeriorityId : 0;
-                getDataObj.PeriorityName = req.RequestPeriority.Name;
-                getDataObj.PeriorityNameAr = req.RequestPeriority.NameAr;
-                getDataObj.PeriorityColor = req.RequestPeriority.Color;
-                getDataObj.PeriorityIcon = req.RequestPeriority.Icon;
+                getDataObj.PeriorityName = req.RequestPeriority?.Name;
+                getDataObj.PeriorityNameAr = req.RequestPeriority?.NameAr;
+                getDataObj.PeriorityColor = req.RequestPeriority?.Color;
+                getDataObj.PeriorityIcon = req.RequestPeriority?.Icon;
 
                 var lstSRStatus = _context.RequestTracking
                                 .Include(t => t.Request).Include(t => t.RequestStatus)

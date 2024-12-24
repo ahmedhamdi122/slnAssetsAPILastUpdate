@@ -8230,7 +8230,6 @@ namespace Asset.Core.Repositories
             IQueryable<AssetDetail> query = _context.AssetDetails.Include(a => a.MasterAsset).Include(a => a.Department).Include(a => a.MasterAsset.brand)
                .Include(a => a.Hospital).Include(a=>a.Hospital.City).Include(a => a.Hospital.Governorate).Include(a => a.Hospital.Organization).Include(a => a.Hospital.SubOrganization).Where(a => a.Barcode.Contains(barcode)).OrderBy(a => a.Barcode);
             var locationIds =await _context.Users.Select(u=>new {UserId=u.Id, hospitalId=u.HospitalId, CityId=u.CityId, GovernorateId=u.GovernorateId, OrganizationId=u.OrganizationId, SubOrganizationId = u.SubOrganizationId }).FirstOrDefaultAsync(u => u.UserId == UserId);
-
             if (locationIds.hospitalId == 0 && locationIds.CityId == 0 && locationIds.GovernorateId > 0 && locationIds.OrganizationId == 0 && locationIds.SubOrganizationId == 0)
             {
                 query = query.Where(a => a.Hospital.GovernorateId == locationIds.GovernorateId);
