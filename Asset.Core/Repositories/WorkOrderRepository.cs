@@ -4693,11 +4693,12 @@ namespace Asset.Core.Repositories
             #endregion
 
             #region Loop to get Items after serach and sort
-
+            DateTime testDate = new DateTime(2022, 12, 23, 10, 0,0);
             foreach (var WorkOrder in lstWorkOrder)
             {
                 IndexWorkOrderVM2.GetData getDataObj = new IndexWorkOrderVM2.GetData();
                 getDataObj.Id = WorkOrder.Id;
+                getDataObj.TimeDifference = DateTime.Now- testDate;
                 getDataObj.Subject = WorkOrder.Subject;
                 getDataObj.BarCode = WorkOrder.Request.AssetDetail.Barcode;
                 getDataObj.ModelNumber = WorkOrder.Request.AssetDetail.MasterAsset.ModelNumber;

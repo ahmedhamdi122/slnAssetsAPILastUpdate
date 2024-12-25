@@ -16,7 +16,7 @@ namespace Asset.ViewModels.WorkOrderVM
 
             public int Id { get; set; }
             public string Subject { get; set; }
-
+            public TimeSpan? TimeDifference { get; set; }
             public string WorkOrderNumber { get; set; }
             public DateTime? CreationDate { get; set; }
             public DateTime? ClosedDate { get; set; }

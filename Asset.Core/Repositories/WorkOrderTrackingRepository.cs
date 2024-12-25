@@ -64,16 +64,11 @@ namespace Asset.Core.Repositories
                     }
 
 
-                    workOrderTracking.ActualStartDate = createWorkOrderTrackingVM.ActualStartDate != "" ? DateTime.Parse(createWorkOrderTrackingVM.ActualStartDate) : null;
-                    workOrderTracking.ActualEndDate = createWorkOrderTrackingVM.ActualEndDate != "" ? DateTime.Parse(createWorkOrderTrackingVM.ActualEndDate) : null;
-
-                    workOrderTracking.PlannedStartDate = createWorkOrderTrackingVM.PlannedStartDate != "" ? DateTime.Parse(createWorkOrderTrackingVM.PlannedStartDate) : null;
-                    workOrderTracking.PlannedEndDate = createWorkOrderTrackingVM.PlannedEndDate != "" ? DateTime.Parse(createWorkOrderTrackingVM.PlannedEndDate) : null;
+                    
 
                     _context.WorkOrderTrackings.Add(workOrderTracking);
                     _context.SaveChanges();
-                    createWorkOrderTrackingVM.Id = workOrderTracking.Id;
-                    return createWorkOrderTrackingVM.Id;
+                    return workOrderTracking.Id;
                 }
             }
             catch (Exception ex)
