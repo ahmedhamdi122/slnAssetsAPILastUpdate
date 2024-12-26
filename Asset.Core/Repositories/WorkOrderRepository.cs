@@ -4297,7 +4297,7 @@ namespace Asset.Core.Repositories
             return workOrderTrackings.AsQueryable();
         }
 
-        public async Task<IndexWorkOrderVM2> ListWorkOrders(SortAndFilterWorkOrderVM data, int first, int rows)
+        public async Task<WorkOrderResultVM> ListWorkOrders(SortAndFilterWorkOrderVM data, int first, int rows)
         {
             #region Initial Variables
             IQueryable<WorkOrder> query = _context.WorkOrders
@@ -4317,9 +4317,9 @@ namespace Asset.Core.Repositories
                          .Include(w => w.Request.AssetDetail.Hospital).ThenInclude(h => h.Governorate)
                          .Include(w => w.Request.AssetDetail.Hospital).ThenInclude(h => h.City)
                          .Include(w => w.Request.AssetDetail.Hospital).ThenInclude(h => h.SubOrganization);
-                        
-            IndexWorkOrderVM2 mainClass = new IndexWorkOrderVM2();
-            List<IndexWorkOrderVM2.GetData> list = new List<IndexWorkOrderVM2.GetData>();
+
+            WorkOrderResultVM mainClass = new WorkOrderResultVM();
+            List<WorkOrderResultVM.GetData> list = new List<WorkOrderResultVM.GetData>();
             ApplicationUser userObj = new ApplicationUser();
             List<string> lstRoleNames = new List<string>();
             Employee employee = new Employee();
@@ -4328,13 +4328,16 @@ namespace Asset.Core.Repositories
             #region User Role
             if (data.SearchObj.UserId != null)
             {
-                var getUserById = await _context.ApplicationUser.Where(a => a.Id == data.SearchObj.UserId).ToListAsync();
-                userObj = getUserById[0];
-                var Employee =await _context.Employees.FirstOrDefaultAsync(a => a.Email == userObj.Email);
-                if (Employee!=null)
+                 userObj = await _context.ApplicationUser.FirstOrDefaultAsync(u=>u.Id==data.SearchObj.UserId);
+               if(userObj!=null)
                 {
-                    employee = Employee;
+                    var Employee = await _context.Employees.FirstOrDefaultAsync(a => a.Email == userObj.Email);
+                    if (Employee != null)
+                    {
+                        employee = Employee;
+                    }
                 }
+               
             #endregion
             }
 
@@ -4342,14 +4345,8 @@ namespace Asset.Core.Repositories
             if (userObj.HospitalId > 0)
             {
                 var isAssetOwner = await _context.AssetOwners.AnyAsync(a => a.EmployeeId == employee.Id);
-                if (isAssetOwner)
-                {
-                    query = query.Where(a => a.CreatedById == userObj.Id && a.HospitalId == userObj.HospitalId);
-                }
-                else
-                {
-                    query = query.Where(a => a.HospitalId == userObj.HospitalId);
-                }
+                query = query.Where(a => isAssetOwner ? a.CreatedById == userObj.Id && a.HospitalId == userObj.HospitalId : a.HospitalId == userObj.HospitalId);
+
             }
             else
             {
@@ -4696,9 +4693,9 @@ namespace Asset.Core.Repositories
             DateTime testDate = new DateTime(2022, 12, 23, 10, 0,0);
             foreach (var WorkOrder in lstWorkOrder)
             {
-                IndexWorkOrderVM2.GetData getDataObj = new IndexWorkOrderVM2.GetData();
+                WorkOrderResultVM.GetData getDataObj = new WorkOrderResultVM.GetData();
                 getDataObj.Id = WorkOrder.Id;
-                getDataObj.TimeDifference = DateTime.Now- testDate;
+                getDataObj.ElapsedTime = DateTime.Now- testDate;
                 getDataObj.Subject = WorkOrder.Subject;
                 getDataObj.BarCode = WorkOrder.Request.AssetDetail.Barcode;
                 getDataObj.ModelNumber = WorkOrder.Request.AssetDetail.MasterAsset.ModelNumber;
@@ -4706,25 +4703,15 @@ namespace Asset.Core.Repositories
                 getDataObj.AssetNameAr = WorkOrder.Request.AssetDetail.MasterAsset.NameAr;
                 getDataObj.SerialNumber = WorkOrder.Request.AssetDetail.SerialNumber;
                 getDataObj.WorkOrderNumber = WorkOrder.WorkOrderNumber;
-                if (WorkOrder.WorkOrderType != null)
-                    getDataObj.WorkOrderTypeName = WorkOrder.WorkOrderType.Name;
                 getDataObj.RequestSubject = WorkOrder.Request.Subject;
-                getDataObj.AssetId = WorkOrder.Request.AssetDetailId;
                 getDataObj.CreatedBy = WorkOrder.User.UserName;
-                getDataObj.ActualStartDate = WorkOrder.ActualStartDate;
-                getDataObj.ActualEndDate = WorkOrder.ActualEndDate;
-                getDataObj.HospitalId = WorkOrder.Request.AssetDetail.HospitalId;
-                getDataObj.GovernorateId = WorkOrder.Request.AssetDetail.Hospital.GovernorateId;
-                getDataObj.CityId = WorkOrder.Hospital.CityId;
-                getDataObj.OrganizationId = WorkOrder.Request.AssetDetail.Hospital.OrganizationId;
-                getDataObj.SubOrganizationId = WorkOrder.Request.AssetDetail.Hospital.SubOrganizationId;
-                getDataObj.CreatedById = WorkOrder.CreatedById;
+      
+          
                 getDataObj.CreationDate = WorkOrder.CreationDate;
                 getDataObj.AssetName = WorkOrder.Request?.AssetDetail?.MasterAsset?.Name + " - " + WorkOrder.Request.AssetDetail.SerialNumber;
                 getDataObj.AssetNameAr = WorkOrder.Request?.AssetDetail?.MasterAsset?.NameAr + " - " + WorkOrder.Request.AssetDetail.SerialNumber;
-                getDataObj.MasterAssetId = WorkOrder.Request?.AssetDetail?.MasterAssetId;
-                var lastWorkOrderTracking = WorkOrder?.lstWorkOrderTracking?.OrderByDescending(wot => wot.CreationDate).FirstOrDefault();
-                if(lastWorkOrderTracking!=null)
+                var lastWorkOrderTracking =await _context.WorkOrderTrackings.Where(wot => wot.WorkOrderId == WorkOrder.Id).OrderByDescending(wot => wot.CreationDate).FirstOrDefaultAsync();
+                if (lastWorkOrderTracking!=null)
                 {
                     getDataObj.WorkOrderStatusId = lastWorkOrderTracking.WorkOrderStatusId;
                     getDataObj.StatusName = lastWorkOrderTracking.WorkOrderStatus.Name;
@@ -4732,39 +4719,13 @@ namespace Asset.Core.Repositories
                     getDataObj.statusColor = lastWorkOrderTracking.WorkOrderStatus.Color;
                     getDataObj.statusIcon = lastWorkOrderTracking.WorkOrderStatus.Icon;
                     getDataObj.Note = lastWorkOrderTracking.Notes;
-                }
-                var firstTrack = WorkOrder?.lstWorkOrderTracking?.OrderBy(wot => wot.CreationDate).FirstOrDefault();
-                if (firstTrack!=null && getDataObj.WorkOrderStatusId < 12)
-                    getDataObj.FirstTrackDate = firstTrack.WorkOrderDate;
-                else if (firstTrack!=null && getDataObj.WorkOrderStatusId == 12)
-                    getDataObj.FirstTrackDate = WorkOrder.lstWorkOrderTracking.OrderByDescending(wot => wot.CreationDate).FirstOrDefault().CreationDate; ;
-
-
-                if (getDataObj.WorkOrderStatusId == 12)
-                    getDataObj.ClosedDate = WorkOrder.CreationDate;
-
-
-
-
+                }    
+                //if (getDataObj.WorkOrderStatusId == 12)
+                //    getDataObj.ClosedDate = WorkOrder.CreationDate;
                 if (WorkOrder.Request.AssetDetailId != null)
                 {
                     getDataObj.AssetName = WorkOrder.Request.AssetDetail.MasterAsset.Name;
                     getDataObj.AssetNameAr = WorkOrder.Request.AssetDetail.MasterAsset.NameAr;
-                }
-
-
-                if (WorkOrder.WorkOrderPeriority != null)
-                {
-                    getDataObj.WorkOrderPeriorityId = (int)WorkOrder.WorkOrderPeriorityId;
-                    getDataObj.PeriorityName = WorkOrder.WorkOrderPeriority.Name;
-                    getDataObj.PeriorityNameAr = WorkOrder.WorkOrderPeriority.NameAr;
-
-                }
-                if (WorkOrder.Request.AssetDetail.Department != null)
-                {
-                    getDataObj.DepartmentId = (int)WorkOrder.Request.AssetDetail.DepartmentId;
-                    getDataObj.DepartmentName = WorkOrder.Request.AssetDetail.Department.Name;
-                    getDataObj.DepartmentNameAr = WorkOrder.Request.AssetDetail.Department.NameAr;
                 }
                 list.Add(getDataObj);
             }

@@ -44,7 +44,7 @@ namespace Asset.Domain.Repositories
 
         #region Main Functions
         IEnumerable<IndexWorkOrderVM> GetAll();
-        Task<IndexWorkOrderVM2> ListWorkOrders(SortAndFilterWorkOrderVM data, int first, int rows);
+        Task<WorkOrderResultVM> ListWorkOrders(SortAndFilterWorkOrderVM data, int first, int rows);
         GeneratedWorkOrderNumberVM GenerateWorOrderNumber();
         int Add(CreateWorkOrderVM createWorkOrderVM);
         void Update(int id, EditWorkOrderVM editWorkOrderVM);

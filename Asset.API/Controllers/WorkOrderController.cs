@@ -720,7 +720,7 @@ namespace Asset.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("ListWorkOrders/{first}/{rows}")]
-        public async Task<IndexWorkOrderVM2> ListWorkOrders(SortAndFilterWorkOrderVM data, int first, int rows)
+        public async Task<WorkOrderResultVM> ListWorkOrders(SortAndFilterWorkOrderVM data, int first, int rows)
         {
             return await _workOrderService.ListWorkOrders(data, first, rows);
         }

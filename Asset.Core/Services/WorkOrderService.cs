@@ -181,7 +181,7 @@ namespace Asset.Core.Services
             return _unitOfWork.WorkOrder.PrintListOfWorkOrders(printWorkOrderObj);
         }
 
-        public async Task<IndexWorkOrderVM2> ListWorkOrders(SortAndFilterWorkOrderVM data,int first, int rows)
+        public async Task<WorkOrderResultVM> ListWorkOrders(SortAndFilterWorkOrderVM data,int first, int rows)
         {
             return await _unitOfWork.WorkOrder.ListWorkOrders(data, first, rows);
         }
