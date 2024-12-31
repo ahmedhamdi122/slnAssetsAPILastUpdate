@@ -66,6 +66,7 @@ namespace Asset.ViewModels.RequestTrackingVM
 
         public int? HospitalId { get; set; }
 
-        public List<RequestTrackingView> lstTracking { get; set; }
+        public List<RequestTrackingView> lstRequestTracking { get; set; }
+        public List<WorkOrderTracking> lstWorkorderTracking { get; set; }
     }
 }

@@ -197,6 +197,11 @@ namespace Asset.Core.Repositories
         //}
         public List<RequestTrackingView> GetRequestTracksByRequestId(int requestId)
         {
+
+
+            
+
+
             var trackings = _context.RequestTracking.Where(r => r.RequestId == requestId).OrderByDescending(a => a.DescriptionDate).Select(req => new RequestTrackingView
             {
                 Id = req.Id,
@@ -235,16 +240,16 @@ namespace Asset.Core.Repositories
                     StatusIcon = req.RequestStatusId != null ? req.RequestStatus.Icon : "",
                 }).OrderByDescending(t => t.DescriptionDate).ThenBy(a => a.DescriptionDate.Value.TimeOfDay).ToListAsync();
 
-            var lstWONotes =await _context.WorkOrderTrackings.Include(a => a.WorkOrder).Include(a => a.WorkOrder.Request).Where(a => a.WorkOrder.RequestId == RequestId)
+            var lstWorkorderTracking = await _context.WorkOrderTrackings.Include(a => a.WorkOrder).Include(a => a.WorkOrder.Request).Where(a => a.WorkOrder.RequestId == RequestId)
                 .OrderByDescending(a => a.CreationDate).ThenBy(a => a.CreationDate.Value.TimeOfDay).ToListAsync();
 
 
-            if (lstWONotes.Count > 0)
+            if (lstWorkorderTracking.Count > 0)
             {
-                wonotes = lstWONotes[0].Notes;
+                wonotes = lstWorkorderTracking[0].Notes;
             }
 
-            var lstRequestTracking =await _context.RequestTracking.Include(t => t.Request.AssetDetail).Include(a => a.Request.AssetDetail.Department).Include(t => t.Request.AssetDetail.MasterAsset)
+            var lstRequestTracking = await _context.RequestTracking.Include(t => t.Request.AssetDetail).Include(a => a.Request.AssetDetail.Department).Include(t => t.Request.AssetDetail.MasterAsset)
             .Include(t => t.Request.RequestMode).Include(t => t.Request.RequestPeriority)
             .Include(t => t.Request.SubProblem).Include(t => t.Request.SubProblem.Problem).Include(t => t.Request.RequestType).Include(r => r.RequestStatus)
             .Where(r => r.RequestId == RequestId).Select(req => new RequestDetails
@@ -288,19 +293,17 @@ namespace Asset.Core.Repositories
                 StatusColor = req.RequestStatus.Color,
                 StatusIcon = req.RequestStatus.Icon,
 
-                departmentName = req.Request.AssetDetail.Department != null?req.Request.AssetDetail.Department.Name:"",
-                departmentNameAr = req.Request.AssetDetail.Department != null ? req.Request.AssetDetail.Department.NameAr:"",
+                departmentName = req.Request.AssetDetail.Department != null ? req.Request.AssetDetail.Department.Name : "",
+                departmentNameAr = req.Request.AssetDetail.Department != null ? req.Request.AssetDetail.Department.NameAr : "",
 
 
                 AssetName = req.Request.AssetDetail.MasterAsset.Name,
                 AssetNameAr = req.Request.AssetDetail.MasterAsset.NameAr,
                 WONotes = wonotes,
-                lstTracking = trackings
+                lstRequestTracking = trackings,
+                lstWorkorderTracking = lstWorkorderTracking
+
             }).FirstOrDefaultAsync();
-
-
-
-
             return lstRequestTracking;
         }
 

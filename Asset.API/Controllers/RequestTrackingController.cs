@@ -40,9 +40,6 @@ namespace Asset.API.Controllers
         {
             return await _requestTrackingService.GetAllTrackingsByRequestId(requestId);
         }
-
-
-
         [HttpGet]
         [Route("GetFirstTrackForRequestByRequestId/{requestId}")]
         public RequestTracking GetFirstTrackForRequestByRequestId(int requestId)

@@ -21,8 +21,8 @@ namespace Asset.Core.Services
         public int AddWorkOrderTracking(CreateWorkOrderTrackingVM createWorkOrderTrackingVM)
         {
             createWorkOrderTrackingVM.CreationDate = DateTime.Now.ToString();
-            _unitOfWork.WorkOrderTracking.Add(createWorkOrderTrackingVM);
-            return createWorkOrderTrackingVM.Id;
+            int WorkOrderTrackingId=_unitOfWork.WorkOrderTracking.Add(createWorkOrderTrackingVM);
+            return WorkOrderTrackingId;
         }
 
         public void DeleteWorkOrderTracking(int id)
@@ -45,9 +45,9 @@ namespace Asset.Core.Services
         //    return _unitOfWork.WorkOrderTracking.GetAllWorkOrderFromTrackingByServiceRequestId(ServiceRequestId, userId);
         //}
 
-        //public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestUserId(int ServiceRequestId, string userId)
+        //public async Task<IEnumerable<LstWorkOrderFromTracking>> GetAllWorkOrderFromTrackingByServiceRequestUserId(int ServiceRequestId, string userId)
         //{
-        //    return _unitOfWork.WorkOrderTracking.GetAllWorkOrderFromTrackingByServiceRequestUserId(ServiceRequestId, userId);
+        //    return await _unitOfWork.WorkOrderTracking.GetAllWorkOrderFromTrackingByServiceRequestUserId(ServiceRequestId, userId);
         //}
 
         //public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByUserId(string userId)
