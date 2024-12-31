@@ -4430,60 +4430,60 @@ namespace Asset.Core.Repositories
             {
                 query = query.Where(w=>w.lstWorkOrderTracking.OrderByDescending(woT=>woT.CreationDate).FirstOrDefault().WorkOrderStatusId == data.SearchObj.StatusId);
             }
-         
 
-            //string setstartday, setstartmonth, setendday, setendmonth = "";
-            //DateTime startingFrom = new DateTime();
-            //DateTime endingTo = new DateTime();
-            //if (data.SearchObj.Start == "")
-            //{
-            //    startingFrom = DateTime.Parse("1900-01-01").Date;
-            //}
-            //else
-            //{
-            //    data.SearchObj.StartDate = DateTime.Parse(data.SearchObj.Start.ToString());
-            //    var startyear = data.SearchObj.StartDate.Value.Year;
-            //    var startmonth = data.SearchObj.StartDate.Value.Month;
-            //    var startday = data.SearchObj.StartDate.Value.Day;
-            //    if (startday < 10)
-            //        setstartday = data.SearchObj.StartDate.Value.Day.ToString().PadLeft(2, '0');
-            //    else
-            //        setstartday = data.SearchObj.StartDate.Value.Day.ToString();
 
-            //    if (startmonth < 10)
-            //        setstartmonth = data.SearchObj.StartDate.Value.Month.ToString().PadLeft(2, '0');
-            //    else
-            //        setstartmonth = data.SearchObj.StartDate.Value.Month.ToString();
+            string setstartday, setstartmonth, setendday, setendmonth = "";
+            DateTime startingFrom = new DateTime();
+            DateTime endingTo = new DateTime();
+            if (data.SearchObj.Start == "")
+            {
+                startingFrom = DateTime.Parse("1900-01-01").Date;
+            }
+            else
+            {
+                data.SearchObj.StartDate = DateTime.Parse(data.SearchObj.Start.ToString());
+                var startyear = data.SearchObj.StartDate.Value.Year;
+                var startmonth = data.SearchObj.StartDate.Value.Month;
+                var startday = data.SearchObj.StartDate.Value.Day;
+                if (startday < 10)
+                    setstartday = data.SearchObj.StartDate.Value.Day.ToString().PadLeft(2, '0');
+                else
+                    setstartday = data.SearchObj.StartDate.Value.Day.ToString();
 
-            //    var sDate = startyear + "/" + setstartmonth + "/" + setstartday;
-            //    startingFrom = DateTime.Parse(sDate);
-            //}
+                if (startmonth < 10)
+                    setstartmonth = data.SearchObj.StartDate.Value.Month.ToString().PadLeft(2, '0');
+                else
+                    setstartmonth = data.SearchObj.StartDate.Value.Month.ToString();
 
-            //if (data.SearchObj.End == "")
-            //{
-            //    endingTo = DateTime.Today.Date;
-            //}
-            //else
-            //{
-            //    data.SearchObj.EndDate = DateTime.Parse(data.SearchObj.End.ToString());
-            //    var endyear = data.SearchObj.EndDate.Value.Year;
-            //    var endmonth = data.SearchObj.EndDate.Value.Month;
-            //    var endday = data.SearchObj.EndDate.Value.Day;
-            //    if (endday < 10)
-            //        setendday = data.SearchObj.EndDate.Value.Day.ToString().PadLeft(2, '0');
-            //    else
-            //        setendday = data.SearchObj.EndDate.Value.Day.ToString();
-            //    if (endmonth < 10)
-            //        setendmonth = data.SearchObj.EndDate.Value.Month.ToString().PadLeft(2, '0');
-            //    else
-            //        setendmonth = data.SearchObj.EndDate.Value.Month.ToString();
-            //    var eDate = endyear + "/" + setendmonth + "/" + setendday;
-            //    endingTo = DateTime.Parse(eDate);
-            //}
-            //if (data.SearchObj.Start != "" && data.SearchObj.End != "")
-            //{
-            //    query = query.Where(w => w.CreationDate.Value.Date >= startingFrom.Date && w.CreationDate.Value.Date <= endingTo.Date);
-            //}
+                var sDate = startyear + "/" + setstartmonth + "/" + setstartday;
+                startingFrom = DateTime.Parse(sDate);
+            }
+
+            if (data.SearchObj.End == "")
+            {
+                endingTo = DateTime.Today.Date;
+            }
+            else
+            {
+                data.SearchObj.EndDate = DateTime.Parse(data.SearchObj.End.ToString());
+                var endyear = data.SearchObj.EndDate.Value.Year;
+                var endmonth = data.SearchObj.EndDate.Value.Month;
+                var endday = data.SearchObj.EndDate.Value.Day;
+                if (endday < 10)
+                    setendday = data.SearchObj.EndDate.Value.Day.ToString().PadLeft(2, '0');
+                else
+                    setendday = data.SearchObj.EndDate.Value.Day.ToString();
+                if (endmonth < 10)
+                    setendmonth = data.SearchObj.EndDate.Value.Month.ToString().PadLeft(2, '0');
+                else
+                    setendmonth = data.SearchObj.EndDate.Value.Month.ToString();
+                var eDate = endyear + "/" + setendmonth + "/" + setendday;
+                endingTo = DateTime.Parse(eDate);
+            }
+            if (data.SearchObj.Start != "" && data.SearchObj.End != "")
+            {
+                query = query.Where(w => w.CreationDate.Value.Date >= startingFrom.Date && w.CreationDate.Value.Date <= endingTo.Date);
+            }
 
 
             #endregion
@@ -4697,6 +4697,7 @@ namespace Asset.Core.Repositories
                 getDataObj.Id = WorkOrder.Id;
                 getDataObj.ElapsedTime = DateTime.Now- testDate;
                 getDataObj.Subject = WorkOrder.Subject;
+                getDataObj.RequestId=WorkOrder.Request.Id;
                 getDataObj.BarCode = WorkOrder.Request.AssetDetail.Barcode;
                 getDataObj.ModelNumber = WorkOrder.Request.AssetDetail.MasterAsset.ModelNumber;
                 getDataObj.AssetName = WorkOrder.Request.AssetDetail.MasterAsset.Name;
@@ -4753,7 +4754,7 @@ namespace Asset.Core.Repositories
             documentObj.HospitalId = attachObj.HospitalId;
             _context.WorkOrderAttachments.Add(documentObj);
             _context.SaveChanges();
-            return attachObj.Id;
+            return documentObj.Id;
         }
 
 

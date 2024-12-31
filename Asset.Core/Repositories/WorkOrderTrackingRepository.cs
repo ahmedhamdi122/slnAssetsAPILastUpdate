@@ -325,31 +325,20 @@ namespace Asset.Core.Repositories
         //    return lstWorkOrderTrackingVM;
         //}
 
-        //public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestUserId(int ServiceRequestId, string userId)
+        //public async Task<IEnumerable<LstWorkOrderFromTracking>> GetAllWorkOrderFromTrackingByServiceRequestUserId(int ServiceRequestId, string userId)
         //{
         //    ApplicationUser UserObj = new ApplicationUser();
         //    ApplicationRole roleObj = new ApplicationRole();
         //    string userRoleName = "";
-        //    var lstUsers = _context.ApplicationUser.Where(a => a.Id == userId).ToList();
-        //    if (lstUsers.Count > 0)
-        //    {
-        //        UserObj = lstUsers[0];
+        //     UserObj = await _context.ApplicationUser.FirstOrDefaultAsync(a => a.Id == userId);
 
-        //        var lstRoles = _context.ApplicationRole.Where(a => a.Id == UserObj.RoleId).ToList();
-        //        if (lstRoles.Count > 0)
-        //        {
-        //            roleObj = lstRoles[0];
-        //            userRoleName = roleObj.Name;
-        //        }
-        //    }
-        //    //  List<LstWorkOrderFromTracking> lstWorkOrderTrackingVM = new List<LstWorkOrderFromTracking>();
 
         //    List<LstWorkOrderFromTracking> list = new List<LstWorkOrderFromTracking>();
-        //    var ListWorkOrderFromTracking = _context.WorkOrderTrackings.Where(w => w.WorkOrder.RequestId == ServiceRequestId)
+        //    var query = _context.WorkOrderTrackings.Where(w => w.WorkOrder.RequestId == ServiceRequestId)
         //                                        .Include(w => w.WorkOrderStatus)
         //                                        .Include(w => w.WorkOrder).Include(w => w.WorkOrder.WorkOrderPeriority)
         //                                        .Include(w => w.WorkOrder.WorkOrderType).Include(w => w.WorkOrder.Request)
-        //                                        .Include(w => w.WorkOrder.Request.AssetDetail).OrderByDescending(a => a.CreationDate).ToList();
+        //                                        .Include(w => w.WorkOrder.Request.AssetDetail).OrderByDescending(a => a.CreationDate);
 
         //    foreach (var item in ListWorkOrderFromTracking)
         //    {
@@ -409,7 +398,6 @@ namespace Asset.Core.Repositories
         //        getDataObj.CityId = (int)item.User.CityId;
         //        getDataObj.OrganizationId = (int)item.User.OrganizationId;
         //        getDataObj.SubOrganizationId = (int)item.User.SubOrganizationId;
-        //        getDataObj.RoleId = item.User.RoleId;
         //        list.Add(getDataObj);
         //    }
         //    if (UserObj.GovernorateId > 0 && UserObj.CityId == 0 && UserObj.HospitalId == 0)

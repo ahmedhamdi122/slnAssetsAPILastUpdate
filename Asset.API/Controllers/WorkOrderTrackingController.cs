@@ -38,12 +38,11 @@ namespace Asset.API.Controllers
         //}
 
         //[Route("GetAllWorkOrderFromTrackingByServiceRequestUserId/{ServiceRequestId}/{userId}")]
-        //public IEnumerable<LstWorkOrderFromTracking> GetAllWorkOrderFromTrackingByServiceRequestUserId(int ServiceRequestId, string userId)
+        //public async Task<IEnumerable<LstWorkOrderFromTracking>> GetAllWorkOrderFromTrackingByServiceRequestUserId(int ServiceRequestId, string userId)
         //{
-        //    return _workOrderTrackingService.GetAllWorkOrderFromTrackingByServiceRequestUserId(ServiceRequestId, userId);
+        //    return await _workOrderTrackingService.GetAllWorkOrderFromTrackingByServiceRequestUserId(ServiceRequestId, userId);
         //}
-
-
+        
 
         [HttpGet]
         [Route("GetAttachmentsByWorkOrderId/{id}")]

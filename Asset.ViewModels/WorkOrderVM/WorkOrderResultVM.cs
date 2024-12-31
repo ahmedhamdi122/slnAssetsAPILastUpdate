@@ -13,6 +13,7 @@ namespace Asset.ViewModels.WorkOrderVM
         public class GetData
         {
             public int Id { get; set; }
+            public int RequestId { get; set; }
             public string Note { get; set; }
             public string ClosedDate { get; set; }
 
