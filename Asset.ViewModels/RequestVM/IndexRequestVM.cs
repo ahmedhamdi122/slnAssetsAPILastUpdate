@@ -81,7 +81,8 @@ namespace Asset.ViewModels.RequestVM
             public int? SubOrganizationId { get; set; }
             public string RoleId { get; set; }
             public int CountListTracks { get; set; }
-            public int CountWorkOrder { get; set; }
+            public int? WorkOrderId { get; set; }
+            public int? CountWorkOrder { get; set; }
             public int LatestWorkOrderStatusId { get; set; }
 
             public string WorkOrderSubject { get; set; }

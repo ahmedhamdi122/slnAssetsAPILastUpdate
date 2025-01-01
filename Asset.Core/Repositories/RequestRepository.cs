@@ -8194,7 +8194,7 @@ namespace Asset.Core.Repositories
                 RequestVM.CityId = req.User != null ? req.User.CityId : 0;
                 RequestVM.OrganizationId = req.User != null ? req.User.OrganizationId : 0;
                 RequestVM.SubOrganizationId = req.User != null ? req.User.SubOrganizationId : 0;
-
+               
                 if (req.RequestModeId != null)
                 {
                     RequestVM.ModeId = req.RequestMode.Id;
@@ -8235,6 +8235,11 @@ namespace Asset.Core.Repositories
                     }
                 }
                 RequestVM.CountWorkOrder = await _context.WorkOrders.Where(a => a.RequestId == req.Id).CountAsync();
+                var workorder= await _context.WorkOrders.FirstOrDefaultAsync(a => a.RequestId == req.Id);
+                if (workorder != null)
+                {
+                    RequestVM.WorkOrderId = workorder.Id;
+                }
                 RequestVM.CountListTracks = await _context.RequestTracking.Where(a => a.RequestId == req.Id).CountAsync();
                 list.Add(RequestVM);
             }

@@ -1,4 +1,5 @@
 ﻿using Asset.Models;
+using Asset.ViewModels.WorkOrderTrackingVM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,6 +68,6 @@ namespace Asset.ViewModels.RequestTrackingVM
         public int? HospitalId { get; set; }
 
         public List<RequestTrackingView> lstRequestTracking { get; set; }
-        public List<WorkOrderTracking> lstWorkorderTracking { get; set; }
+        public List<WorkOrderTrackingDTO> lstWorkorderTracking { get; set; }
     }
 }

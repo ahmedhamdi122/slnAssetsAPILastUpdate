@@ -1,6 +1,7 @@
 ﻿using Asset.Domain.Repositories;
 using Asset.Models;
 using Asset.ViewModels.RequestTrackingVM;
+using Asset.ViewModels.WorkOrderTrackingVM;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -240,11 +241,11 @@ namespace Asset.Core.Repositories
                     StatusIcon = req.RequestStatusId != null ? req.RequestStatus.Icon : "",
                 }).OrderByDescending(t => t.DescriptionDate).ThenBy(a => a.DescriptionDate.Value.TimeOfDay).ToListAsync();
 
-            var lstWorkorderTracking = await _context.WorkOrderTrackings.Include(a => a.WorkOrder).Include(a => a.WorkOrder.Request).Where(a => a.WorkOrder.RequestId == RequestId)
-                .OrderByDescending(a => a.CreationDate).ThenBy(a => a.CreationDate.Value.TimeOfDay).ToListAsync();
+            var lstWorkorderTracking = await _context.WorkOrderTrackings.Include(wtr=> wtr.WorkOrderStatus).Include(a => a.WorkOrder).Include(a => a.WorkOrder.Request).Where(a => a.WorkOrder.RequestId == RequestId)
+                .OrderByDescending(a => a.CreationDate).Select(woTr=>new WorkOrderTrackingDTO (){Id= woTr.Id,Notes= woTr.Notes, CreatedBy= woTr.User.UserName,CreationDate= woTr.CreationDate,WorkOrderTrackingId= woTr.WorkOrderId,workOrderStatusName=woTr.WorkOrderStatus.Name, workOrderStatusNameAr = woTr.WorkOrderStatus.NameAr ,workOrderStatusIcon= woTr.WorkOrderStatus.Icon, workOrderStatusColor = woTr.WorkOrderStatus.Color }).ToListAsync();
 
 
-            if (lstWorkorderTracking.Count > 0)
+            if (lstWorkorderTracking !=null)
             {
                 wonotes = lstWorkorderTracking[0].Notes;
             }
