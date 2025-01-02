@@ -4317,14 +4317,12 @@ namespace Asset.Core.Repositories
                          .Include(w => w.Request.AssetDetail.Hospital).ThenInclude(h => h.Governorate)
                          .Include(w => w.Request.AssetDetail.Hospital).ThenInclude(h => h.City)
                          .Include(w => w.Request.AssetDetail.Hospital).ThenInclude(h => h.SubOrganization);
-
             WorkOrderResultVM mainClass = new WorkOrderResultVM();
             List<WorkOrderResultVM.GetData> list = new List<WorkOrderResultVM.GetData>();
             ApplicationUser userObj = new ApplicationUser();
             List<string> lstRoleNames = new List<string>();
             Employee employee = new Employee();
             #endregion
-
             #region User Role
             if (data.SearchObj.UserId != null)
             {
@@ -4337,16 +4335,13 @@ namespace Asset.Core.Repositories
                         employee = Employee;
                     }
                 }
-               
             #endregion
             }
-
             #region Load Data Depend on User
             if (userObj.HospitalId > 0)
             {
                 var isAssetOwner = await _context.AssetOwners.AnyAsync(a => a.EmployeeId == employee.Id);
                 query = query.Where(a => isAssetOwner ? a.CreatedById == userObj.Id && a.HospitalId == userObj.HospitalId : a.HospitalId == userObj.HospitalId);
-
             }
             else
             {
@@ -4706,8 +4701,6 @@ namespace Asset.Core.Repositories
                 getDataObj.WorkOrderNumber = WorkOrder.WorkOrderNumber;
                 getDataObj.RequestSubject = WorkOrder.Request.Subject;
                 getDataObj.CreatedBy = WorkOrder.User.UserName;
-      
-          
                 getDataObj.CreationDate = WorkOrder.CreationDate;
                 getDataObj.AssetName = WorkOrder.Request?.AssetDetail?.MasterAsset?.Name + " - " + WorkOrder.Request.AssetDetail.SerialNumber;
                 getDataObj.AssetNameAr = WorkOrder.Request?.AssetDetail?.MasterAsset?.NameAr + " - " + WorkOrder.Request.AssetDetail.SerialNumber;
@@ -4720,7 +4713,7 @@ namespace Asset.Core.Repositories
                     getDataObj.statusColor = lastWorkOrderTracking.WorkOrderStatus.Color;
                     getDataObj.statusIcon = lastWorkOrderTracking.WorkOrderStatus.Icon;
                     getDataObj.Note = lastWorkOrderTracking.Notes;
-                }    
+                }
                 //if (getDataObj.WorkOrderStatusId == 12)
                 //    getDataObj.ClosedDate = WorkOrder.CreationDate;
                 if (WorkOrder.Request.AssetDetailId != null)
@@ -4731,12 +4724,10 @@ namespace Asset.Core.Repositories
                 list.Add(getDataObj);
             }
             #endregion
-
             #region Represent data after Paging and count
             mainClass.Results = list;
             #endregion
             return mainClass;
-
         }
 
 

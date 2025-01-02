@@ -99,7 +99,8 @@ namespace Asset.ViewModels.RequestVM
 
             public DateTime? WorkOrderDate { get; set; }
             public string AssignedTo { get; set; }
-            public string WOCreatedBy { get; set; }
+            public string WoCreatedBy { get; set; }
+            public string WoCreatedByName { get; set; }
             public string WOPeriorityName { get; set; }
             public string WOPeriorityNameAr { get; set; }
             public string WorkOrderTypeName { get; set; }

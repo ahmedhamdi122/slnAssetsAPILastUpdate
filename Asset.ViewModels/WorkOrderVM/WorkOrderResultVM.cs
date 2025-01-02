@@ -16,7 +16,6 @@ namespace Asset.ViewModels.WorkOrderVM
             public int RequestId { get; set; }
             public string Note { get; set; }
             public string ClosedDate { get; set; }
-
             public int WorkOrderStatusId { get; set; }
             public string Subject { get; set; }
             public TimeSpan? ElapsedTime { get; set; }

@@ -8215,6 +8215,12 @@ namespace Asset.Core.Repositories
                 {
                     RequestVM.LatestWorkOrderStatusId = LastWorkOrder.WorkOrderStatusId;
                     RequestVM.WOLastTrackDescription = LastWorkOrder.Notes;
+                    RequestVM.WoCreatedBy = LastWorkOrder.CreatedById;
+                    var user = await _context.Users.FirstOrDefaultAsync(u=>u.Id==LastWorkOrder.CreatedById);
+                    if(user!=null)
+                    {
+                        RequestVM.WoCreatedByName = user.UserName;
+                    }
                 }
                 var requestTracking = await _context.RequestTracking.Include(r => r.RequestStatus).Where(r => r.RequestId == req.Id).OrderByDescending(r => r.DescriptionDate).FirstOrDefaultAsync();
                 if (requestTracking != null)
