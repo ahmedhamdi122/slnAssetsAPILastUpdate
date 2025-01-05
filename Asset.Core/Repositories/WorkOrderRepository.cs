@@ -4282,7 +4282,6 @@ namespace Asset.Core.Repositories
                          .Include(a => a.WorkOrder.Request.AssetDetail.MasterAsset)
                          .Include(a => a.WorkOrder.Request.AssetDetail.MasterAsset.brand)
                          .Include(a => a.WorkOrder.Request.AssetDetail.Supplier)
-                         .Include(a => a.WorkOrder.Request.AssetDetail.Department)
                          .Include(a => a.WorkOrder.Request.AssetDetail.MasterAsset.Origin)
                          .Include(a => a.WorkOrder.Request.AssetDetail.Building)
                          .Include(a => a.WorkOrder.Request.AssetDetail.Floor)
@@ -4301,18 +4300,11 @@ namespace Asset.Core.Repositories
         {
             #region Initial Variables
             IQueryable<WorkOrder> query = _context.WorkOrders
-                         .Include(w => w.WorkOrderPeriority).Include(w => w.WorkOrderType).Include(w=>w.lstWorkOrderTracking).ThenInclude(wot=>wot.WorkOrderStatus)
+                         .Include(w=>w.lstWorkOrderTracking).ThenInclude(wot=>wot.WorkOrderStatus)
                          .Include(a => a.User)
                          .Include(w => w.Request)
                          .Include(w => w.Request.AssetDetail)
-                         .Include(w => w.Request.AssetDetail.MasterAsset)
-                         .Include(w => w.Request.AssetDetail.MasterAsset.brand)
-                         .Include(w => w.Request.AssetDetail.Supplier)
-                         .Include(w => w.Request.AssetDetail.Department)
-                         .Include(w => w.Request.AssetDetail.MasterAsset.Origin)
-                         .Include(w => w.Request.AssetDetail.Building)
-                         .Include(w => w.Request.AssetDetail.Floor)
-                         .Include(w => w.Request.AssetDetail.Room)
+                         .ThenInclude(a=> a.MasterAsset)
                          .Include(w => w.Request.AssetDetail.Hospital).ThenInclude(h => h.Organization)
                          .Include(w => w.Request.AssetDetail.Hospital).ThenInclude(h => h.Governorate)
                          .Include(w => w.Request.AssetDetail.Hospital).ThenInclude(h => h.City)
@@ -4363,7 +4355,6 @@ namespace Asset.Core.Repositories
                 }
             }
             #endregion
-
             #region Search Criteria
             if (data.SearchObj.GovernorateId != 0)
             {

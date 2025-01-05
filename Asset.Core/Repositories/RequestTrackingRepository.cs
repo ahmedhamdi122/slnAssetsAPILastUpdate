@@ -245,7 +245,7 @@ namespace Asset.Core.Repositories
                 .OrderByDescending(a => a.CreationDate).Select(woTr=>new WorkOrderTrackingDTO (){Id= woTr.Id,Notes= woTr.Notes, CreatedBy= woTr.User.UserName,CreationDate= woTr.CreationDate,WorkOrderTrackingId= woTr.WorkOrderId,workOrderStatusName=woTr.WorkOrderStatus.Name, workOrderStatusNameAr = woTr.WorkOrderStatus.NameAr ,workOrderStatusIcon= woTr.WorkOrderStatus.Icon, workOrderStatusColor = woTr.WorkOrderStatus.Color }).ToListAsync();
 
 
-            if (lstWorkorderTracking !=null)
+            if (lstWorkorderTracking.Count !=0)
             {
                 wonotes = lstWorkorderTracking[0].Notes;
             }
