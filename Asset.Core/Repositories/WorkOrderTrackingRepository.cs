@@ -63,9 +63,6 @@ namespace Asset.Core.Repositories
 
                     }
 
-
-                    
-
                     _context.WorkOrderTrackings.Add(workOrderTracking);
                     _context.SaveChanges();
                     return workOrderTracking.Id;

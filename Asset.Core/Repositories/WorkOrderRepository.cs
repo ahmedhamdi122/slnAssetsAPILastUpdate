@@ -4121,9 +4121,7 @@ namespace Asset.Core.Repositories
                         var trackObj = lstRequestTracks[0];
                         printWorkObj.FirstRequest = trackObj.Description;
                     }
-
                 }
-
                 printWorkObj.HospitalId = work.Request.AssetDetail.HospitalId;
                 printWorkObj.HospitalName = work.Request.AssetDetail.Hospital.Name;
                 printWorkObj.HospitalNameAr = work.Request.AssetDetail.Hospital.NameAr;
@@ -4171,8 +4169,8 @@ namespace Asset.Core.Repositories
 
                         if (item.WorkOrderStatusId == 12)
                         {
-                            trackObj.ClosedDate = item.ActualEndDate.Value.ToString();//.Value.ToShortDateString();
-                            printWorkObj.ClosedDate = lstTracks.Where(a => a.WorkOrderStatusId == 12).Last().CreationDate.Value.ToString();
+                        //    trackObj.ClosedDate = item.ActualEndDate.Value.ToString();//.Value.ToShortDateString();
+                        //    printWorkObj.ClosedDate = lstTracks.Where(a => a.WorkOrderStatusId == 12).Last().CreationDate.Value.ToString();
                         }
                         else
                         {
@@ -4319,21 +4317,13 @@ namespace Asset.Core.Repositories
             if (data.SearchObj.UserId != null)
             {
                  userObj = await _context.ApplicationUser.FirstOrDefaultAsync(u=>u.Id==data.SearchObj.UserId);
-               if(userObj!=null)
-                {
-                    var Employee = await _context.Employees.FirstOrDefaultAsync(a => a.Email == userObj.Email);
-                    if (Employee != null)
-                    {
-                        employee = Employee;
-                    }
-                }
             #endregion
             }
             #region Load Data Depend on User
             if (userObj.HospitalId > 0)
             {
-                var isAssetOwner = await _context.AssetOwners.AnyAsync(a => a.EmployeeId == employee.Id);
-                query = query.Where(a => isAssetOwner ? a.CreatedById == userObj.Id && a.HospitalId == userObj.HospitalId : a.HospitalId == userObj.HospitalId);
+               
+                query = query.Where(a =>   a.HospitalId == userObj.HospitalId);
             }
             else
             {
@@ -4534,7 +4524,6 @@ namespace Asset.Core.Repositories
                         query = query.OrderByDescending(w => w.Request.RequestDate);
                     }
                     break;
-
                 case "Request Code":
                 case "رقم الطلب":
                     if (data.SortObj.SortStatus == "ascending")

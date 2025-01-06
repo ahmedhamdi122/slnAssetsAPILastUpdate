@@ -410,8 +410,6 @@ namespace Asset.API.Controllers
         {
             return await _AssetDetailService.AutoCompleteAssetBarCode(barcode, hospitalId, UserId);
         }
-
-
         /// <summary>
         /// AutoComplete Asset serial depend on HospitalId
         /// </summary>
