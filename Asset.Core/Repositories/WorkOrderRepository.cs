@@ -4298,7 +4298,7 @@ namespace Asset.Core.Repositories
         {
             #region Initial Variables
             IQueryable<WorkOrder> query = _context.WorkOrders
-                         .Include(w=>w.lstWorkOrderTracking).ThenInclude(wot=>wot.WorkOrderStatus)
+                         .Include(w=>w.lstWorkOrderTracking)
                          .Include(a => a.User)
                          .Include(w => w.Request)
                          .Include(w => w.Request.AssetDetail)
@@ -4684,9 +4684,10 @@ namespace Asset.Core.Repositories
                 getDataObj.CreationDate = WorkOrder.CreationDate;
                 getDataObj.AssetName = WorkOrder.Request?.AssetDetail?.MasterAsset?.Name + " - " + WorkOrder.Request.AssetDetail.SerialNumber;
                 getDataObj.AssetNameAr = WorkOrder.Request?.AssetDetail?.MasterAsset?.NameAr + " - " + WorkOrder.Request.AssetDetail.SerialNumber;
-                var lastWorkOrderTracking =await _context.WorkOrderTrackings.Where(wot => wot.WorkOrderId == WorkOrder.Id).OrderByDescending(wot => wot.CreationDate).FirstOrDefaultAsync();
-                if (lastWorkOrderTracking!=null)
+                var lastWorkOrderTracking =await _context.WorkOrderTrackings.Include(wot=>wot.WorkOrderStatus).Where(wot => wot.WorkOrderId == WorkOrder.Id).OrderByDescending(wot => wot.CreationDate).FirstOrDefaultAsync();
+                if (lastWorkOrderTracking != null)
                 {
+
                     getDataObj.WorkOrderStatusId = lastWorkOrderTracking.WorkOrderStatusId;
                     getDataObj.StatusName = lastWorkOrderTracking.WorkOrderStatus.Name;
                     getDataObj.StatusNameAr = lastWorkOrderTracking.WorkOrderStatus.NameAr;
