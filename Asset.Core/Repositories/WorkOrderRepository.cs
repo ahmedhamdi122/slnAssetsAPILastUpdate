@@ -21,8 +21,7 @@ namespace Asset.Core.Repositories
         {
             _context = context;
         }
-
-
+        
         public IEnumerable<IndexWorkOrderVM> ExportWorkOrdersByStatusId(int? hospitalId, string userId, int statusId)
         {
             List<IndexWorkOrderVM> list = new List<IndexWorkOrderVM>();
@@ -4345,6 +4344,7 @@ namespace Asset.Core.Repositories
                 }
             }
             #endregion
+                         
             #region Search Criteria
             if (data.SearchObj.GovernorateId != 0)
             {
@@ -4462,7 +4462,7 @@ namespace Asset.Core.Repositories
             }
 
 
-            #endregion
+            #endregion 
 
             #region Sort Criteria
 

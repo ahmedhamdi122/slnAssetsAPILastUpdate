@@ -84,7 +84,7 @@ namespace Asset.API.Controllers
             //         })
             //         .ToList();
             //     return Ok(moduleDtos);
-
+            //var sideBar= await 
             if (user == null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "UserNotFound", Message = "There is no account associated with this username", MessageAr = "لا يوجد حساب مرتبط  باسم المستخدم " });
             var userpass = await _userManager.CheckPasswordAsync(user, userObj.PasswordHash);
@@ -123,8 +123,6 @@ namespace Asset.API.Controllers
             var orgId = user.OrganizationId;
             var subOrgId = user.SubOrganizationId;
             var hospitalId = user.HospitalId;
-            //var supplierId = user.SupplierId;
-            //var commetieeMemberId = user.CommetieeMemberId;
 
             var govName = user.GovernorateId > 0 ? _context.Governorates.Where(a => a.Id == user.GovernorateId).FirstOrDefault()?.Name : "";
             var cityName = user.CityId > 0 ? _context.Cities.Where(a => a.Id == user.CityId).FirstOrDefault().Name : "";
@@ -142,38 +140,7 @@ namespace Asset.API.Controllers
             var hospitalCode = user.HospitalId > 0 ? _context.Hospitals.Where(a => a.Id == user.HospitalId).FirstOrDefault()?.Code : "";
             userName = user.UserName;
 
-            ////var roleNames = (from userRole in _context.UserRoles
-            ////                 join role in _roleManager.Roles on userRole.RoleId equals role.Id
-            ////                 where user.Id == userRole.UserId
-            ////                 select role);
-
-            //        //if (supplierId > 0)
-            //        //{
-            //        //    var lstSuppliers = _context.Suppliers.Where(a => a.EMail == user.Email).ToList();
-            //        //    if (lstSuppliers.Count > 0)
-            //        //    {
-            //        //        var supplierObj = lstSuppliers[0];
-            //        //        Useremail = user.Email;
-            //        //        userName = supplierObj.Name;
-            //        //        userNameAr = supplierObj.NameAr;
-            //        //    }
-            //        //}
-            //        //if (commetieeMemberId > 0)
-            //        //{
-            //        //    var lstMembers = _context.CommetieeMembers.Where(a => a.EMail == user.Email).ToList();
-            //        //    if (lstMembers.Count > 0)
-            //        //    {
-            //        //        var memberObj = lstMembers[0];
-            //        //        Useremail = user.Email;
-            //        //        userName = memberObj.Name;
-            //        //        userNameAr = memberObj.NameAr;
-            //        //    }
-            //        //}
-            //        //else
-            //        //{
-            //            Useremail = user.Email;
-            //            userName = user.UserName;
-            //       // }
+        
 
             var lstSettings = _settingService.GetAll().ToList();
             if (lstSettings.Count > 0)
